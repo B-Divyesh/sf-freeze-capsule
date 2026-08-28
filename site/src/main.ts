@@ -31,7 +31,7 @@ const home = () => shell(`
   </section>
   ${terminal(false)}
   <section class="steps blueprint-section" aria-labelledby="how-title"><div class="section-mark">SEQUENCE / 03</div><h2 id="how-title">How it preserves the useful window</h2><ol><li><span>01</span><div><h3>Keep one snapshot current</h3><p>The user service records a bounded ten-minute window every 30 seconds.</p></div></li><li><span>02</span><div><h3>Promote it after a gap</h3><p>A 90-second scheduling gap preserves the last completed snapshot.</p></div></li><li><span>03</span><div><h3>Render a safer report</h3><p>The render command removes home paths, email addresses, IP addresses, and common secrets.</p></div></li></ol></section>
-  <section id="install" class="install blueprint-section" aria-labelledby="install-title"><div><div class="section-mark">INSTALLATION PLATE</div><h2 id="install-title">Install the Linux watcher</h2><p>The package installs one binary. You choose when to start the per-user service.</p><div class="command"><code>curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh</code><button type="button" data-copy="curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh">Copy command</button></div><p class="platform-note" data-download-state aria-live="polite">Choose a package or check the published release.</p><button class="check-release" type="button" data-check-release>Check published packages</button><div class="downloads"><a data-download="deb" href="${RELEASES}">Linux .deb</a><a data-download="rpm" href="${RELEASES}">Linux .rpm</a><a data-download="mac" href="${RELEASES}">macOS .pkg</a><a data-download="win" href="${RELEASES}">Windows .zip</a><a href="${RELEASES}">All releases <span class="sr-only">(external site)</span></a></div></div><aside><h3>After install</h3><pre><code>freeze-capsule install-service\nfreeze-capsule doctor\nfreeze-capsule hotkey-command</code></pre><p>Linux provides live capture. macOS and Windows builds provide the portable sample and report tools.</p></aside></section>
+  <section id="install" class="install blueprint-section" aria-labelledby="install-title"><div><div class="section-mark">INSTALLATION PLATE</div><h2 id="install-title">Install the Linux watcher</h2><p>The package installs one binary. You choose when to start the per-user service.</p><div class="command"><code>curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh</code><button type="button" data-copy="curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh">Copy command</button></div><p class="platform-note" data-download-state aria-live="polite">Choose a package or check the published release.</p><div class="release-actions"><a class="primary" data-primary-download href="${RELEASES}">Open Linux releases</a><button class="check-release" type="button" data-check-release>Check published packages</button></div><div class="downloads"><a data-download="deb" href="${RELEASES}">Linux .deb</a><a data-download="rpm" href="${RELEASES}">Linux .rpm</a><a data-download="mac" href="${RELEASES}">macOS .pkg</a><a data-download="win" href="${RELEASES}">Windows .zip</a><a href="${RELEASES}">All releases <span class="sr-only">(external site)</span></a></div></div><aside><h3>After install</h3><pre><code>freeze-capsule install-service\nfreeze-capsule doctor\nfreeze-capsule hotkey-command</code></pre><p>Linux provides live capture. macOS and Windows builds provide the portable sample and report tools.</p></aside></section>
   <section class="limits blueprint-section" aria-labelledby="limits-title"><div class="section-mark">BOUNDARY NOTES</div><h2 id="limits-title">Know what it cannot capture</h2><div class="limit-grid"><p><strong>A hard lock can stop all capture.</strong><br />The last completed rolling snapshot remains available.</p><p><strong>Log access follows your account.</strong><br />Missing kernel lines appear as unavailable in the report.</p><p><strong>It does not send or file reports.</strong><br />You inspect the redacted file before sharing it.</p></div></section>`);
 
 const demo = () => shell(`
@@ -65,6 +65,8 @@ function bind() {
   document.querySelector<HTMLButtonElement>('[data-reset]')?.addEventListener('click', () => { sessionStorage.removeItem('demo:ran'); render('/demo'); });
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach(button => button.addEventListener('click', async () => { await navigator.clipboard.writeText(button.dataset.copy ?? ''); button.textContent = 'Copied'; }));
   if (location.pathname === '/demo' && sessionStorage.getItem('demo:ran') === '1') showDemoResult();
+  const primaryDownload = document.querySelector<HTMLAnchorElement>('[data-primary-download]');
+  if (primaryDownload) primaryDownload.textContent = `Open ${detectedPlatform()} releases`;
 }
 
 function runDemo() {
@@ -99,9 +101,15 @@ function applyRelease(release: Release, state: HTMLElement) {
   const isArm = /arm|aarch64/i.test(navigator.userAgent);
   const pairs: [string, RegExp][] = [['deb', /amd64\.deb$/], ['rpm', /x86_64\.rpm$/], ['mac', isArm ? /macos-aarch64\.pkg$/ : /macos-x86_64\.pkg$/], ['win', /windows-x86_64\.zip$/]];
   pairs.forEach(([kind, pattern]) => { const asset = release.assets.find(item => pattern.test(item.name)); const link = document.querySelector<HTMLAnchorElement>(`[data-download="${kind}"]`); if (asset && link) link.href = asset.browser_download_url; });
-  const platform = /Windows/i.test(navigator.userAgent) ? 'Windows' : /Mac/i.test(navigator.userAgent) ? 'macOS' : 'Linux';
+  const platform = detectedPlatform();
+  const kind = platform === 'Windows' ? 'win' : platform === 'macOS' ? 'mac' : 'deb';
+  const selected = document.querySelector<HTMLAnchorElement>(`[data-download="${kind}"]`);
+  const primary = document.querySelector<HTMLAnchorElement>('[data-primary-download]');
+  if (selected && primary) { primary.href = selected.href; primary.textContent = `Download for ${platform}`; }
   state.textContent = `${release.tag_name} packages are ready. ${platform} was detected.`;
 }
+
+function detectedPlatform() { return /Windows/i.test(navigator.userAgent) ? 'Windows' : /Mac/i.test(navigator.userAgent) ? 'macOS' : 'Linux'; }
 
 window.addEventListener('popstate', () => render());
 render();
