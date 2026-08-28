@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+env:
+  RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v0.1.0' }}
+
 jobs:
   build:
     name: Build ${{ matrix.asset }}
@@ -55,7 +58,7 @@ jobs:
         run: |
           mkdir -p pkgroot/usr/local/bin
           cp "target/${{ matrix.target }}/release/freeze-capsule" pkgroot/usr/local/bin/
-          pkgbuild --root pkgroot --identifier in.sociobot.freeze-capsule --version "${GITHUB_REF_NAME#v}" "freeze-capsule-${{ matrix.asset }}.pkg"
+          pkgbuild --root pkgroot --identifier in.sociobot.freeze-capsule --version "${RELEASE_TAG#v}" "freeze-capsule-${{ matrix.asset }}.pkg"
       - name: Package Windows archive
         if: runner.os == 'Windows'
         shell: pwsh
@@ -70,8 +73,8 @@ jobs:
         run: |
           cp "target/${{ matrix.target }}/release/freeze-capsule" ./freeze-capsule
           go install github.com/goreleaser/nfpm/v2/cmd/nfpm@v2.41.3
-          VERSION="${GITHUB_REF_NAME#v}" "$(go env GOPATH)/bin/nfpm" package --config packaging/nfpm.yaml --packager deb --target "freeze-capsule_${GITHUB_REF_NAME#v}_amd64.deb"
-          VERSION="${GITHUB_REF_NAME#v}" "$(go env GOPATH)/bin/nfpm" package --config packaging/nfpm.yaml --packager rpm --target "freeze-capsule-${GITHUB_REF_NAME#v}-1.x86_64.rpm"
+          VERSION="${RELEASE_TAG#v}" "$(go env GOPATH)/bin/nfpm" package --config packaging/nfpm.yaml --packager deb --target "freeze-capsule_${RELEASE_TAG#v}_amd64.deb"
+          VERSION="${RELEASE_TAG#v}" "$(go env GOPATH)/bin/nfpm" package --config packaging/nfpm.yaml --packager rpm --target "freeze-capsule-${RELEASE_TAG#v}-1.x86_64.rpm"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset }}
@@ -97,8 +100,8 @@ jobs:
         run: |
           cd release-assets
           sha256sum freeze-capsule-* > SHA256SUMS
-          version="${GITHUB_REF_NAME#v}"
-          base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}"
+          version="${RELEASE_TAG#v}"
+          base="https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}"
           node -e 'const fs=require("fs");const [version,base]=process.argv.slice(1);const sums=Object.fromEntries(fs.readFileSync("SHA256SUMS","utf8").trim().split("\n").map(x=>{const [h,n]=x.trim().split(/\s+/);return[n,h]}));fs.writeFileSync("latest.json",JSON.stringify({version,assets:Object.entries(sums).map(([name,sha256])=>({name,sha256,url:`${base}/${name}`}))},null,2)+"\n")' "$version" "$base"
           win_hash="$(awk '$2 ~ /windows-x86_64.zip$/ {print $1}' SHA256SUMS)"
           mac_arm_hash="$(awk '$2 ~ /macos-aarch64.tar.gz$/ {print $1}' SHA256SUMS)"
@@ -113,6 +116,7 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
           generate_release_notes: true
           files: release-assets/*
       - name: Publish Homebrew tap when token is available
@@ -131,5 +135,5 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add Formula/freeze-capsule.rb
-          git commit -m "freeze-capsule ${GITHUB_REF_NAME}" || exit 0
+          git commit -m "freeze-capsule ${RELEASE_TAG}" || exit 0
           git push
