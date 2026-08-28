@@ -1,149 +1,124 @@
-# Freeze Capsule — review 5 handoff
-
-## Review 5 outcome
-
-Independent adversarial review 5 is **FAIL** with two documented findings in
-`.factory/review-5.md`. Product code was not modified. This review and its
-handoff are the only changes in the review commit.
-
-### Verification performed
-
-- Fresh live browser contexts at 390×844 and 1440×900.
-- One-click populated demo, Reset, demo exit, storage isolation, request log,
-  CLI temporary-directory demo, routes, metadata, focus restoration, headers,
-  404, and every landing/download link.
-- Live axe checks on Home, Demo, Privacy, Terms, and 404: zero violations.
-- Fresh clone `/tmp/freeze-capsule-review-5-NmDyPt/repo`: `npm ci`, all 26
-  exact claims commands individually, and `npm test` all passed.
-
-### Remaining work
-
-1. Add a separately declared and tested `linux-only-capture` claim for the
-   README statement that real system data is collected only on Linux, or remove
-   that statement.
-2. Define the background watcher on first use on the landing page.
-
-After those changes, rerun the clean-clone claim loop and the live 390 px
-first-read/demo check.
-
-## Archive: polish round 4 handoff
+# Freeze Capsule — polish round 5 handoff
 
 ## Outcome
 
-All findings from reviews 1–4 are resolved. The implementation repair is
-commit `8c71ecc`; final site guidance and evidence are in `b4f0a20`. The
-static product is deployed at <https://freeze-capsule.sociobot.in> with its
-original CLI/installers artifact class and blueprint visual identity intact.
+All findings in `.factory/review-1.md` through `.factory/review-5.md` and
+`.factory/polish-1.md` through `.factory/polish-4.md` are closed. The repair
+is implementation commit `9d99a359f0103163f682a840500bda681246da68`
+(`fix: prove Linux-only capture boundary`), pushed to `main` and deployed as
+the static site at <https://freeze-capsule.sociobot.in>.
 
-The phone demo now shows journal, graphics, process, and display-session
-evidence immediately after one landing click. Clipboard and package lookup
-failures have recovery text. Every route has the required metadata, focus,
-legal shell, and real 404 behavior. All round-4 copy findings were rewritten.
+The final two fixes are substantive:
+
+- `linux-only-capture` is an exact public claim with its own tagged test. The
+  collector now selects its platform branch through an injected Linux-source
+  closure. The test exercises macOS and Windows branches, asserts one
+  unavailable platform result, asserts no Linux source sections, and would
+  panic if Linux collection were requested.
+- The landing page now defines the background process on first use:
+  “The background watcher records a ten-minute window every 30 seconds.”
+
+The product remains a Rust CLI with installer artifacts and its original
+blueprint drafting-sheet identity. The catalog sentence is now verb-first and
+55 characters: “Capture Linux freeze clues before a reboot erases them.”
 
 ## Exact verification evidence
 
-### Clean clone and claims
+### Clean clone
 
-Final fresh clone: `/tmp/freeze-capsule-final-L9O6e3/repo` from pushed commit
-`b4f0a20`.
+Fresh clone: `/tmp/freeze-capsule-round5-clean-tkeufz/repo`, created with
+`git clone --no-local --branch main /work/repo` at the implementation commit.
+Full log: `/tmp/freeze-capsule-round5-clean-2.log`.
 
-- `npm ci`: pass.
-- Every one of the 26 exact `.factory/claims.json` commands: pass individually.
-- `npm test`: pass — 10 Rust unit tests, watchdog integration, 35 Playwright
-  browser/integration/claim tests.
+- `npm ci`: pass; zero moderate-or-higher audit vulnerabilities.
+- All **27** exact commands in `.factory/claims.json`: pass individually.
+  This includes the new `npm run test:site -- --grep @claim:linux-only-capture`.
+- `npm test -- --workers=1`: pass — 11 Rust unit tests, the real suspended
+  watcher integration, and 36 Playwright/browser tests.
 - `cargo clippy --all-targets -- -D warnings`: pass.
 - `cargo build --locked --release`: pass.
 - `npm run build`: pass; output is `dist/site`.
-- `npm audit --audit-level=moderate`: pass; zero vulnerabilities.
-- Production bundle: 14.82 kB JavaScript / 5.54 kB gzip and 12.17 kB CSS /
-  3.50 kB gzip.
+- Production bundle: JavaScript 14.83 kB (5.55 kB gzip); CSS 12.17 kB
+  (3.50 kB gzip).
 
-The installer claim starts a local fixture server. It executes both the POSIX
-and PowerShell installers with a valid archive/checksum and a deliberately
-changed checksum. Both valid archives install; both changed checksums fail
-before a binary is copied. PowerShell 7.6.5 is downloaded only as a test runner
-when `pwsh` is unavailable, and its pinned archive checksum is verified first.
+The claim tests cover generated CLI/browser fixture parity, one-click report
+visibility, demo isolation, encrypted/redacted output, retention, watchdog
+promotion, actual POSIX and PowerShell checksum acceptance/rejection, JSON,
+encryption/key modes, normal local state, no tracking, explicit release lookup,
+redaction limits, build output, workflow declaration, live Linux sources, and
+the non-Linux collection boundary. The complete per-finding map is
+`.factory/polish-5.md`.
 
-### Browser, accessibility, privacy, and performance
+### Local mobile checks
 
-- `/opt/fleet/lib/verify-url.sh` against the live home page: HTTP 200, no page
-  or console errors, `lang=en`, one h1, one main, no missing alt text, and no
-  unnamed button. Evidence: `.factory/evidence/verify-live-polish-4.json`.
-- Axe 4.13 CLI on live Home, Demo, Privacy, Terms, and `/missing-sheet`: zero
-  violations on every route.
-- Mobile Lighthouse on the final live home page: performance 100,
-  accessibility 100, best practices 100, SEO 100, LCP 1.1 s, CLS 0, TBT 0 ms, and 5,588
-  transferred JavaScript bytes.
-- Privacy request log across live Home, Demo, Privacy, Terms, and 404: no
-  third-party request. The separate claim test proves the GitHub API request
-  occurs only after **Check published packages**. No cookies or analytics are
-  present.
-- The command-line offline/privacy path runs with `connect()` blocked and uses
-  only a temporary demo directory. The website makes no offline claim.
+Fresh 390×844 screenshots were visually inspected:
 
-### Cold live recheck
+- `.factory/evidence/home-390-polish-5.png`
+- `.factory/evidence/demo-390-polish-5.png`
+- `.factory/evidence/404-390-polish-5.png`
 
-- At 390×844, the home action outcome and all three facts end by y=583.
-- One click opens `/demo?demo=1`; the four report excerpt rows occupy
-  y=469–551. Screenshot:
-  `.factory/evidence/live-demo-390-polish-4.png`.
-- Reset removes a seeded `demo:changed` value, restores `demo:loaded`, and
-  preserves both seeded `real:marker` values. Install exit removes all `demo:`
-  keys and preserves both real markers.
-- Browser Back focuses “Save freeze clues before you reboot”; Forward focuses
-  “Inspect a sample freeze report.”
-- Home, Demo, Privacy, and Terms each return 200 with route-specific title,
-  description, canonical, OG URL, one h1, one main, and the legal footer.
-- `/missing-sheet` returns HTTP 404 with “Page not found”; `/404.html` returns
-  200 as the deliberate standalone error document.
-- Clipboard denial announces “Could not copy. Select the command and copy it
-  manually.” and produces no page error.
-- An aborted GitHub API request announces “Package check failed. Open the
-  GitHub release page to see current files.” and produces no page error.
-- Every discovered static/legal link and all four resolved package links
-  returned 200 after redirects.
+The Home screen shows its headline, audience, primary action, one-click result,
+and all three facts before the fold. The demo’s populated evidence excerpt is
+visible before replay controls. The 404 uses the complete navigation/footer
+shell and a plain route-specific heading.
 
-Screenshots:
+### Deployment and cold production recheck
 
-- `.factory/evidence/home-390-polish-4.png`
-- `.factory/evidence/demo-390-polish-4.png`
-- `.factory/evidence/live-demo-390-polish-4.png`
-- `.factory/evidence/404-390-polish-4.png`
+Deployment used `/opt/fleet/lib/deploy-static.sh freeze-capsule dist/site`.
+Azure Static Web Apps upload deployment ID:
+`9b08cc50-9df5-4be7-bc4f-48453618b08a`. The existing custom domain reached
+HTTPS 200 after the upload.
 
-## Release and installers
+- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/ .factory/evidence/live-polish-5`:
+  pass — HTTP 200, 920 ms cold load, no page or console errors, one title,
+  `lang=en`, one `h1`, one `main`, no missing image alt text, and no unnamed
+  buttons. Evidence: `.factory/evidence/live-polish-5/verify.json`.
+- Fresh live Playwright + Axe audit: Home, Demo, Privacy, Terms, the real 404,
+  and standalone `/404.html` each have one `h1`, one `main`, route-specific
+  title/description/canonical/OG URL, skip link, legal footer, and zero
+  serious/critical axe violations. The expected browser failed-resource message
+  for the deliberately HTTP-404 document was excluded only for that document;
+  no application console error occurred.
+- `/missing-sheet`: HTTP 404. `/404.html`: HTTP 200 as the designed standalone
+  error document. Security response headers include CSP with response-header
+  `frame-ancestors`, `X-Content-Type-Options`, `Referrer-Policy`, and
+  `Permissions-Policy`. Hashed assets are one-year immutable.
+- Cold demo flow: one Home click opens `/demo?demo=1` with AMD/Cinnamon/Chrome
+  evidence. Its Journal and Graphics rows span y=469–507; Processes and Display
+  session span y=513–551, entirely inside a 390×844 viewport. Reset leaves only
+  `demo:loaded`; Install exit clears every `demo:` key while preserving seeded
+  real markers. Demo requests are same-origin only.
+- Browser Back and Forward restore heading focus. The explicit package-check
+  action produces exactly one request to `api.github.com`; none occurs before
+  activation. The live response was “v0.1.1 packages are ready. Linux was
+  detected.”
+- All static, legal, installer, release-page, and resolved `.deb`, `.rpm`,
+  macOS `.pkg`, and Windows `.zip` links returned HTTP 200 after redirects.
 
-- GitHub release `v0.1.1` exposes 13 assets: Linux archive, `.deb`, `.rpm`, two
-  macOS archives, two macOS `.pkg` files, Windows zip, checksums, `latest.json`,
-  Homebrew formula, Scoop manifest, and winget manifest archive.
-- The deployed POSIX installer downloaded, checksum-verified, installed, and
-  ran the real command-line demo in a fresh temporary directory.
-- The deployed PowerShell installer downloaded, checksum-verified, and
-  installed the Windows executable in a fresh temporary directory.
-- Homebrew tap <https://github.com/B-Divyesh/homebrew-freeze-capsule> now
-  publishes `Formula/freeze-capsule.rb`; all three formula hashes match the
-  release `SHA256SUMS`.
-- The checked release workflow declares Linux, macOS, and Windows packaging
-  jobs and contains no package-signing command. The site gives conditional
-  macOS and Windows warning guidance.
+Live mobile screenshots were visually inspected:
+
+- `.factory/evidence/live-home-390-polish-5.png`
+- `.factory/evidence/live-demo-390-polish-5.png`
+- `.factory/evidence/live-404-390-polish-5.png`
 
 ## Run and verify
 
 ```sh
 npm ci
-npm test
+npm test -- --workers=1
 cargo clippy --all-targets -- -D warnings
 cargo build --locked --release
 npm run build
 ```
 
-Run any single claim using the exact `test` field in `.factory/claims.json`.
-The isolated browser demo is `/demo?demo=1`; the isolated CLI demo is
+Run any single public claim with the exact `test` command in
+`.factory/claims.json`. The isolated browser entry point is
+`/demo?demo=1`; the isolated command-line entry point is
 `freeze-capsule demo`.
 
 ## Known gaps and next steps
 
-No acceptance finding or known product defect remains. Future signed macOS or
-Windows releases would require the owner's signing certificates; signing is
-not part of the current unsigned release contract. Set `HOMEBREW_TAP_TOKEN` in
-the release repository only if future releases should update the tap
-automatically; the current formula is already published.
+No acceptance finding or known product defect remains. macOS and Windows
+release artifacts remain intentionally unsigned, as disclosed; adding signing
+in the future requires owner-held certificates and is not part of this work
+order.
