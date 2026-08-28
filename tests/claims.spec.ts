@@ -184,6 +184,7 @@ test('@claim:sample-fixture browser fixture is generated from the CLI demo repor
 test('known static routes and the real 404 configuration are explicit', () => {
   const config = JSON.parse(readFileSync('site/public/staticwebapp.config.json', 'utf8')) as { routes: { route: string; rewrite?: string; statusCode?: number }[]; responseOverrides: { '404': { rewrite: string } } };
   expect(config.routes.filter(route => ['/demo', '/privacy', '/terms'].includes(route.route)).every(route => route.rewrite === '/index.html')).toBe(true);
+  expect(config.routes.filter(route => ['/404.html', '/404.css', '/404.js', '/favicon.svg', '/apple-touch-icon.png', '/robots.txt', '/sitemap.xml', '/install.sh', '/install.ps1'].includes(route.route))).toHaveLength(9);
   expect(config.routes.find(route => route.route === '/*')).toMatchObject({ statusCode: 404 });
   expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
   const missing = readFileSync('site/public/404.html', 'utf8');

@@ -19,6 +19,16 @@
         "Cache-Control": "public, max-age=31536000, immutable"
       }
     },
+    { "route": "/404.html" },
+    { "route": "/404.css" },
+    { "route": "/404.js" },
+    { "route": "/index.html" },
+    { "route": "/favicon.svg" },
+    { "route": "/apple-touch-icon.png" },
+    { "route": "/robots.txt" },
+    { "route": "/sitemap.xml" },
+    { "route": "/install.sh" },
+    { "route": "/install.ps1" },
     { "route": "/*", "statusCode": 404 }
   ],
   "mimeTypes": { ".sh": "text/plain", ".ps1": "text/plain" }
