@@ -1,0 +1,15 @@
+{
+  "slug": "freeze-capsule",
+  "title": "Freeze Capsule",
+  "summary": "Save Linux freeze clues before a reboot erases them.",
+  "artifact_class": "cli-installers",
+  "user": "Desktop Linux users who need evidence after a freeze, before rebooting loses graphics, kernel, app, and session clues.",
+  "smallest_useful_product": "A least-privilege watchdog that keeps an encrypted, bounded snapshot current, promotes it after a watchdog gap or hotkey, and renders a redacted report.",
+  "monetization": "free",
+  "constraints": [
+    "Bound retention and redact reports.",
+    "Disclose that a hard lock can stop capture.",
+    "Respect distro log permissions.",
+    "Do not modify the kernel or file bug reports."
+  ]
+}
