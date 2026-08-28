@@ -1,0 +1,20 @@
+name: freeze-capsule
+arch: amd64
+platform: linux
+version: ${VERSION}
+section: utils
+priority: optional
+maintainer: Param Factory <hello@sociobot.in>
+description: Preserve bounded Linux freeze evidence before reboot
+vendor: Param Factory
+homepage: https://freeze-capsule.sociobot.in
+license: MIT
+contents:
+  - src: ./freeze-capsule
+    dst: /usr/bin/freeze-capsule
+    file_info:
+      mode: 0755
+  - src: ./packaging/freeze-capsule.service
+    dst: /usr/lib/systemd/user/freeze-capsule.service
+  - src: ./LICENSE
+    dst: /usr/share/doc/freeze-capsule/LICENSE

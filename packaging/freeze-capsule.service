@@ -1,0 +1,16 @@
+[Unit]
+Description=Freeze Capsule rolling evidence watcher
+Documentation=https://freeze-capsule.sociobot.in
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/freeze-capsule watch --interval 30 --timeout 90
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/state/freeze-capsule
+
+[Install]
+WantedBy=default.target

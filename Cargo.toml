@@ -1,0 +1,30 @@
+[package]
+name = "freeze-capsule"
+version = "0.1.0"
+edition = "2024"
+description = "Preserve bounded Linux freeze evidence before reboot"
+license = "MIT"
+repository = "https://github.com/B-Divyesh/sf-freeze-capsule"
+
+[[bin]]
+name = "freeze-capsule"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0"
+chacha20poly1305 = "0.10"
+chrono = { version = "0.4", default-features = false, features = ["clock", "serde"] }
+clap = { version = "4.5", features = ["derive", "env"] }
+rand = "0.9"
+regex = "1.11"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dev-dependencies]
+tempfile = "3.20"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
