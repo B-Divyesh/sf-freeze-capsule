@@ -52,5 +52,4 @@ The signature motion is a single **scan line** across the capsule cutaway when i
 - Wordmark and favicon: hand-authored geometric SVG using an `FC` capsule outline. Original to this repository.
 - Social card: composed locally from the hero and product typography at 1200×630.
 
-The image prompt and output details are recorded beside the final assets in this document after generation.
-
+The source is `.factory/assets/freeze-capsule-hero-source.png`. The exact prompt, `factory-image` deployment, 1536×1024 size, and high-quality setting are preserved in `.factory/assets/freeze-capsule-hero-source.json`. The shipped 960×640 WebP is 49 KB. The 1200×630 social card is a local crop of the same original art. The factory generation response reported 5,488 image output tokens.

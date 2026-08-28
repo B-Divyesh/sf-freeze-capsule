@@ -1,0 +1,37 @@
+[
+  {
+    "id": "sample-report",
+    "claim": "The bundled sample renders journal, graphics, process, and display-session evidence.",
+    "where": "landing preview, demo, README",
+    "test": "npm run test:site -- --grep @claim:sample-report",
+    "sandbox": "fresh browser context at /demo; run and reset the sample"
+  },
+  {
+    "id": "demo-private",
+    "claim": "The browser demo saves only demo state and makes no third-party request.",
+    "where": "demo banner, privacy page",
+    "test": "npm run test:site -- --grep @claim:demo-private",
+    "sandbox": "fresh browser context; record every request during the demo flow"
+  },
+  {
+    "id": "encrypted-redacted",
+    "claim": "The CLI demo writes an encrypted capsule and a redacted report with all required evidence sections.",
+    "where": "landing facts, workflow, README",
+    "test": "npm run test:site -- --grep @claim:encrypted-redacted",
+    "sandbox": "bundled sample through freeze-capsule demo in a new temporary directory"
+  },
+  {
+    "id": "bounded-retention",
+    "claim": "Freeze Capsule keeps no more than eight retained capsules.",
+    "where": "landing facts, README",
+    "test": "npm run test:site -- --grep @claim:bounded-retention",
+    "sandbox": "temporary capsule directory seeded with twelve encrypted sample capsules"
+  },
+  {
+    "id": "free-license",
+    "claim": "Freeze Capsule is free and open source under the MIT License.",
+    "where": "landing facts, README, terms",
+    "test": "npm run test:site -- --grep @claim:free-license",
+    "sandbox": "clean repository; inspect the shipped license"
+  }
+]
