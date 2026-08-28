@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build:site": "tsc --noEmit && vite build",
+    "generate:demo": "node tools/generate-demo-fixture.mjs",
+    "build:site": "npm run generate:demo && tsc --noEmit && vite build",
     "build": "npm run build:site",
     "preview": "vite preview --host 127.0.0.1",
     "test:rust": "cargo test && sh tests/watchdog.sh",

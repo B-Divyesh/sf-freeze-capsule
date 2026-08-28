@@ -1,10 +1,17 @@
 [
   {
     "id": "sample-report",
-    "claim": "The bundled sample renders journal, graphics, process, and display-session evidence.",
-    "where": "landing preview, demo, README",
+    "claim": "One click opens a bundled report with journal, graphics, process, and display-session evidence.",
+    "where": "landing action, demo",
     "test": "npm run test:site -- --grep @claim:sample-report",
-    "sandbox": "fresh browser context at /demo; run and reset the sample"
+    "sandbox": "fresh browser context at /; activate the sample action"
+  },
+  {
+    "id": "sample-fixture",
+    "claim": "The browser sample report matches the report created by the bundled CLI demo.",
+    "where": "landing preview, demo",
+    "test": "npm run test:site -- --grep @claim:sample-fixture",
+    "sandbox": "fresh repository; compare the shipped browser fixture with freeze-capsule --json demo output"
   },
   {
     "id": "demo-private",
@@ -57,7 +64,7 @@
   },
   {
     "id": "cli-local-only",
-    "claim": "The CLI has no telemetry or network client; its demo never writes the normal capsule directory.",
+    "claim": "The CLI demo makes no network connection and never writes the normal capsule directory.",
     "where": "landing facts, privacy page, README",
     "test": "npm run test:site -- --grep @claim:cli-local-only",
     "sandbox": "CLI demo with network connect() blocked and an isolated normal-capsule directory"

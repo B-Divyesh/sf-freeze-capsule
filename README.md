@@ -2,7 +2,7 @@
 
 Save Linux freeze clues before a reboot erases them.
 
-Freeze Capsule is for desktop Linux users debugging graphics, kernel, application, or display-session lockups. Its per-user watcher keeps one encrypted snapshot current. A long scheduling gap promotes the prior snapshot into bounded retention. A desktop hotkey can capture on demand.
+Freeze Capsule is for desktop Linux users debugging graphics, kernel, application, or display-session freezes. Its watcher keeps one encrypted snapshot current. If the watcher pauses for 90 seconds, it keeps the last complete snapshot.
 
 Live site: <https://freeze-capsule.sociobot.in>
 
@@ -14,7 +14,7 @@ freeze-capsule demo
 
 The command loads [the bundled sample](examples/sample-freeze.json). It writes an encrypted capsule and redacted Markdown report under a new temporary directory. It never reads or writes your normal capsule directory.
 
-The same sample is available at <https://freeze-capsule.sociobot.in/demo>.
+The same isolated sample is available at <https://freeze-capsule.sociobot.in/demo?demo=1>. The browser report is generated from the same bundled CLI demo fixture.
 
 ## Install
 
@@ -49,7 +49,7 @@ Live capture is Linux-specific. macOS and Windows builds provide the portable de
 
 ## Use
 
-Start the least-privilege user watcher:
+Start the watcher as your Linux user:
 
 ```sh
 freeze-capsule install-service
@@ -79,24 +79,24 @@ freeze-capsule render latest --format json
 
 ## What it records
 
-Each Linux snapshot requests a ten-minute journal window, kernel messages, PCI graphics drivers, DRM connector states, the process table, and selected display-session variables. Every section is capped at 96 KiB. Missing commands or permissions appear in the report instead of aborting capture.
+Each Linux snapshot requests journal, kernel, graphics, connector, and process details. It also records selected display-session variables. A report marks unavailable sources instead of abandoning capture.
 
 Capsules use XChaCha20-Poly1305 with a local 32-byte key. The key is created with user-only permissions. Rendering replaces common home paths, email addresses, IPv4 addresses, and secret assignments. Review every report before sharing it.
 
-At most eight retained capsules remain. The rolling prebuffer is separate. A hard lock can stop every user process, so Freeze Capsule cannot guarantee a final write during a lock. It preserves the last completed snapshot instead.
+At most eight retained capsules remain. The rolling prebuffer is not counted as a retained capsule. A hard freeze can stop every user process, so Freeze Capsule cannot guarantee a final write. It preserves the last completed snapshot instead.
 
 ## Develop
 
-Requirements: stable Rust, Node.js 20 or newer, and npm.
+You need Rust, Node.js, and npm to build from source.
 
 ```sh
-npm install
+npm ci
 npm test
 npm run build:site
 cargo build --release
 ```
 
-The static site lands in `dist/site`. The CLI binary lands in `target/release`. Playwright uses its bundled Chromium. The release workflow builds platform artifacts only on GitHub Actions.
+The build commands print their output paths. If Playwright needs a browser, run `npx playwright install chromium`.
 
 ## Release
 
@@ -107,8 +107,8 @@ git tag v0.1.1
 git push origin main v0.1.1
 ```
 
-The workflow builds archives, `.deb`, `.rpm`, unsigned macOS `.pkg` files, checksums, `latest.json`, Homebrew, Scoop, and winget manifests. macOS and Windows artifacts are unsigned.
+The GitHub Actions workflow builds archives, Linux packages, macOS packages, Windows archives, checksums, and release manifests. macOS and Windows artifacts are unsigned.
 
 ## Privacy and license
 
-The CLI has no telemetry and no network client. See [privacy](https://freeze-capsule.sociobot.in/privacy) and [terms](https://freeze-capsule.sociobot.in/terms). Freeze Capsule is released under the [MIT License](LICENSE).
+The bundled CLI demo makes no network connection and uses a temporary directory. See [privacy](https://freeze-capsule.sociobot.in/privacy) and [terms](https://freeze-capsule.sociobot.in/terms). Freeze Capsule is released under the [MIT License](LICENSE).

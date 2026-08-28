@@ -4,17 +4,14 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
-test('@claim:sample-report demo renders the bundled freeze evidence', async ({ page }) => {
-  await page.goto('/demo');
-  await page.getByRole('button', { name: 'Run sample capture' }).click();
+test('@claim:sample-report one click opens the bundled freeze report', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Try it with sample data' }).click();
   const report = page.getByRole('heading', { name: 'Freeze Capsule report' });
   await expect(report).toBeVisible();
-  await expect(page.getByText('amdgpu ring gfx timeout')).toBeVisible();
-  await expect(page.getByText('6 captured · 1 limited')).toBeVisible();
-  await page.reload();
-  await expect(report).toBeVisible();
-  await page.getByRole('button', { name: 'Reset demo' }).click();
-  await expect(report).toBeHidden();
+  await expect(page.locator('[data-report-content]')).toContainText('amdgpu');
+  await expect(page.locator('[data-report-content]')).toContainText('Cinnamon');
+  await expect(page.locator('[data-report-content]')).toContainText('chrome');
 });
 
 test('@claim:demo-private demo makes no third-party request', async ({ page }) => {
@@ -22,12 +19,13 @@ test('@claim:demo-private demo makes no third-party request', async ({ page }) =
   page.on('request', request => {
     if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') foreign.push(request.url());
   });
-  await page.goto('/demo');
-  await page.getByRole('button', { name: 'Run sample capture' }).click();
+  await page.goto('/demo?demo=1');
   await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
   expect(foreign).toEqual([]);
-  expect(await page.evaluate(() => Object.keys(sessionStorage))).toEqual(['demo:ran']);
+  expect(await page.evaluate(() => Object.keys(sessionStorage))).toEqual(['demo:loaded']);
   expect(await page.evaluate(() => Object.keys(localStorage))).toEqual([]);
+  await page.getByRole('link', { name: 'Install Freeze Capsule' }).click();
+  expect(await page.evaluate(() => Object.keys(sessionStorage).filter(key => key.startsWith('demo:')))).toEqual([]);
 });
 
 test('@claim:demo-capture-render the CLI demo executes its encrypted capture and render path', () => {
@@ -71,7 +69,9 @@ test('@claim:bounded-retention retention keeps no more than eight capsules', () 
 });
 
 test('@claim:free-license repository ships the MIT license', () => {
-  expect(readFileSync('LICENSE', 'utf8')).toContain('MIT License');
+  const license = readFileSync('LICENSE', 'utf8');
+  expect(license).toContain('MIT License');
+  expect(license).toContain('THE SOFTWARE IS PROVIDED "AS IS"');
 });
 
 test('@claim:watchdog-gap a scheduling pause promotes the last completed snapshot', () => {
@@ -123,7 +123,11 @@ test('keyboard route changes focus the page heading', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: 'Demo', exact: true }).focus();
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/\/demo$/);
+  await expect(page).toHaveURL(/\/demo\?demo=1$/);
+  await expect(page.locator('h1')).toBeFocused();
+  await page.goBack();
+  await expect(page.locator('h1')).toBeFocused();
+  await page.goForward();
   await expect(page.locator('h1')).toBeFocused();
 });
 
@@ -132,18 +136,37 @@ test('mobile first screen and demo stay within 390 pixels', async ({ page }) => 
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Try it with sample data' })).toBeVisible();
+  await expect(page.getByText('See a redacted report in one click.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Free and open source', { exact: true })).toBeVisible();
+  await expect(page.getByText('Demo data stays separate', { exact: true })).toBeVisible();
+  await expect(page.getByText('Keeps at most eight capsules', { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page.goto('/demo');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
+test('@claim:sample-fixture browser fixture is generated from the CLI demo report', () => {
+  const expected = JSON.parse(execFileSync('cargo', ['run', '--quiet', '--', '--json', 'demo'], { encoding: 'utf8' })) as { capsule: string; report: string };
+  const fixture = JSON.parse(readFileSync('site/public/assets/demo-report.json', 'utf8')) as { report: string };
+  expect(fixture.report).toBe(readFileSync(expected.report, 'utf8'));
+  rmSync(expected.capsule.replace(/\/capsule-[^/]+$/, ''), { recursive: true, force: true });
+});
+
+test('known static routes and the real 404 configuration are explicit', () => {
+  const config = JSON.parse(readFileSync('site/public/staticwebapp.config.json', 'utf8')) as { routes: { route: string; rewrite?: string }[]; responseOverrides: { '404': { rewrite: string } } };
+  expect(config.routes.filter(route => ['/demo', '/privacy', '/terms'].includes(route.route)).every(route => route.rewrite === '/index.html')).toBe(true);
+  expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
+  const missing = readFileSync('site/public/404.html', 'utf8');
+  for (const text of ['noindex,follow', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1']) expect(missing).toContain(text);
+});
+
 test('demo banner controls meet the 44 pixel mobile touch-target baseline', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/demo');
-  for (const name of ['Reset demo', 'Start for real']) {
+  for (const name of ['Reset demo', 'Install Freeze Capsule']) {
     const box = await page.getByRole(name === 'Reset demo' ? 'button' : 'link', { name }).boundingBox();
-    expect(box?.height, `${name} height`).toBeGreaterThanOrEqual(44);
-    expect(box?.width, `${name} width`).toBeGreaterThanOrEqual(44);
+    expect(box?.height, name + ' height').toBeGreaterThanOrEqual(44);
+    expect(box?.width, name + ' width').toBeGreaterThanOrEqual(44);
   }
 });
 
