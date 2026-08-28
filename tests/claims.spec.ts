@@ -17,6 +17,7 @@ test('@claim:sample-report one click opens the bundled freeze report', async ({ 
 
 test('@claim:demo-private demo makes no third-party request', async ({ page }) => {
   const foreign: string[] = [];
+  const demoKeys = () => page.evaluate(() => Object.keys(sessionStorage).filter(key => key.startsWith('demo:')));
   page.on('request', request => {
     if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') foreign.push(request.url());
   });
@@ -26,7 +27,34 @@ test('@claim:demo-private demo makes no third-party request', async ({ page }) =
   expect(await page.evaluate(() => Object.keys(sessionStorage))).toEqual(['demo:loaded']);
   expect(await page.evaluate(() => Object.keys(localStorage))).toEqual([]);
   await page.getByRole('link', { name: 'Install Freeze Capsule' }).click();
-  expect(await page.evaluate(() => Object.keys(sessionStorage).filter(key => key.startsWith('demo:')))).toEqual([]);
+  expect(await demoKeys()).toEqual([]);
+
+  await page.goto('/demo?demo=1');
+  await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
+  expect(await demoKeys()).toEqual(['demo:loaded']);
+  await page.getByRole('link', { name: 'Privacy' }).first().click();
+  await expect(page).toHaveURL('/privacy');
+  expect(await demoKeys()).toEqual([]);
+
+  await page.goto('/demo?demo=1');
+  await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
+  await page.getByRole('link', { name: 'Freeze Capsule home' }).click();
+  await expect(page).toHaveURL('/');
+  expect(await demoKeys()).toEqual([]);
+
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Try it with sample data' }).click();
+  await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
+  expect(await demoKeys()).toEqual(['demo:loaded']);
+  await page.goBack();
+  await expect(page).toHaveURL('/');
+  expect(await demoKeys()).toEqual([]);
+
+  await page.goto('/demo?demo=1');
+  await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
+  await page.goto('/missing-sheet');
+  await expect(page.getByRole('heading', { name: 'This sheet is missing' })).toBeVisible();
+  expect(await demoKeys()).toEqual([]);
 });
 
 test('@claim:demo-capture-render the CLI demo executes its encrypted capture and render path', () => {

@@ -48,6 +48,10 @@ function routeFor(pathname: string): Route { return ['/', '/demo', '/privacy', '
 
 function render(pathname = location.pathname, push = false, focus = false) {
   const route = routeFor(pathname);
+  // Demo storage is disposable. Clearing it at the route boundary, rather than
+  // only on one banner control, also covers the wordmark, header links,
+  // browser history, unknown routes, and a stale tab reopened outside /demo.
+  if (route !== '/demo') clearDemo();
   if (push) history.pushState({}, '', route === '/404' ? pathname : route);
   const pages: Record<Route, () => string> = { '/': home, '/demo': demo, '/privacy': privacy, '/terms': terms, '/404': notFound };
   const titles: Record<Route, string> = { '/': 'Freeze Capsule — save Linux freeze clues', '/demo': 'Demo — Freeze Capsule', '/privacy': 'Privacy — Freeze Capsule', '/terms': 'Terms — Freeze Capsule', '/404': 'Page not found — Freeze Capsule' };
