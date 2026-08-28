@@ -278,9 +278,9 @@ fn collect(reason: &str) -> Capsule {
         name: "platform".into(),
         source: env::consts::OS.into(),
         status: "unavailable".into(),
-        content: "Live capture is supported on Linux. Use `freeze-capsule demo` here.".into(),
+        content: "The watcher collects real system data only on Linux. Use `freeze-capsule demo` here.".into(),
     });
-    Capsule { schema: 1, captured_at: Utc::now(), reason: reason.chars().take(80).collect(), window_seconds: SNAPSHOT_WINDOW_SECONDS, sections, notices: vec!["Commands respect the current user's log permissions.".into(), "A hard lock can prevent any process from recording new data; the watcher keeps the last completed snapshot.".into()] }
+    Capsule { schema: 1, captured_at: Utc::now(), reason: reason.chars().take(80).collect(), window_seconds: SNAPSHOT_WINDOW_SECONDS, sections, notices: vec!["Commands respect the current user's log permissions.".into(), "A hard freeze can prevent any process from recording new data; the watcher keeps the last completed snapshot.".into()] }
 }
 
 fn command_section(name: &str, source: &str, program: &str, args: &[&str]) -> Section {
@@ -625,7 +625,7 @@ fn doctor(root: &Path, json: bool) -> Result<()> {
             }
         );
         if platform != "linux" {
-            println!("Live capture: Linux only. The bundled demo is available.");
+            println!("System-data watcher: Linux only. The bundled demo is available.");
         }
     }
     Ok(())

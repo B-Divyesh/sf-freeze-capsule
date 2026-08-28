@@ -38,7 +38,7 @@ Body text on blueprint is at least 8.5:1. Dark text on safety yellow is above 9:
 ## Interaction grammar
 
 - Links are cyan and underlined. Buttons are filled safety labels.
-- The live terminal advances through a real bundled demo transcript. Its controls keep standard button semantics.
+- The demo leads with a compact report excerpt derived from the bundled command-line report. The full report and replay control follow it.
 - Download detection changes one labelled plate; the manual choices remain visible.
 - Route changes focus the page heading and announce it.
 

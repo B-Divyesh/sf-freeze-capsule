@@ -1,11 +1,15 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { execFileSync, spawn } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { createServer } from 'node:http';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { parse } from 'yaml';
 
 test('@claim:sample-report one click opens the bundled freeze report', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   await page.getByRole('link', { name: 'Try it with sample data' }).click();
   const report = page.getByRole('heading', { name: 'Freeze Capsule report' });
@@ -13,6 +17,12 @@ test('@claim:sample-report one click opens the bundled freeze report', async ({ 
   await expect(page.locator('[data-report-content]')).toContainText('amdgpu');
   await expect(page.locator('[data-report-content]')).toContainText('Cinnamon');
   await expect(page.locator('[data-report-content]')).toContainText('chrome');
+  for (const kind of ['journal', 'graphics', 'processes', 'display-session']) {
+    const box = await page.locator(`[data-evidence="${kind}"]`).boundingBox();
+    expect(box, `${kind} excerpt exists`).not.toBeNull();
+    expect(box!.y, `${kind} excerpt starts in the first screen`).toBeLessThan(844);
+    expect(box!.y + box!.height, `${kind} excerpt is fully in the first screen`).toBeLessThanOrEqual(844);
+  }
 });
 
 test('@claim:demo-private demo makes no third-party request', async ({ page }) => {
@@ -21,13 +31,24 @@ test('@claim:demo-private demo makes no third-party request', async ({ page }) =
   page.on('request', request => {
     if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') foreign.push(request.url());
   });
-  await page.goto('/demo?demo=1');
+  await page.goto('/');
+  await page.evaluate(() => { localStorage.setItem('real:marker', 'keep'); sessionStorage.setItem('real:marker', 'keep'); });
+  await page.getByRole('link', { name: 'Try it with sample data' }).click();
   await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
   expect(foreign).toEqual([]);
-  expect(await page.evaluate(() => Object.keys(sessionStorage))).toEqual(['demo:loaded']);
-  expect(await page.evaluate(() => Object.keys(localStorage))).toEqual([]);
+  expect(await demoKeys()).toEqual(['demo:loaded']);
+  await page.evaluate(() => sessionStorage.setItem('demo:changed', 'discard'));
+  await page.getByRole('button', { name: 'Reset demo' }).click();
+  await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
+  await expect.poll(demoKeys).toEqual(['demo:loaded']);
+  expect(await page.evaluate(() => localStorage.getItem('real:marker'))).toBe('keep');
+  expect(await page.evaluate(() => sessionStorage.getItem('real:marker'))).toBe('keep');
   await page.getByRole('link', { name: 'Install Freeze Capsule' }).click();
   expect(await demoKeys()).toEqual([]);
+  await expect(page.getByRole('heading', { name: 'Install the Linux watcher' })).toBeInViewport();
+  expect(await page.evaluate(() => localStorage.getItem('real:marker'))).toBe('keep');
+  expect(await page.evaluate(() => sessionStorage.getItem('real:marker'))).toBe('keep');
+  await page.evaluate(() => { localStorage.removeItem('real:marker'); sessionStorage.removeItem('real:marker'); });
 
   await page.goto('/demo?demo=1');
   await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
@@ -53,7 +74,7 @@ test('@claim:demo-private demo makes no third-party request', async ({ page }) =
   await page.goto('/demo?demo=1');
   await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
   await page.goto('/404.html');
-  await expect(page.getByRole('heading', { name: 'This sheet is missing' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();
   expect(await demoKeys()).toEqual([]);
 });
 
@@ -207,7 +228,19 @@ test('release lookup failure shows a calm fallback without console errors', asyn
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
   await page.getByRole('button', { name: 'Check published packages' }).click();
-  await expect(page.getByText('Downloads are being published. The release page shows current files.')).toBeVisible();
+  await expect(page.getByText('Package check failed. Open the GitHub release page to see current files.')).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('clipboard denial explains how to copy the install command manually', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: () => Promise.reject(new DOMException('denied', 'NotAllowedError')) } });
+  });
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/#install');
+  await page.getByRole('button', { name: 'Copy command' }).click();
+  await expect(page.getByRole('status')).toHaveText('Could not copy. Select the command and copy it manually.');
   expect(errors).toEqual([]);
 });
 
@@ -236,17 +269,69 @@ test('@claim:hotkey-capture the printed desktop command creates a retained capsu
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
-test('@claim:installer-checksum both installer scripts compare the downloaded SHA-256 before copying a binary', () => {
-  const posix = readFileSync('site/public/install.sh', 'utf8');
-  const powershell = readFileSync('site/public/install.ps1', 'utf8');
-  for (const source of [posix, powershell]) {
-    expect(source).toContain('SHA256SUMS');
-    expect(source).toMatch(/expected/i);
-    expect(source).toMatch(/actual/i);
-    expect(source).toMatch(/Checksum verification failed/i);
+test('@claim:installer-checksum both installers accept valid checksums and reject changed checksums before copying', async () => {
+  test.setTimeout(180_000);
+  const root = mkdtempSync(join(tmpdir(), 'freeze-capsule-installers-'));
+  const unixStage = join(root, 'unix-stage');
+  const windowsStage = join(root, 'windows-stage');
+  mkdirSync(unixStage);
+  mkdirSync(windowsStage);
+  writeFileSync(join(unixStage, 'freeze-capsule'), '#!/bin/sh\necho fixture binary\n');
+  chmodSync(join(unixStage, 'freeze-capsule'), 0o755);
+  writeFileSync(join(windowsStage, 'freeze-capsule.exe'), 'fixture windows binary\n');
+  const unixAsset = 'freeze-capsule-linux-x86_64.tar.gz';
+  const windowsAsset = 'freeze-capsule-windows-x86_64.zip';
+  execFileSync('tar', ['-C', unixStage, '-czf', join(root, unixAsset), 'freeze-capsule']);
+  execFileSync('zip', ['-q', join(root, windowsAsset), 'freeze-capsule.exe'], { cwd: windowsStage });
+  const digest = (name: string) => createHash('sha256').update(readFileSync(join(root, name))).digest('hex');
+  const checksums = `${digest(unixAsset)}  ${unixAsset}\n${digest(windowsAsset)}  ${windowsAsset}\n`;
+  const server = createServer((request, response) => {
+    const path = request.url ?? '';
+    if (path.endsWith('/SHA256SUMS')) {
+      response.end(path.startsWith('/tampered/') ? checksums.replace(/[a-f0-9]{64}/g, '0'.repeat(64)) : checksums);
+      return;
+    }
+    const name = path.split('/').at(-1) ?? '';
+    if (![unixAsset, windowsAsset].includes(name)) { response.writeHead(404).end(); return; }
+    response.end(readFileSync(join(root, name)));
+  });
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('fixture server did not bind');
+  const run = (file: string, args: string[], env: NodeJS.ProcessEnv) => new Promise<{ code: number; output: string }>((resolve, reject) => {
+    const child = spawn(file, args, { cwd: process.cwd(), env: { ...process.env, ...env } });
+    let output = '';
+    child.stdout.on('data', value => { output += value; });
+    child.stderr.on('data', value => { output += value; });
+    child.on('error', reject);
+    child.on('close', code => resolve({ code: code ?? -1, output }));
+  });
+  try {
+    const pwsh = execFileSync('sh', ['tests/ensure-pwsh.sh'], { encoding: 'utf8' }).trim();
+    const base = `http://127.0.0.1:${address.port}`;
+    const posixInstall = join(root, 'posix-valid');
+    const powershellInstall = join(root, 'powershell-valid');
+    const goodPosix = await run('sh', ['site/public/install.sh'], { FREEZE_CAPSULE_RELEASE_BASE: `${base}/valid`, FREEZE_CAPSULE_INSTALL_DIR: posixInstall });
+    expect(goodPosix.code, goodPosix.output).toBe(0);
+    expect(readFileSync(join(posixInstall, 'freeze-capsule'), 'utf8')).toContain('fixture binary');
+    const goodPowerShell = await run(pwsh, ['-NoLogo', '-NoProfile', '-NonInteractive', '-File', 'site/public/install.ps1'], { FREEZE_CAPSULE_RELEASE_BASE: `${base}/valid`, FREEZE_CAPSULE_INSTALL_DIR: powershellInstall });
+    expect(goodPowerShell.code, goodPowerShell.output).toBe(0);
+    expect(readFileSync(join(powershellInstall, 'freeze-capsule.exe'), 'utf8')).toBe('fixture windows binary\n');
+
+    const badPosixInstall = join(root, 'posix-tampered');
+    const badPowerShellInstall = join(root, 'powershell-tampered');
+    const badPosix = await run('sh', ['site/public/install.sh'], { FREEZE_CAPSULE_RELEASE_BASE: `${base}/tampered`, FREEZE_CAPSULE_INSTALL_DIR: badPosixInstall });
+    expect(badPosix.code).not.toBe(0);
+    expect(badPosix.output).toContain('Checksum verification failed.');
+    expect(existsSync(join(badPosixInstall, 'freeze-capsule'))).toBe(false);
+    const badPowerShell = await run(pwsh, ['-NoLogo', '-NoProfile', '-NonInteractive', '-File', 'site/public/install.ps1'], { FREEZE_CAPSULE_RELEASE_BASE: `${base}/tampered`, FREEZE_CAPSULE_INSTALL_DIR: badPowerShellInstall });
+    expect(badPowerShell.code).not.toBe(0);
+    expect(badPowerShell.output).toContain('Checksum verification failed.');
+    expect(existsSync(join(badPowerShellInstall, 'freeze-capsule.exe'))).toBe(false);
+  } finally {
+    await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+    rmSync(root, { recursive: true, force: true });
   }
-  expect(posix).toContain('[ "$actual" = "$expected" ]');
-  expect(powershell).toContain('$actual -ne $expected');
 });
 
 test('@claim:json-output documented list and report commands return structured JSON', () => {
@@ -273,10 +358,28 @@ test('@claim:current-snapshot current rolling evidence does not use a saved-caps
   expect(execFileSync('cargo', ['test', 'current_snapshot_does_not_use_a_retained_capsule_slot'], { encoding: 'utf8' })).toContain('test result: ok');
 });
 
-test('@claim:release-artifacts release workflow names all shipped archives, packages, checksums, and manifests', () => {
-  const workflow = readFileSync('.github/workflows/release.yml', 'utf8');
-  for (const token of ['ubuntu-latest', 'macos-latest', 'windows-latest', 'SHA256SUMS', 'latest.json', '.deb', '.rpm', '.pkg', '.zip', 'softprops/action-gh-release']) expect(workflow).toContain(token);
-  expect(workflow).toContain('unsigned');
+test('@claim:build-output site and release builds write the documented output paths', () => {
+  expect(existsSync('dist/site/index.html')).toBe(true);
+  execFileSync('cargo', ['build', '--locked', '--release'], { encoding: 'utf8' });
+  expect(existsSync('target/release/freeze-capsule')).toBe(true);
+});
+
+test('@claim:release-workflow-declaration release workflow declares three operating-system package jobs without signing', () => {
+  const workflow = parse(readFileSync('.github/workflows/release.yml', 'utf8')) as {
+    on: { push: { tags: string[] }; workflow_dispatch: unknown };
+    jobs: Record<string, { needs?: string; strategy?: { matrix?: { include?: { os: string; target: string; asset: string }[] } }; steps?: { name?: string; run?: string; uses?: string }[] }>;
+  };
+  expect(workflow.on.push.tags).toEqual(['v*']);
+  expect(workflow.on).toHaveProperty('workflow_dispatch');
+  expect(workflow.jobs.build.strategy?.matrix?.include).toEqual(expect.arrayContaining([
+    expect.objectContaining({ os: 'ubuntu-latest', asset: 'linux-x86_64' }),
+    expect.objectContaining({ os: 'macos-latest', asset: 'macos-x86_64' }),
+    expect.objectContaining({ os: 'macos-latest', asset: 'macos-aarch64' }),
+    expect.objectContaining({ os: 'windows-latest', asset: 'windows-x86_64' }),
+  ]));
+  expect(workflow.jobs.release.needs).toBe('build');
+  const executableSteps = Object.values(workflow.jobs).flatMap(job => job.steps ?? []).map(step => `${step.uses ?? ''}\n${step.run ?? ''}`).join('\n');
+  expect(executableSteps).not.toMatch(/\bcodesign\b|\bsigntool\b|\bnotarytool\b|osslsigncode/i);
 });
 
 test('@claim:normal-state-directory normal capture keeps one key and capsules beneath XDG state', () => {

@@ -19,7 +19,7 @@ const shell = (body: string, isDemo = false) => `
 
 const terminal = (interactive = false) => `
   <section class="terminal-sheet" aria-labelledby="terminal-title">
-    <div class="plate-label"><span>DETAIL A</span><span>INCLUDED COMMAND-LINE SAMPLE</span></div>
+    <div class="plate-label"><span>INCLUDED COMMAND-LINE SAMPLE</span></div>
     <div class="terminal-head"><h2 id="terminal-title">See the sample report before installing</h2>${interactive ? '<button class="run-button" type="button" data-run>Replay sample capture</button>' : '<a href="/demo?demo=1" data-link>View the sample report</a>'}</div>
     <div class="terminal" role="region" aria-label="Freeze Capsule demo transcript" tabindex="0"><div class="terminal-dots" aria-hidden="true"><i></i><i></i><i></i></div><pre data-transcript>Loading the bundled command-line sample…</pre></div>
     <p class="terminal-note">This browser report comes from the included command-line demo. <code>freeze-capsule --json demo</code></p>
@@ -27,22 +27,22 @@ const terminal = (interactive = false) => `
 
 const home = () => shell(`
   <section class="hero blueprint-section">
-    <div class="hero-copy"><p class="eyebrow">LINUX FIELD TOOL · DRAWING FC–01</p><h1>Save freeze clues before you reboot</h1><p class="lede">For desktop Linux users who need graphics, kernel, process, and session context after a freeze.</p><div class="hero-actions"><a class="primary" href="/demo?demo=1" data-link>Try it with sample data</a><span>See a redacted report in one click.</span></div><ul class="facts"><li><span aria-hidden="true">01</span> Free and open source</li><li><span aria-hidden="true">02</span> Demo data stays separate</li><li><span aria-hidden="true">03</span> Keeps at most eight capsules</li></ul></div>
-    <figure class="hero-art"><div class="scan" aria-hidden="true"></div><img src="/assets/freeze-capsule-hero.webp" width="768" height="512" alt="Cutaway drawing of a capsule holding four layers of Linux system evidence." fetchpriority="high" /><figcaption>FIG. 1 — journal · graphics · processes · display session</figcaption></figure>
+    <div class="hero-copy"><p class="eyebrow">LINUX FREEZE EVIDENCE TOOL</p><h1>Save freeze clues before you reboot</h1><p class="lede">For desktop Linux users who need graphics, kernel, process, and session context after a freeze.</p><div class="hero-actions"><a class="primary" href="/demo?demo=1" data-link>Try it with sample data</a><span>See a redacted report in one click.</span></div><ul class="facts"><li><span aria-hidden="true">01</span> Free and open source</li><li><span aria-hidden="true">02</span> Demo data stays separate</li><li><span aria-hidden="true">03</span> Keeps at most eight capsules</li></ul></div>
+    <figure class="hero-art"><div class="scan" aria-hidden="true"></div><img src="/assets/freeze-capsule-hero.webp" width="768" height="512" alt="Cutaway drawing of a capsule holding four layers of Linux system evidence." fetchpriority="high" /><figcaption>Evidence sources: journal, graphics, processes, and display session.</figcaption></figure>
   </section>
   ${terminal(false)}
-  <section class="steps blueprint-section" aria-labelledby="how-title"><div class="section-mark">SEQUENCE / 03</div><h2 id="how-title">How Freeze Capsule keeps pre-freeze evidence</h2><ol><li><span>01</span><div><h3>Keep one snapshot current</h3><p>The watcher records a ten-minute window every 30 seconds.</p></div></li><li><span>02</span><div><h3>Keep the snapshot when the watcher pauses</h3><p>A 90-second pause keeps the last completed snapshot.</p></div></li><li><span>03</span><div><h3>Create a redacted report</h3><p>The report removes home paths, email addresses, IP addresses, and common secrets.</p></div></li></ol></section>
-  <section id="install" class="install blueprint-section" aria-labelledby="install-title"><div><div class="section-mark">INSTALLATION PLATE</div><h2 id="install-title">Install the Linux watcher</h2><p>Install Freeze Capsule, then choose when to start the watcher.</p><div class="command"><code>curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh</code><button type="button" data-copy="curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh">Copy command</button></div><p class="platform-note" data-download-state aria-live="polite">Find a package on GitHub, or check the published release.</p><div class="release-actions"><a class="primary" data-primary-download href="${RELEASES}">Find Linux packages on GitHub</a><button class="check-release" type="button" data-check-release>Check published packages</button></div><div class="downloads"><a data-download="deb" href="${RELEASES}">Find Linux .deb on GitHub</a><a data-download="rpm" href="${RELEASES}">Find Linux .rpm on GitHub</a><a data-download="mac" href="${RELEASES}">Find macOS .pkg on GitHub</a><a data-download="win" href="${RELEASES}">Find Windows .zip on GitHub</a></div></div><aside><h3>Start and check the watcher</h3><pre><code>freeze-capsule install-service\nfreeze-capsule doctor\nfreeze-capsule hotkey-command</code></pre><p>On Linux, use these commands to set up, check, or trigger the watcher.</p></aside></section>
-  <section class="limits blueprint-section" aria-labelledby="limits-title"><div class="section-mark">BOUNDARY NOTES</div><h2 id="limits-title">Know the capture limits</h2><div class="limit-grid"><p><strong>A hard freeze can stop capture.</strong><br />The last completed snapshot remains available.</p><p><strong>Log access follows your account.</strong><br />Unavailable sources appear in the report.</p><p><strong>Review before sharing.</strong><br />Redaction does not remove every machine detail.</p></div></section>`);
+  <section class="steps blueprint-section" aria-labelledby="how-title"><div class="section-mark">THREE STEPS</div><h2 id="how-title">How Freeze Capsule keeps pre-freeze evidence</h2><ol><li><span>01</span><div><h3>Keep one snapshot current</h3><p>The watcher records a ten-minute window every 30 seconds.</p></div></li><li><span>02</span><div><h3>Keep the snapshot when the watcher pauses</h3><p>A 90-second pause keeps the last completed snapshot.</p></div></li><li><span>03</span><div><h3>Create a redacted report</h3><p>The report removes home paths, email addresses, IP addresses, and common secrets.</p></div></li></ol></section>
+  <section id="install" class="install blueprint-section" aria-labelledby="install-title"><div><h2 id="install-title">Install the Linux watcher</h2><p>Install Freeze Capsule, then choose when to start the watcher.</p><div class="command"><code id="install-command" tabindex="0">curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh</code><button type="button" data-copy="curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh">Copy command</button></div><p class="copy-status" data-copy-status role="status" aria-live="polite"></p><p class="platform-note" data-download-state aria-live="polite">Find a package on GitHub, or check the published release.</p><div class="release-actions"><a class="primary" data-primary-download href="${RELEASES}">Find Linux packages on GitHub</a><button class="check-release" type="button" data-check-release>Check published packages</button></div><div class="downloads"><a data-download="deb" href="${RELEASES}">Find Linux .deb on GitHub</a><a data-download="rpm" href="${RELEASES}">Find Linux .rpm on GitHub</a><a data-download="mac" href="${RELEASES}">Find macOS .pkg on GitHub</a><a data-download="win" href="${RELEASES}">Find Windows .zip on GitHub</a></div></div><aside><h3>Start and check the watcher</h3><pre><code>freeze-capsule install-service\nfreeze-capsule doctor\nfreeze-capsule hotkey-command</code></pre><p>On Linux, use these commands to set up, check, or trigger the watcher.</p></aside></section>
+  <section class="limits blueprint-section" aria-labelledby="limits-title"><h2 id="limits-title">Know the capture limits</h2><div class="limit-grid"><p><strong>A hard freeze can stop capture.</strong><br />The last completed snapshot remains available.</p><p><strong>Log access follows your account.</strong><br />Unavailable sources appear in the report.</p><p><strong>Review before sharing.</strong><br />Redaction does not remove every machine detail.</p></div></section>`);
 
 const demo = () => shell(`
-  <section class="page-head"><p class="eyebrow">SANDBOX / TEMP DIRECTORY</p><h1>Inspect a sample freeze report</h1><p>The sample shows an AMD graphics timeout during a Cinnamon and Chrome freeze.</p></section>
-  ${terminal(true)}
-  <section class="report-sheet" aria-labelledby="report-title" data-report><div class="report-meta"><span>REDACTED OUTPUT</span><span>2026-07-23 14:32 UTC</span></div><article data-report-content aria-live="polite"><h2 id="report-title">Loading the sample report</h2><p>Reading the bundled command-line fixture…</p></article></section>`, true);
+  <section class="page-head"><p class="eyebrow">ISOLATED SAMPLE</p><h1>Inspect a sample freeze report</h1><p>The sample shows an AMD graphics timeout during a Cinnamon and Chrome freeze.</p></section>
+  <section class="report-sheet" aria-labelledby="report-title" data-report><div class="report-meta"><span>REDACTED OUTPUT</span><span>2026-07-23 14:32 UTC</span></div><article data-report-content aria-live="polite"><h2 id="report-title">Loading the sample report</h2><p>Reading the included command-line sample…</p></article></section>
+  ${terminal(true)}`, true);
 
-const privacy = () => shell(`<article class="prose"><p class="eyebrow">POLICY SHEET / 01</p><h1>Privacy stays local</h1><p><time datetime="2026-08-28">Effective 28 August 2026</time></p><h2>The command-line tool</h2><p>Capsules and one local key are stored in your state directory. The included demo uses a temporary directory.</p><h2>The website</h2><p>The site does not use accounts, analytics, advertising, or cookies. Checking published packages requests public release details from GitHub.</p><h2>Reports</h2><p>Open each report before sharing it. Redaction covers common private patterns, not every machine detail.</p><h2>Remove local evidence</h2><p>Remove your Freeze Capsule state directory when you want to remove local capsules and the key.</p></article>`);
-const terms = () => shell(`<article class="prose"><p class="eyebrow">TERMS SHEET / 01</p><h1>Use the tool at your discretion</h1><p><time datetime="2026-08-28">Effective 28 August 2026</time></p><h2>License</h2><p>Freeze Capsule is free software under the MIT License.</p><h2>No guarantee of capture</h2><p>A hard freeze can prevent a final write. Available logs depend on your Linux distribution and account permissions.</p><h2>Your responsibility</h2><p>Read the redacted report before sharing it.</p><h2>Warranty</h2><p>The software is provided “as is,” without warranty, as described in the MIT License.</p></article>`);
-const notFound = () => shell(`<section class="not-found"><div class="broken-capsule" aria-hidden="true"><i></i><i></i></div><p class="eyebrow">DRAWING NOT FOUND / 404</p><h1>This sheet is missing</h1><p>The address does not match a Freeze Capsule page.</p><a class="primary" href="/" data-link>Return to the home sheet</a></section>`);
+const privacy = () => shell(`<article class="prose"><p class="eyebrow">PRIVACY POLICY</p><h1>Privacy stays local</h1><p><time datetime="2026-08-28">Effective 28 August 2026</time></p><h2>The command-line tool</h2><p>Capsules and one local key are stored in your state directory. The included demo uses a temporary directory.</p><h2>The website</h2><p>The site does not use accounts, analytics, advertising, or cookies. Checking published packages requests public release details from GitHub.</p><h2>Reports</h2><p>Open each report before sharing it. Redaction covers common private patterns, not every machine detail.</p><h2>Remove local evidence</h2><p>Remove your Freeze Capsule state directory when you want to remove local capsules and the key.</p></article>`);
+const terms = () => shell(`<article class="prose"><p class="eyebrow">TERMS</p><h1>Terms for using Freeze Capsule</h1><p><time datetime="2026-08-28">Effective 28 August 2026</time></p><h2>License</h2><p>Freeze Capsule is free software under the MIT License.</p><h2>No guarantee of capture</h2><p>A hard freeze can prevent a final write. Available logs depend on your Linux distribution and account permissions.</p><h2>Your responsibility</h2><p>Read the redacted report before sharing it.</p><h2>Warranty</h2><p>The software is provided “as is,” without warranty, as described in the MIT License.</p></article>`);
+const notFound = () => shell(`<section class="not-found"><div class="broken-capsule" aria-hidden="true"><i></i><i></i></div><p class="eyebrow">PAGE NOT FOUND / 404</p><h1>Page not found</h1><p>The address does not match a Freeze Capsule page.</p><a class="primary" href="/" data-link>Return to the home page</a></section>`);
 
 function routeFor(pathname: string): Route { return ['/', '/demo', '/privacy', '/terms'].includes(pathname) ? pathname as Route : '/404'; }
 
@@ -80,7 +80,17 @@ function bind() {
   document.querySelector<HTMLButtonElement>('[data-check-release]')?.addEventListener('click', () => void loadRelease());
   document.querySelector<HTMLButtonElement>('[data-reset]')?.addEventListener('click', () => { clearDemo(); void loadDemoFixture(); });
   document.querySelector<HTMLAnchorElement>('[data-leave-demo]')?.addEventListener('click', event => { event.preventDefault(); clearDemo(); render('/', true, true); window.setTimeout(() => document.querySelector('#install')?.scrollIntoView(), 0); });
-  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach(button => button.addEventListener('click', async () => { await navigator.clipboard.writeText(button.dataset.copy ?? ''); button.textContent = 'Copied'; }));
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+    const status = document.querySelector<HTMLElement>('[data-copy-status]');
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      button.textContent = 'Copied';
+      if (status) status.textContent = 'Install command copied.';
+    } catch {
+      button.textContent = 'Copy command';
+      if (status) status.textContent = 'Could not copy. Select the command and copy it manually.';
+    }
+  }));
   const primaryDownload = document.querySelector<HTMLAnchorElement>('[data-primary-download]');
   if (primaryDownload) primaryDownload.textContent = `Open ${detectedPlatform()} releases`;
 }
@@ -89,7 +99,30 @@ function clearDemo() { Object.keys(sessionStorage).filter(key => key.startsWith(
 function safe(text: string) { return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }
 async function fixture() { const response = await fetch('/assets/demo-report.json'); if (!response.ok) throw new Error('fixture unavailable'); return response.json() as Promise<{ transcript: string; report: string }>; }
 async function loadTerminalFixture() { try { const data = await fixture(); const target = document.querySelector<HTMLElement>('[data-transcript]'); if (target) target.textContent = data.transcript; } catch { /* shell stays readable if an asset is unavailable */ } }
-async function loadDemoFixture() { try { const data = await fixture(); const transcript = document.querySelector<HTMLElement>('[data-transcript]'); const report = document.querySelector<HTMLElement>('[data-report-content]'); if (transcript) transcript.textContent = data.transcript; if (report) report.innerHTML = '<h2 id="report-title">Freeze Capsule report</h2><pre>' + safe(data.report) + '</pre>'; sessionStorage.setItem('demo:loaded', '1'); } catch { const report = document.querySelector<HTMLElement>('[data-report-content]'); if (report) report.innerHTML = '<h2 id="report-title">Sample unavailable</h2><p>Reload the page to load the bundled report.</p>'; } }
+function reportExcerpt(report: string) {
+  const lines = report.split('\n');
+  const line = (pattern: RegExp) => lines.find(value => pattern.test(value)) ?? 'Source unavailable in this sample';
+  const rows = [
+    ['Journal', line(/ring gfx timeout/i)],
+    ['Graphics', line(/Kernel driver in use:/i)],
+    ['Processes', line(/\bchrome\b/i)],
+    ['Display session', line(/XDG_CURRENT_DESKTOP=/i)],
+  ];
+  return `<ul class="report-excerpt" aria-label="Sample evidence excerpt">${rows.map(([label, value]) => `<li data-evidence="${safe(label.toLowerCase().replace(' ', '-'))}"><strong>${safe(label)}</strong><span>${safe(value)}</span></li>`).join('')}</ul>`;
+}
+async function loadDemoFixture() {
+  try {
+    const data = await fixture();
+    const transcript = document.querySelector<HTMLElement>('[data-transcript]');
+    const report = document.querySelector<HTMLElement>('[data-report-content]');
+    if (transcript) transcript.textContent = data.transcript;
+    if (report) report.innerHTML = `<h2 id="report-title">Freeze Capsule report</h2>${reportExcerpt(data.report)}<details><summary>Read the full report</summary><pre>${safe(data.report)}</pre></details>`;
+    sessionStorage.setItem('demo:loaded', '1');
+  } catch {
+    const report = document.querySelector<HTMLElement>('[data-report-content]');
+    if (report) report.innerHTML = '<h2 id="report-title">Sample unavailable</h2><p>Reload the page to load the included report.</p>';
+  }
+}
 async function replayDemo() { const button = document.querySelector<HTMLButtonElement>('[data-run]'); if (button) { button.disabled = true; button.textContent = 'Replaying sample…'; } await loadDemoFixture(); if (button) { button.disabled = false; button.textContent = 'Replay sample capture'; } }
 
 async function loadRelease() {
@@ -101,7 +134,7 @@ async function loadRelease() {
     applyRelease(parsed.value, state);
   } catch {
     try { const response = await fetch(API, { headers: { Accept: 'application/vnd.github+json' } }); if (!response.ok) throw new Error('not published'); const release = await response.json() as Release; localStorage.setItem('release:v1', JSON.stringify({ saved: Date.now(), value: release })); applyRelease(release, state); }
-    catch { state.textContent = 'Downloads are being published. The release page shows current files.'; }
+    catch { state.textContent = 'Package check failed. Open the GitHub release page to see current files.'; }
   }
 }
 

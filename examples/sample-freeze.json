@@ -43,6 +43,6 @@
   ],
   "notices": [
     "Commands respect the current user's log permissions.",
-    "A hard lock can prevent any process from recording new data; the watcher keeps the last completed snapshot."
+    "A hard freeze can prevent any process from recording new data; the watcher keeps the last completed snapshot."
   ]
 }

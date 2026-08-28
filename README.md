@@ -2,7 +2,7 @@
 
 Save Linux freeze clues before a reboot erases them.
 
-Freeze Capsule is for desktop Linux users debugging graphics, kernel, application, or display-session freezes. Its watcher keeps one encrypted snapshot current. If the watcher pauses for 90 seconds, it keeps the last complete snapshot.
+Freeze Capsule is for desktop Linux users debugging graphics, kernel, application, or display-session freezes. Its background watcher keeps one encrypted snapshot current. If the watcher pauses for 90 seconds, it keeps the last complete snapshot.
 
 Live site: <https://freeze-capsule.sociobot.in>
 
@@ -32,20 +32,20 @@ irm https://freeze-capsule.sociobot.in/install.ps1 | iex
 
 Both installers download the published archive and verify its SHA-256 checksum.
 
-Homebrew after the tap is published:
+Install with Homebrew after the formula is published:
 
 ```sh
 brew install B-Divyesh/freeze-capsule/freeze-capsule
 ```
 
-Scoop after adding the repository bucket:
+Install with Scoop after adding this repository as a bucket:
 
 ```powershell
 scoop bucket add freeze-capsule https://github.com/B-Divyesh/sf-freeze-capsule
 scoop install freeze-capsule
 ```
 
-Live capture is Linux-specific. Use the included sample to inspect a report before installing.
+The watcher collects real system data only on Linux. Use the included sample to inspect a report before installing.
 
 ## Use
 
@@ -63,7 +63,7 @@ freeze-capsule hotkey-command
 # Bind the printed command in your desktop keyboard settings.
 ```
 
-After a freeze or reboot:
+List and export reports after a freeze or reboot:
 
 ```sh
 freeze-capsule list
@@ -96,7 +96,7 @@ npm run build:site
 cargo build --release
 ```
 
-The build commands print their output paths. If Playwright needs a browser, run `npx playwright install chromium`.
+The site is in `dist/site`. The release binary is in `target/release/freeze-capsule`. If Playwright needs a browser, run `npx playwright install chromium`.
 
 ## Release
 
@@ -107,7 +107,7 @@ git tag v0.1.1
 git push origin main v0.1.1
 ```
 
-The GitHub Actions workflow builds archives, Linux packages, macOS packages, Windows archives, checksums, and release manifests. macOS and Windows artifacts are unsigned.
+The checked release workflow declares Linux, macOS, and Windows packaging jobs. It does not configure package signing.
 
 ## Privacy and license
 

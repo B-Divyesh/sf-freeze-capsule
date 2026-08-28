@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 $repo = "B-Divyesh/sf-freeze-capsule"
 $version = if ($env:FREEZE_CAPSULE_VERSION) { $env:FREEZE_CAPSULE_VERSION } else { "latest" }
 $installDir = if ($env:FREEZE_CAPSULE_INSTALL_DIR) { $env:FREEZE_CAPSULE_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "FreezeCapsule\bin" }
-$base = if ($version -eq "latest") { "https://github.com/$repo/releases/latest/download" } else { "https://github.com/$repo/releases/download/$version" }
+$base = if ($env:FREEZE_CAPSULE_RELEASE_BASE) { $env:FREEZE_CAPSULE_RELEASE_BASE } elseif ($version -eq "latest") { "https://github.com/$repo/releases/latest/download" } else { "https://github.com/$repo/releases/download/$version" }
 $asset = "freeze-capsule-windows-x86_64.zip"
 $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("freeze-capsule-" + [guid]::NewGuid())
 New-Item -ItemType Directory -Path $tempDir | Out-Null

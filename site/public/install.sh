@@ -20,7 +20,9 @@ if [ "$os" = "linux" ] && [ "$arch" = "aarch64" ]; then
   exit 1
 fi
 
-if [ "$VERSION" = "latest" ]; then
+if [ -n "${FREEZE_CAPSULE_RELEASE_BASE:-}" ]; then
+  base="$FREEZE_CAPSULE_RELEASE_BASE"
+elif [ "$VERSION" = "latest" ]; then
   base="https://github.com/$REPO/releases/latest/download"
 else
   base="https://github.com/$REPO/releases/download/$VERSION"
