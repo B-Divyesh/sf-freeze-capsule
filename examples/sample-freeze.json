@@ -26,7 +26,7 @@
       "name": "processes",
       "source": "ps",
       "status": "captured",
-      "content": "PID PPID STAT ELAPSED %CPU %MEM COMMAND\n2142 1964 Rl 6621 88.4 3.8 cinnamon\n4871 2142 Sl 240 45.1 8.3 chrome\n1964 1 Ssl 6700 2.1 1.4 Xorg"
+      "content": "PID PPID STAT ELAPSED %CPU %MEM COMMAND\n2142 1964 Rl 6621 88.4 3.8 cinnamon\n4871 2142 Sl 240 45.1 8.3 chrome --token=sample-only-token alex.freeze@example.test 198.51.100.17 /home/alex/freeze\n1964 1 Ssl 6700 2.1 1.4 Xorg"
     },
     {
       "name": "gpu-drm",

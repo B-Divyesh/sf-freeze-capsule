@@ -1,28 +1,49 @@
-# Freeze Capsule verifier handoff — FAIL
+# Freeze Capsule repair handoff
 
-**Candidate verified:** `d4d2159da56397a519f4deba1f0cbc8744df3d81`
-**Live URL verified:** <https://freeze-capsule.sociobot.in>
+**Repair base:** `d449e0e6519fd7a9c762d38e0ce868402f559f32`
+**Repair version:** `0.1.1`
 **Date:** 28 August 2026 UTC
 
-Independent QA is **FAIL**. The local suite, declared claims, clean consumer
-install, published Linux archive, live installer, browser demo, and live asset
-matching all passed. Do not release this candidate until the P1 blockers in
-[`verification.md`](verification.md) are fixed and independently retested:
+## Fixed release blockers
 
-1. Demo banner controls are only 36 px high; the required touch target is 44 px.
-2. Fingerprinted live assets cache for only 30 seconds, rather than long-lived
-   immutable caching.
-3. Claims coverage/tagging does not meet the supplied claims contract.
-4. The only published release tag is not the candidate commit, so installer
-   provenance is not the exact candidate.
+1. Demo banner actions now have a 44 px minimum height. A Playwright regression
+   measures both controls at 390 px.
+2. Static Web Apps now revalidates HTML immediately and caches `/assets/*` for
+   one year with `immutable`. The test asserts both header policies.
+3. Claims now have exactly one tagged regression each. New checks cover the
+   real watchdog suspension, ten-minute/30-second service contract, explicit
+   home/email/IP/secret substitutions, real CLI demo output, and local-only
+   CLI demo behavior with `connect()` blocked.
+4. The repair increments the release to `v0.1.1`. The release workflow now
+   generates Homebrew, Scoop, and winget manifests from the actual release
+   checksums instead of stale placeholder values.
 
-No product code was changed by the verifier. Run the commands in
-`verification.md` after repair, then publish/tag the repaired candidate and
-repeat the release-asset checksum/install check.
+## Verified before release
+
+- `npm ci` — passed; zero audit vulnerabilities.
+- `npm test` — passed: 5 Rust tests, watchdog suspension integration, and 17
+  Playwright tests (axe has no serious or critical findings on every route).
+- Every exact command listed in `.factory/claims.json` — passed.
+- `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`,
+  `cargo build --release`, and `cargo package --allow-dirty` — passed.
+- `cargo install --path . --root <temporary-root> --locked` — passed; the
+  clean consumer ran `--help`, JSON demo, capture, list, JSON render, and the
+  empty-directory error path.
+- Production site build: 14.21 KB JS (5.44 KB gzip), 11.48 KB CSS (3.33 KB
+  gzip), 49.31 KB hero WebP. Browser checks cover desktop, 390×844, keyboard,
+  focus, reduced motion, route titles, headers config, privacy, and release
+  lookup failure.
+
+## Release and deployment evidence
+
+The repaired commit will be tagged `v0.1.1`, built by the GitHub Actions
+release matrix, and deployed as the existing static `dist/site` artifact. This
+section is updated with the immutable tag, action run, checksum, installer,
+and live-header evidence after publication.
 
 ---
 
-# Builder handoff (superseded by the verifier result above)
+# Historical builder handoff (superseded by this repair)
 
 ## What shipped
 

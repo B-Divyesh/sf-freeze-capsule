@@ -15,10 +15,24 @@
   },
   {
     "id": "encrypted-redacted",
-    "claim": "The CLI demo writes an encrypted capsule and a redacted report with all required evidence sections.",
+    "claim": "The CLI demo writes an encrypted capsule and a redacted report with journal, graphics, process, and display-session evidence.",
     "where": "landing facts, workflow, README",
     "test": "npm run test:site -- --grep @claim:encrypted-redacted",
     "sandbox": "bundled sample through freeze-capsule demo in a new temporary directory"
+  },
+  {
+    "id": "demo-capture-render",
+    "claim": "The CLI demo executes the encrypted capture and render path in a temporary directory.",
+    "where": "landing sample terminal",
+    "test": "npm run test:site -- --grep @claim:demo-capture-render",
+    "sandbox": "bundled sample through freeze-capsule --json demo; assert the temporary capsule and report exist"
+  },
+  {
+    "id": "redaction-coverage",
+    "claim": "Rendering replaces home paths, email addresses, IP addresses, and common secret values.",
+    "where": "landing workflow, README, privacy page",
+    "test": "npm run test:site -- --grep @claim:redaction-coverage",
+    "sandbox": "known private-value fixture through the report redactor"
   },
   {
     "id": "bounded-retention",
@@ -31,8 +45,22 @@
     "id": "watchdog-gap",
     "claim": "A scheduling gap promotes the last completed rolling snapshot.",
     "where": "landing workflow, README",
-    "test": "sh tests/watchdog.sh",
+    "test": "npm run test:site -- --grep @claim:watchdog-gap",
     "sandbox": "new temporary directory; suspend the real watcher process beyond its configured timeout"
+  },
+  {
+    "id": "rolling-snapshot",
+    "claim": "The user service records a bounded ten-minute window every 30 seconds.",
+    "where": "landing workflow",
+    "test": "npm run test:site -- --grep @claim:rolling-snapshot",
+    "sandbox": "compiled service-unit and snapshot configuration"
+  },
+  {
+    "id": "cli-local-only",
+    "claim": "The CLI has no telemetry or network client; its demo never writes the normal capsule directory.",
+    "where": "landing facts, privacy page, README",
+    "test": "npm run test:site -- --grep @claim:cli-local-only",
+    "sandbox": "CLI demo with network connect() blocked and an isolated normal-capsule directory"
   },
   {
     "id": "free-license",

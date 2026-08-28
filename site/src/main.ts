@@ -14,7 +14,7 @@ const shell = (body: string, isDemo = false) => `
     <nav aria-label="Main navigation"><a href="/demo" data-link>Demo</a><a href="/#install">Install</a><a href="/privacy" data-link>Privacy</a></nav>
   </header>
   <main id="main" tabindex="-1">${body}</main>
-  <footer><p><strong>Freeze Capsule</strong> · Save Linux freeze clues before reboot.</p><nav aria-label="Footer"><a href="/privacy" data-link>Privacy</a><a href="/terms" data-link>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory <span class="sr-only">(external site)</span></a></nav><p class="build">v0.1.0 · build 2026.08</p></footer>`;
+  <footer><p><strong>Freeze Capsule</strong> · Save Linux freeze clues before reboot.</p><nav aria-label="Footer"><a href="/privacy" data-link>Privacy</a><a href="/terms" data-link>Terms</a><a href="https://sociobot.in" rel="external">Built by Param Factory <span class="sr-only">(external site)</span></a></nav><p class="build">v0.1.1 · build 2026.08</p></footer>`;
 
 const terminal = (interactive = false) => `
   <section class="terminal-sheet" aria-labelledby="terminal-title">

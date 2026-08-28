@@ -103,11 +103,11 @@ The static site lands in `dist/site`. The CLI binary lands in `target/release`. 
 Tag a tested commit:
 
 ```sh
-git tag v0.1.0
-git push origin main v0.1.0
+git tag v0.1.1
+git push origin main v0.1.1
 ```
 
-The workflow builds archives, `.deb`, `.rpm`, unsigned macOS `.pkg` files, checksums, `latest.json`, Homebrew, Scoop, and winget manifests. macOS and Windows artifacts are unsigned in v0.1.0.
+The workflow builds archives, `.deb`, `.rpm`, unsigned macOS `.pkg` files, checksums, `latest.json`, Homebrew, Scoop, and winget manifests. macOS and Windows artifacts are unsigned.
 
 ## Privacy and license
 

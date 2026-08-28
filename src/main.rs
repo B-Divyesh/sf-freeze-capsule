@@ -20,6 +20,9 @@ use std::{
 const MAGIC: &[u8] = b"FCAP1\0";
 const MAX_CAPSULES: usize = 8;
 const MAX_SECTION_BYTES: usize = 96 * 1024;
+const SNAPSHOT_WINDOW_SECONDS: u32 = 600;
+const DEFAULT_WATCH_INTERVAL_SECONDS: u64 = 30;
+const DEFAULT_WATCHDOG_TIMEOUT_SECONDS: u64 = 90;
 const DEMO_JSON: &str = include_str!("../examples/sample-freeze.json");
 
 #[derive(Parser)]
@@ -46,10 +49,10 @@ enum Commands {
     /// Keep a rolling snapshot and promote it after a scheduling gap
     Watch {
         /// Seconds between bounded snapshots
-        #[arg(long, default_value_t = 30)]
+        #[arg(long, default_value_t = DEFAULT_WATCH_INTERVAL_SECONDS)]
         interval: u64,
         /// Gap in seconds that indicates the machine stopped scheduling the watcher
-        #[arg(long, default_value_t = 90)]
+        #[arg(long, default_value_t = DEFAULT_WATCHDOG_TIMEOUT_SECONDS)]
         timeout: u64,
         /// Stop after one snapshot; useful for service checks
         #[arg(long)]
@@ -277,7 +280,7 @@ fn collect(reason: &str) -> Capsule {
         status: "unavailable".into(),
         content: "Live capture is supported on Linux. Use `freeze-capsule demo` here.".into(),
     });
-    Capsule { schema: 1, captured_at: Utc::now(), reason: reason.chars().take(80).collect(), window_seconds: 600, sections, notices: vec!["Commands respect the current user's log permissions.".into(), "A hard lock can prevent any process from recording new data; the watcher keeps the last completed snapshot.".into()] }
+    Capsule { schema: 1, captured_at: Utc::now(), reason: reason.chars().take(80).collect(), window_seconds: SNAPSHOT_WINDOW_SECONDS, sections, notices: vec!["Commands respect the current user's log permissions.".into(), "A hard lock can prevent any process from recording new data; the watcher keeps the last completed snapshot.".into()] }
 }
 
 fn command_section(name: &str, source: &str, program: &str, args: &[&str]) -> Section {
@@ -577,10 +580,7 @@ fn install_service() -> Result<()> {
         let dir = config.join("systemd/user");
         fs::create_dir_all(&dir)?;
         let exe = env::current_exe()?;
-        let unit = format!(
-            "[Unit]\nDescription=Freeze Capsule rolling evidence watcher\nDocumentation=https://freeze-capsule.sociobot.in\n\n[Service]\nType=simple\nExecStart={} watch --interval 30 --timeout 90\nRestart=on-failure\nNoNewPrivileges=true\nPrivateTmp=true\nProtectSystem=strict\nProtectHome=read-only\nReadWritePaths=%h/.local/state/freeze-capsule\n\n[Install]\nWantedBy=default.target\n",
-            exe.display()
-        );
+        let unit = watcher_service_unit(&exe);
         fs::write(dir.join("freeze-capsule.service"), unit)?;
         let reload = Command::new("systemctl")
             .args(["--user", "daemon-reload"])
@@ -596,6 +596,13 @@ fn install_service() -> Result<()> {
         println!("Installed and started the per-user watcher. No root access was requested.");
     }
     Ok(())
+}
+
+fn watcher_service_unit(executable: &Path) -> String {
+    format!(
+        "[Unit]\nDescription=Freeze Capsule rolling evidence watcher\nDocumentation=https://freeze-capsule.sociobot.in\n\n[Service]\nType=simple\nExecStart={} watch --interval {DEFAULT_WATCH_INTERVAL_SECONDS} --timeout {DEFAULT_WATCHDOG_TIMEOUT_SECONDS}\nRestart=on-failure\nNoNewPrivileges=true\nPrivateTmp=true\nProtectSystem=strict\nProtectHome=read-only\nReadWritePaths=%h/.local/state/freeze-capsule\n\n[Install]\nWantedBy=default.target\n",
+        executable.display()
+    )
 }
 
 fn doctor(root: &Path, json: bool) -> Result<()> {
@@ -682,5 +689,16 @@ mod tests {
         }
         prune(dir.path()).unwrap();
         assert_eq!(capsule_paths(dir.path()).unwrap().len(), MAX_CAPSULES);
+    }
+
+    #[test]
+    fn rolling_snapshot_contract_uses_the_documented_window_and_cadence() {
+        assert_eq!(SNAPSHOT_WINDOW_SECONDS, 600);
+        assert_eq!(DEFAULT_WATCH_INTERVAL_SECONDS, 30);
+        assert_eq!(DEFAULT_WATCHDOG_TIMEOUT_SECONDS, 90);
+        assert!(
+            watcher_service_unit(Path::new("/tmp/freeze-capsule"))
+                .contains("watch --interval 30 --timeout 90")
+        );
     }
 }

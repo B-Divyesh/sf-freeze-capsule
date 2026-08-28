@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v0.1.0' }}
+  RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v0.1.1' }}
 
 jobs:
   build:
@@ -107,11 +107,7 @@ jobs:
           mac_arm_hash="$(awk '$2 ~ /macos-aarch64.tar.gz$/ {print $1}' SHA256SUMS)"
           mac_x64_hash="$(awk '$2 ~ /macos-x86_64.tar.gz$/ {print $1}' SHA256SUMS)"
           linux_hash="$(awk '$2 ~ /linux-x86_64.tar.gz$/ {print $1}' SHA256SUMS)"
-          sed -e "s/0.1.0/$version/g" -e "0,/RELEASE_WORKFLOW_REPLACES_THIS/s//$mac_arm_hash/" -e "0,/RELEASE_WORKFLOW_REPLACES_THIS/s//$mac_x64_hash/" -e "0,/RELEASE_WORKFLOW_REPLACES_THIS/s//$linux_hash/" ../homebrew/Formula/freeze-capsule.rb > freeze-capsule.rb
-          sed -e "s/0.1.0/$version/g" -e "s/RELEASE_WORKFLOW_REPLACES_THIS/$win_hash/" ../scoop-bucket/freeze-capsule.json > freeze-capsule.json
-          mkdir winget
-          cp ../winget/*.yaml winget/
-          sed -i "s/0.1.0/$version/g;s/RELEASE_WORKFLOW_REPLACES_THIS/$win_hash/" winget/*.yaml
+          node -e 'const fs=require("fs");const [version,base,win,macArm,macX64,linux]=process.argv.slice(1);fs.writeFileSync("freeze-capsule.rb",`class FreezeCapsule < Formula\n  desc "Preserve bounded Linux freeze evidence before reboot"\n  homepage "https://freeze-capsule.sociobot.in"\n  version "${version}"\n  license "MIT"\n\n  on_macos do\n    if Hardware::CPU.arm?\n      url "${base}/freeze-capsule-macos-aarch64.tar.gz"\n      sha256 "${macArm}"\n    else\n      url "${base}/freeze-capsule-macos-x86_64.tar.gz"\n      sha256 "${macX64}"\n    end\n  end\n\n  on_linux do\n    url "${base}/freeze-capsule-linux-x86_64.tar.gz"\n    sha256 "${linux}"\n  end\n\n  def install\n    bin.install "freeze-capsule"\n  end\n\n  test do\n    assert_match "Freeze Capsule", shell_output("#{bin}/freeze-capsule doctor")\n  end\nend\n`);fs.writeFileSync("freeze-capsule.json",JSON.stringify({version,description:"Preserve bounded Linux freeze evidence before reboot",homepage:"https://freeze-capsule.sociobot.in",license:"MIT",url:`${base}/freeze-capsule-windows-x86_64.zip`,hash:win,bin:"freeze-capsule.exe",checkver:{github:"https://github.com/B-Divyesh/sf-freeze-capsule"},autoupdate:{url:"https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v$version/freeze-capsule-windows-x86_64.zip"}},null,2)+"\n");fs.mkdirSync("winget");const prefix=`PackageIdentifier: ParamFactory.FreezeCapsule\nPackageVersion: ${version}\n`;fs.writeFileSync("winget/ParamFactory.FreezeCapsule.version.yaml",prefix+"DefaultLocale: en-US\nManifestType: version\nManifestVersion: 1.9.0\n");fs.writeFileSync("winget/ParamFactory.FreezeCapsule.yaml",prefix+"PackageLocale: en-US\nPublisher: Param Factory\nPackageName: Freeze Capsule\nLicense: MIT\nShortDescription: Preserve bounded Linux freeze evidence before reboot\nPackageUrl: https://freeze-capsule.sociobot.in\nManifestType: defaultLocale\nManifestVersion: 1.9.0\n");fs.writeFileSync("winget/ParamFactory.FreezeCapsule.installer.yaml",prefix+`InstallerType: zip\nNestedInstallerType: portable\nNestedInstallerFiles:\n  - RelativeFilePath: freeze-capsule.exe\n    PortableCommandAlias: freeze-capsule\nInstallers:\n  - Architecture: x64\n    InstallerUrl: ${base}/freeze-capsule-windows-x86_64.zip\n    InstallerSha256: ${win}\nManifestType: installer\nManifestVersion: 1.9.0\n`);' "$version" "$base" "$win_hash" "$mac_arm_hash" "$mac_x64_hash" "$linux_hash"
           tar -czf freeze-capsule-winget-manifests.tar.gz -C winget .
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
