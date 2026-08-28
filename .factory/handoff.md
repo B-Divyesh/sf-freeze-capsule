@@ -1,4 +1,28 @@
-# Freeze Capsule handoff
+# Freeze Capsule verifier handoff — FAIL
+
+**Candidate verified:** `d4d2159da56397a519f4deba1f0cbc8744df3d81`
+**Live URL verified:** <https://freeze-capsule.sociobot.in>
+**Date:** 28 August 2026 UTC
+
+Independent QA is **FAIL**. The local suite, declared claims, clean consumer
+install, published Linux archive, live installer, browser demo, and live asset
+matching all passed. Do not release this candidate until the P1 blockers in
+[`verification.md`](verification.md) are fixed and independently retested:
+
+1. Demo banner controls are only 36 px high; the required touch target is 44 px.
+2. Fingerprinted live assets cache for only 30 seconds, rather than long-lived
+   immutable caching.
+3. Claims coverage/tagging does not meet the supplied claims contract.
+4. The only published release tag is not the candidate commit, so installer
+   provenance is not the exact candidate.
+
+No product code was changed by the verifier. Run the commands in
+`verification.md` after repair, then publish/tag the repaired candidate and
+repeat the release-asset checksum/install check.
+
+---
+
+# Builder handoff (superseded by the verifier result above)
 
 ## What shipped
 
