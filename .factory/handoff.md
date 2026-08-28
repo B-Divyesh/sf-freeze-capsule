@@ -3,7 +3,7 @@
 ## Outcome
 
 All findings from reviews 1–4 are resolved. The implementation repair is
-commit `8c71ecc`; the final documentation commit follows it on `main`. The
+commit `8c71ecc`; final site guidance and evidence are in `b4f0a20`. The
 static product is deployed at <https://freeze-capsule.sociobot.in> with its
 original CLI/installers artifact class and blueprint visual identity intact.
 
@@ -16,8 +16,8 @@ legal shell, and real 404 behavior. All round-4 copy findings were rewritten.
 
 ### Clean clone and claims
 
-Fresh clone: `/tmp/freeze-capsule-polish4-NeB2JQ/repo` from implementation
-commit `8c71ecc`.
+Final fresh clone: `/tmp/freeze-capsule-final-L9O6e3/repo` from pushed commit
+`b4f0a20`.
 
 - `npm ci`: pass.
 - Every one of the 26 exact `.factory/claims.json` commands: pass individually.
