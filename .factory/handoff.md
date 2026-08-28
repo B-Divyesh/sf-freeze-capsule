@@ -32,6 +32,9 @@ Verification completed on 28 August 2026:
 - `cargo clippy --all-targets -- -D warnings` passed.
 - `npm audit --audit-level=high` reported zero vulnerabilities.
 - Release workflow YAML passed `yaml-lint`.
+- GitHub Actions run `33185785710`: Linux, macOS arm64, macOS x64, Windows, and release jobs passed.
+- GitHub Release `v0.1.0` contains 13 assets. `latest.json` parsed and reported seven platform/package artifacts.
+- The published Linux archive matched `SHA256SUMS`. The one-line installer downloaded, verified, installed, and ran the released binary demo.
 - Production budget: 5.32 KB gzip JavaScript, 3.32 KB gzip CSS, 49 KB hero WebP.
 - Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100. LCP 1.6 s, TBT 0 ms, CLS 0.
 
@@ -47,8 +50,8 @@ Claim definitions and one-command checks are in `.factory/claims.json`. Demo iso
 
 ## Needs operator action
 
-- The GitHub release workflow produces valid formula, Scoop, and winget manifests after binary hashes exist. The committed copies contain `RELEASE_WORKFLOW_REPLACES_THIS` until the first workflow run.
-- Set `HOMEBREW_TAP_TOKEN` with write access to `B-Divyesh/homebrew-freeze-capsule` to publish the generated formula. Without it, the formula remains attached to the GitHub Release.
+- The valid Homebrew formula, Scoop manifest, and winget manifests now contain v0.1.0 release hashes. They are also attached to the GitHub Release.
+- Set `HOMEBREW_TAP_TOKEN` with write access to `B-Divyesh/homebrew-freeze-capsule` for future automatic tap publication. The v0.1.0 formula is currently a release asset and committed in this repository.
 - Submit the generated winget manifest to `microsoft/winget-pkgs` after release review.
 - macOS `.pkg` and Windows portable zip are unsigned. Future signing would require Apple and Windows signing certificates.
 - Factory deployment should publish `dist/site`; no DNS or infrastructure was changed here.

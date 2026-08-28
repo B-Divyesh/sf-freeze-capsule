@@ -4,7 +4,7 @@
   "homepage": "https://freeze-capsule.sociobot.in",
   "license": "MIT",
   "url": "https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v0.1.0/freeze-capsule-windows-x86_64.zip",
-  "hash": "RELEASE_WORKFLOW_REPLACES_THIS",
+  "hash": "ab31ceb920d6cc453dd54f3fb4c50f78ef228671b1b9f1b3cab99a85d1ff10a6",
   "bin": "freeze-capsule.exe",
   "checkver": { "github": "https://github.com/B-Divyesh/sf-freeze-capsule" },
   "autoupdate": { "url": "https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v$version/freeze-capsule-windows-x86_64.zip" }
