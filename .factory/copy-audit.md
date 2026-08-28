@@ -46,6 +46,8 @@ marketing words.
 | Open the GitHub release page to see current files. | 10 | Lookup recovery step |
 | Find Linux .deb on GitHub / Find Linux .rpm on GitHub | 5 / 5 | Honest external links |
 | Find macOS .pkg on GitHub / Find Windows .zip on GitHub | 5 / 5 | Honest external links |
+| If macOS shows an unidentified-developer warning, right-click the package and choose Open. | 12 | Conditional install recovery |
+| Review any Windows security warning before running the file. | 9 | Conditional install safety step |
 | Start and check the watcher | 5 | Section heading |
 | On Linux, use these commands to set up, check, or trigger the watcher. | 13 | Linux instruction |
 | Know the capture limits | 4 | Section heading |
