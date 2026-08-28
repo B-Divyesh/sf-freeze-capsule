@@ -32,7 +32,7 @@ From a fresh clone made with `git clone /work/repo <mktemp directory>`, after `n
 
 ## Deployment status
 
-`git push origin main` completed successfully. This checkout has no static deployment workflow, deploy script, token, or work-order deployment configuration; the only GitHub workflow is tag-only release packaging. At the final cold check on 28 August 2026 19:24 UTC, `https://freeze-capsule.sociobot.in` still served the older `index-B_W3jRdD.js`/`index-CwujLCAi.css` deployment, and `/404.html` was likewise the old 1,650-byte document. No repository-side deployment action exists to run without changing infrastructure, which the product contract forbids.
+`git push origin main` completed successfully. The injected static work order specifies `npm ci && npm run build:site` with `dist/site`; that exact build completed successfully. It provides no publish command, deployment token, or endpoint, and the only checked-in GitHub workflow is tag-only release packaging. At the final cold check on 28 August 2026 19:25 UTC, `https://freeze-capsule.sociobot.in` still served the older `index-B_W3jRdD.js`/`index-CwujLCAi.css` deployment, and `/404.html` was likewise the old 1,650-byte document. No repository-side publication action exists to run without changing infrastructure, which the product contract forbids.
 
 Once the factory static deployer publishes `73dcd6b`, cold-check `/`, `/demo?demo=1`, `/privacy`, `/terms`, `/missing-sheet`, and `/404.html`; the expected new assets are `index-mCnaAh8b.js` and `index-0Ewcw7uD.css`. Then rerun the browser checks listed above against the live origin.
 
