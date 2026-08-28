@@ -1,1 +1,1 @@
-Save Linux freeze clues before reboot erases them.
+Save Linux freeze clues before a reboot erases them.

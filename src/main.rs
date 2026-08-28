@@ -657,6 +657,10 @@ mod tests {
         let dir = tempdir().unwrap();
         let capsule: Capsule = serde_json::from_str(DEMO_JSON).unwrap();
         let bytes = encrypt(dir.path(), &capsule).unwrap();
+        // FCAP1 followed by the 24-byte XChaCha nonce is the on-disk format.
+        assert!(bytes.len() > MAGIC.len() + 24);
+        assert_eq!(&bytes[..MAGIC.len()], MAGIC);
+        assert_eq!(fs::read(key_path(dir.path())).unwrap().len(), 32);
         assert!(!String::from_utf8_lossy(&bytes).contains("amdgpu"));
         assert_eq!(decrypt(dir.path(), &bytes).unwrap().reason, capsule.reason);
     }
@@ -689,6 +693,100 @@ mod tests {
         }
         prune(dir.path()).unwrap();
         assert_eq!(capsule_paths(dir.path()).unwrap().len(), MAX_CAPSULES);
+    }
+
+    #[test]
+    fn current_snapshot_does_not_use_a_retained_capsule_slot() {
+        let dir = tempdir().unwrap();
+        let mut capsule: Capsule = serde_json::from_str(DEMO_JSON).unwrap();
+        save_capsule(dir.path(), &capsule, true).unwrap();
+        for n in 0..MAX_CAPSULES {
+            capsule.captured_at = Utc::now() + chrono::Duration::seconds(n as i64);
+            save_capsule(dir.path(), &capsule, false).unwrap();
+        }
+        prune(dir.path()).unwrap();
+        assert!(dir.path().join("prebuffer.fcap").exists());
+        assert_eq!(capsule_paths(dir.path()).unwrap().len(), MAX_CAPSULES);
+    }
+
+    #[test]
+    fn unavailable_sources_stay_in_a_renderable_report() {
+        let dir = tempdir().unwrap();
+        let capsule = Capsule {
+            schema: 1,
+            captured_at: Utc::now(),
+            reason: "controlled-source-failure".into(),
+            window_seconds: SNAPSHOT_WINDOW_SECONDS,
+            sections: vec![
+                command_section(
+                    "journal",
+                    "controlled command",
+                    "freeze-capsule-missing-command",
+                    &[],
+                ),
+                file_section(
+                    "gpu-drm",
+                    "controlled directory",
+                    &dir.path().join("missing"),
+                ),
+            ],
+            notices: vec![],
+        };
+        let rendered = render(&capsule, Format::Markdown).unwrap();
+        assert!(rendered.contains("## journal"));
+        assert!(rendered.contains("## gpu-drm"));
+        assert_eq!(capsule.sections[0].status, "unavailable");
+        assert_eq!(capsule.sections[1].status, "unavailable");
+    }
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn linux_collector_requests_each_documented_source() {
+        let capsule = collect("source-contract");
+        for name in [
+            "journal",
+            "kernel",
+            "graphics",
+            "gpu-drm",
+            "processes",
+            "display-session",
+        ] {
+            assert!(
+                capsule.sections.iter().any(|section| section.name == name),
+                "missing {name}"
+            );
+        }
+        assert!(
+            capsule
+                .sections
+                .iter()
+                .all(|section| !section.status.is_empty())
+        );
+    }
+
+    #[test]
+    fn redaction_keeps_a_non_private_hardware_detail_for_review() {
+        let rendered = redact("GPU PCI ID 1002:73bf at /home/alex token=abc");
+        assert!(rendered.contains("1002:73bf"));
+        assert!(rendered.contains("/home/[USER]"));
+        assert!(rendered.contains("token=[REDACTED]"));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn local_key_is_created_with_owner_only_permissions() {
+        use std::os::unix::fs::PermissionsExt;
+        let dir = tempdir().unwrap();
+        let capsule: Capsule = serde_json::from_str(DEMO_JSON).unwrap();
+        encrypt(dir.path(), &capsule).unwrap();
+        assert_eq!(
+            fs::metadata(key_path(dir.path()))
+                .unwrap()
+                .permissions()
+                .mode()
+                & 0o777,
+            0o600
+        );
     }
 
     #[test]

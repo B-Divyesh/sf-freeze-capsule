@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 test('@claim:sample-report one click opens the bundled freeze report', async ({ page }) => {
@@ -137,9 +138,9 @@ test('mobile first screen and demo stay within 390 pixels', async ({ page }) => 
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Try it with sample data' })).toBeVisible();
   await expect(page.getByText('See a redacted report in one click.', { exact: true })).toBeVisible();
-  await expect(page.getByText('Free and open source', { exact: true })).toBeVisible();
-  await expect(page.getByText('Demo data stays separate', { exact: true })).toBeVisible();
-  await expect(page.getByText('Keeps at most eight capsules', { exact: true })).toBeVisible();
+  await expect(page.locator('.facts li').nth(0)).toContainText('Free and open source');
+  await expect(page.locator('.facts li').nth(1)).toContainText('Demo data stays separate');
+  await expect(page.locator('.facts li').nth(2)).toContainText('Keeps at most eight capsules');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page.goto('/demo');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
@@ -157,7 +158,7 @@ test('known static routes and the real 404 configuration are explicit', () => {
   expect(config.routes.filter(route => ['/demo', '/privacy', '/terms'].includes(route.route)).every(route => route.rewrite === '/index.html')).toBe(true);
   expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
   const missing = readFileSync('site/public/404.html', 'utf8');
-  for (const text of ['noindex,follow', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1']) expect(missing).toContain(text);
+  for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1', 'apple-touch-icon', 'og:image', 'twitter:image']) expect(missing).toContain(text);
 });
 
 test('demo banner controls meet the 44 pixel mobile touch-target baseline', async ({ page }) => {
@@ -178,4 +179,107 @@ test('release lookup failure shows a calm fallback without console errors', asyn
   await page.getByRole('button', { name: 'Check published packages' }).click();
   await expect(page.getByText('Downloads are being published. The release page shows current files.')).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+test('@claim:linux-live-capture Linux collection requests every documented source', () => {
+  const output = execFileSync('cargo', ['test', 'linux_collector_requests_each_documented_source'], { encoding: 'utf8' });
+  expect(output).toContain('test result: ok');
+});
+
+test('@claim:hard-freeze-limit a stopped watcher preserves the last completed snapshot', () => {
+  expect(execFileSync('sh', ['tests/watchdog.sh'], { encoding: 'utf8' })).toContain('watchdog gap promotion: ok');
+});
+
+test('@claim:limited-source-report missing commands and unreadable sources remain reportable', () => {
+  const output = execFileSync('cargo', ['test', 'unavailable_sources_stay_in_a_renderable_report'], { encoding: 'utf8' });
+  expect(output).toContain('test result: ok');
+});
+
+test('@claim:hotkey-capture the printed desktop command creates a retained capsule', () => {
+  const root = join(tmpdir(), `freeze-capsule-hotkey-${process.pid}-${Date.now()}`);
+  try {
+    execFileSync('cargo', ['build', '--quiet']);
+    const command = execFileSync('target/debug/freeze-capsule', ['hotkey-command'], { encoding: 'utf8' }).trim().split(/\s+/);
+    expect(command).toEqual(['freeze-capsule', 'capture', '--reason', 'hotkey']);
+    execFileSync('target/debug/freeze-capsule', ['--capsule-dir', root, ...command.slice(1)]);
+    expect(readdirSync(root).some(name => /^capsule-.*\.fcap$/.test(name))).toBe(true);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('@claim:installer-checksum both installer scripts compare the downloaded SHA-256 before copying a binary', () => {
+  const posix = readFileSync('site/public/install.sh', 'utf8');
+  const powershell = readFileSync('site/public/install.ps1', 'utf8');
+  for (const source of [posix, powershell]) {
+    expect(source).toContain('SHA256SUMS');
+    expect(source).toMatch(/expected/i);
+    expect(source).toMatch(/actual/i);
+    expect(source).toMatch(/Checksum verification failed/i);
+  }
+  expect(posix).toContain('[ "$actual" = "$expected" ]');
+  expect(powershell).toContain('$actual -ne $expected');
+});
+
+test('@claim:json-output documented list and report commands return structured JSON', () => {
+  const root = join(tmpdir(), `freeze-capsule-json-${process.pid}-${Date.now()}`);
+  try {
+    execFileSync('cargo', ['build', '--quiet']);
+    execFileSync('target/debug/freeze-capsule', ['--capsule-dir', root, 'capture']);
+    const listed = JSON.parse(execFileSync('target/debug/freeze-capsule', ['--capsule-dir', root, '--json', 'list'], { encoding: 'utf8' })) as string[];
+    expect(listed).toHaveLength(1);
+    const report = JSON.parse(execFileSync('target/debug/freeze-capsule', ['--capsule-dir', root, 'render', 'latest', '--format', 'json'], { encoding: 'utf8' })) as { sections: { name: string; status: string }[] };
+    expect(report.sections.some(section => section.name === 'journal' && section.status.length > 0)).toBe(true);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('@claim:encryption-format capsules use the FCAP1 XChaCha nonce layout and a 32-byte local key', () => {
+  expect(execFileSync('cargo', ['test', 'encrypted_round_trip_has_no_plaintext'], { encoding: 'utf8' })).toContain('test result: ok');
+});
+
+test('@claim:key-permissions Unix local keys are owner-readable only', () => {
+  expect(execFileSync('cargo', ['test', 'local_key_is_created_with_owner_only_permissions'], { encoding: 'utf8' })).toContain('test result: ok');
+});
+
+test('@claim:current-snapshot current rolling evidence does not use a saved-capsule slot', () => {
+  expect(execFileSync('cargo', ['test', 'current_snapshot_does_not_use_a_retained_capsule_slot'], { encoding: 'utf8' })).toContain('test result: ok');
+});
+
+test('@claim:release-artifacts release workflow names all shipped archives, packages, checksums, and manifests', () => {
+  const workflow = readFileSync('.github/workflows/release.yml', 'utf8');
+  for (const token of ['ubuntu-latest', 'macos-latest', 'windows-latest', 'SHA256SUMS', 'latest.json', '.deb', '.rpm', '.pkg', '.zip', 'softprops/action-gh-release']) expect(workflow).toContain(token);
+  expect(workflow).toContain('unsigned');
+});
+
+test('@claim:normal-state-directory normal capture keeps one key and capsules beneath XDG state', () => {
+  const state = join(tmpdir(), `freeze-capsule-state-${process.pid}-${Date.now()}`);
+  const root = join(state, 'freeze-capsule');
+  try {
+    execFileSync('cargo', ['build', '--quiet']);
+    execFileSync('target/debug/freeze-capsule', ['capture'], { env: { ...process.env, XDG_STATE_HOME: state } });
+    expect(readFileSync(join(root, 'capsule.key'))).toHaveLength(32);
+    expect(readdirSync(root).filter(name => /^capsule-.*\.fcap$/.test(name))).toHaveLength(1);
+  } finally { rmSync(state, { recursive: true, force: true }); }
+});
+
+test('@claim:site-no-tracking static routes use no cookies, analytics, advertising, or third-party requests', async ({ page }) => {
+  const foreign: string[] = [];
+  page.on('request', request => { if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') foreign.push(request.url()); });
+  for (const route of ['/', '/demo?demo=1', '/privacy', '/terms']) await page.goto(route);
+  expect(foreign).toEqual([]);
+  expect(await page.context().cookies()).toEqual([]);
+  expect(await page.evaluate(() => Object.keys(localStorage))).toEqual([]);
+});
+
+test('@claim:release-lookup-request GitHub release details are requested only after the explicit check action', async ({ page }) => {
+  const githubRequests: string[] = [];
+  page.on('request', request => { if (request.url().startsWith('https://api.github.com/')) githubRequests.push(request.url()); });
+  await page.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ tag_name: 'v-test', assets: [] }) }));
+  await page.goto('/');
+  expect(githubRequests).toEqual([]);
+  await page.getByRole('button', { name: 'Check published packages' }).click();
+  await expect(page.getByText('v-test packages are ready. Linux was detected.')).toBeVisible();
+  expect(githubRequests).toHaveLength(1);
+});
+
+test('@claim:redaction-limits reports redact selected private patterns while retaining hardware detail for review', () => {
+  expect(execFileSync('cargo', ['test', 'redaction_keeps_a_non_private_hardware_detail_for_review'], { encoding: 'utf8' })).toContain('test result: ok');
 });

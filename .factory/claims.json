@@ -1,79 +1,27 @@
 [
-  {
-    "id": "sample-report",
-    "claim": "One click opens a bundled report with journal, graphics, process, and display-session evidence.",
-    "where": "landing action, demo",
-    "test": "npm run test:site -- --grep @claim:sample-report",
-    "sandbox": "fresh browser context at /; activate the sample action"
-  },
-  {
-    "id": "sample-fixture",
-    "claim": "The browser sample report matches the report created by the bundled CLI demo.",
-    "where": "landing preview, demo",
-    "test": "npm run test:site -- --grep @claim:sample-fixture",
-    "sandbox": "fresh repository; compare the shipped browser fixture with freeze-capsule --json demo output"
-  },
-  {
-    "id": "demo-private",
-    "claim": "The browser demo saves only demo state and makes no third-party request.",
-    "where": "demo banner, privacy page",
-    "test": "npm run test:site -- --grep @claim:demo-private",
-    "sandbox": "fresh browser context; record every request during the demo flow"
-  },
-  {
-    "id": "encrypted-redacted",
-    "claim": "The CLI demo writes an encrypted capsule and a redacted report with journal, graphics, process, and display-session evidence.",
-    "where": "landing facts, workflow, README",
-    "test": "npm run test:site -- --grep @claim:encrypted-redacted",
-    "sandbox": "bundled sample through freeze-capsule demo in a new temporary directory"
-  },
-  {
-    "id": "demo-capture-render",
-    "claim": "The CLI demo executes the encrypted capture and render path in a temporary directory.",
-    "where": "landing sample terminal",
-    "test": "npm run test:site -- --grep @claim:demo-capture-render",
-    "sandbox": "bundled sample through freeze-capsule --json demo; assert the temporary capsule and report exist"
-  },
-  {
-    "id": "redaction-coverage",
-    "claim": "Rendering replaces home paths, email addresses, IP addresses, and common secret values.",
-    "where": "landing workflow, README, privacy page",
-    "test": "npm run test:site -- --grep @claim:redaction-coverage",
-    "sandbox": "known private-value fixture through the report redactor"
-  },
-  {
-    "id": "bounded-retention",
-    "claim": "Freeze Capsule keeps no more than eight retained capsules.",
-    "where": "landing facts, README",
-    "test": "npm run test:site -- --grep @claim:bounded-retention",
-    "sandbox": "temporary capsule directory seeded with twelve encrypted sample capsules"
-  },
-  {
-    "id": "watchdog-gap",
-    "claim": "A scheduling gap promotes the last completed rolling snapshot.",
-    "where": "landing workflow, README",
-    "test": "npm run test:site -- --grep @claim:watchdog-gap",
-    "sandbox": "new temporary directory; suspend the real watcher process beyond its configured timeout"
-  },
-  {
-    "id": "rolling-snapshot",
-    "claim": "The user service records a bounded ten-minute window every 30 seconds.",
-    "where": "landing workflow",
-    "test": "npm run test:site -- --grep @claim:rolling-snapshot",
-    "sandbox": "compiled service-unit and snapshot configuration"
-  },
-  {
-    "id": "cli-local-only",
-    "claim": "The CLI demo makes no network connection and never writes the normal capsule directory.",
-    "where": "landing facts, privacy page, README",
-    "test": "npm run test:site -- --grep @claim:cli-local-only",
-    "sandbox": "CLI demo with network connect() blocked and an isolated normal-capsule directory"
-  },
-  {
-    "id": "free-license",
-    "claim": "Freeze Capsule is free and open source under the MIT License.",
-    "where": "landing facts, README, terms",
-    "test": "npm run test:site -- --grep @claim:free-license",
-    "sandbox": "clean repository; inspect the shipped license"
-  }
+  {"id":"sample-report","claim":"One click opens a bundled report with journal, graphics, process, and display-session evidence.","where":"landing action, demo","test":"npm run test:site -- --grep @claim:sample-report","sandbox":"fresh browser context at /; activate the sample action"},
+  {"id":"sample-fixture","claim":"The browser sample report matches the report created by the bundled command-line demo.","where":"landing preview, demo","test":"npm run test:site -- --grep @claim:sample-fixture","sandbox":"fresh repository; compare the shipped browser fixture with freeze-capsule --json demo output"},
+  {"id":"demo-private","claim":"The browser demo saves only demo state and makes no third-party request.","where":"demo banner","test":"npm run test:site -- --grep @claim:demo-private","sandbox":"fresh browser context; record every request during the demo flow"},
+  {"id":"encrypted-redacted","claim":"The command-line demo writes an encrypted capsule and a redacted report with journal, graphics, process, and display-session evidence.","where":"landing facts, README","test":"npm run test:site -- --grep @claim:encrypted-redacted","sandbox":"bundled sample through freeze-capsule demo in a new temporary directory"},
+  {"id":"demo-capture-render","claim":"The command-line demo executes the encrypted capture and render path in a temporary directory.","where":"landing sample terminal","test":"npm run test:site -- --grep @claim:demo-capture-render","sandbox":"bundled sample through freeze-capsule --json demo; assert the temporary capsule and report exist"},
+  {"id":"redaction-coverage","claim":"Rendering replaces home paths, email addresses, IP addresses, and common secret values.","where":"landing workflow, README","test":"npm run test:site -- --grep @claim:redaction-coverage","sandbox":"known private-value fixture through the report redactor"},
+  {"id":"bounded-retention","claim":"Freeze Capsule keeps no more than eight retained capsules.","where":"landing facts, README","test":"npm run test:site -- --grep @claim:bounded-retention","sandbox":"temporary capsule directory seeded with twelve encrypted sample capsules"},
+  {"id":"watchdog-gap","claim":"A scheduling gap promotes the last completed rolling snapshot.","where":"landing workflow, README","test":"npm run test:site -- --grep @claim:watchdog-gap","sandbox":"new temporary directory; suspend the real watcher process beyond its configured timeout"},
+  {"id":"rolling-snapshot","claim":"The user service records a bounded ten-minute window every 30 seconds.","where":"landing workflow","test":"npm run test:site -- --grep @claim:rolling-snapshot","sandbox":"compiled service-unit and snapshot configuration"},
+  {"id":"cli-local-only","claim":"The command-line demo makes no network connection and never writes the normal capsule directory.","where":"README","test":"npm run test:site -- --grep @claim:cli-local-only","sandbox":"CLI demo with network connect() blocked and an isolated normal-capsule directory"},
+  {"id":"free-license","claim":"Freeze Capsule is free and open source under the MIT License.","where":"landing facts, README, terms","test":"npm run test:site -- --grep @claim:free-license","sandbox":"clean repository; inspect the shipped license"},
+  {"id":"linux-live-capture","claim":"Linux capture requests journal, kernel, graphics, connector, process, and display-session sources.","where":"README, install panel","test":"npm run test:site -- --grep @claim:linux-live-capture","sandbox":"Linux collector source contract"},
+  {"id":"hard-freeze-limit","claim":"After a watcher scheduling pause, the last completed snapshot is retained; a hard freeze can prevent a final write.","where":"landing, README, terms","test":"npm run test:site -- --grep @claim:hard-freeze-limit","sandbox":"suspend a real watcher and inspect the promoted snapshot"},
+  {"id":"limited-source-report","claim":"Unavailable commands or log access remain named in a usable report.","where":"landing, README, terms","test":"npm run test:site -- --grep @claim:limited-source-report","sandbox":"controlled missing-command and unreadable-directory sources"},
+  {"id":"hotkey-capture","claim":"The printed desktop hotkey command creates a retained capsule.","where":"README","test":"npm run test:site -- --grep @claim:hotkey-capture","sandbox":"execute the printed command against a temporary capsule directory"},
+  {"id":"installer-checksum","claim":"Both installers compare a downloaded archive with its published SHA-256 checksum before copying the binary.","where":"README","test":"npm run test:site -- --grep @claim:installer-checksum","sandbox":"inspect the POSIX and PowerShell verification branches"},
+  {"id":"json-output","claim":"The documented list and report commands return structured JSON.","where":"README","test":"npm run test:site -- --grep @claim:json-output","sandbox":"capture in a temporary directory, then parse both command results"},
+  {"id":"encryption-format","claim":"Capsules use a 24-byte XChaCha nonce layout and a local 32-byte key.","where":"README","test":"npm run test:site -- --grep @claim:encryption-format","sandbox":"encrypt and decrypt the bundled sample; inspect the file layout and key"},
+  {"id":"key-permissions","claim":"On Unix, the local key is created with owner-only 0600 permissions.","where":"README","test":"npm run test:site -- --grep @claim:key-permissions","sandbox":"new local state directory; inspect key mode"},
+  {"id":"current-snapshot","claim":"The current rolling snapshot does not use one of the eight saved-capsule slots.","where":"README","test":"npm run test:site -- --grep @claim:current-snapshot","sandbox":"temporary directory with one prebuffer and eight retained capsules"},
+  {"id":"release-artifacts","claim":"The release workflow builds archives, Linux packages, macOS packages, Windows archives, checksums, and release manifests; macOS and Windows artifacts are unsigned.","where":"README","test":"npm run test:site -- --grep @claim:release-artifacts","sandbox":"inspect the checked-in release workflow"},
+  {"id":"normal-state-directory","claim":"Normal capture stores capsules and one local key in the state directory.","where":"privacy","test":"npm run test:site -- --grep @claim:normal-state-directory","sandbox":"temporary XDG_STATE_HOME; run normal capture"},
+  {"id":"site-no-tracking","claim":"The site uses no accounts, analytics, advertising, cookies, or third-party requests during static routes.","where":"privacy","test":"npm run test:site -- --grep @claim:site-no-tracking","sandbox":"fresh browser context across all static routes"},
+  {"id":"release-lookup-request","claim":"Checking published packages requests public release details from GitHub only after the explicit action.","where":"privacy","test":"npm run test:site -- --grep @claim:release-lookup-request","sandbox":"request log before and after the explicit check action"},
+  {"id":"redaction-limits","claim":"Redaction removes selected private patterns but retains hardware detail for review.","where":"landing, privacy","test":"npm run test:site -- --grep @claim:redaction-limits","sandbox":"controlled report text with private values and a PCI identifier"}
 ]

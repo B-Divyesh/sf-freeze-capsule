@@ -45,7 +45,7 @@ scoop bucket add freeze-capsule https://github.com/B-Divyesh/sf-freeze-capsule
 scoop install freeze-capsule
 ```
 
-Live capture is Linux-specific. macOS and Windows builds provide the portable demo, renderer, and report inspection commands.
+Live capture is Linux-specific. Use the included sample to inspect a report before installing.
 
 ## Use
 
@@ -81,9 +81,9 @@ freeze-capsule render latest --format json
 
 Each Linux snapshot requests journal, kernel, graphics, connector, and process details. It also records selected display-session variables. A report marks unavailable sources instead of abandoning capture.
 
-Capsules use XChaCha20-Poly1305 with a local 32-byte key. The key is created with user-only permissions. Rendering replaces common home paths, email addresses, IPv4 addresses, and secret assignments. Review every report before sharing it.
+Capsules use XChaCha20-Poly1305 with a local 32-byte key. On Unix, the key is created with owner-only 0600 permissions. Rendering replaces common home paths, email addresses, IPv4 addresses, and secret assignments. Review every report before sharing it.
 
-At most eight retained capsules remain. The rolling prebuffer is not counted as a retained capsule. A hard freeze can stop every user process, so Freeze Capsule cannot guarantee a final write. It preserves the last completed snapshot instead.
+At most eight saved capsules remain. The current rolling snapshot does not use one of those eight slots. A hard freeze can stop every user process, so Freeze Capsule cannot guarantee a final write. It preserves the last completed snapshot instead.
 
 ## Develop
 

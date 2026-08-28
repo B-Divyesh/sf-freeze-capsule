@@ -52,14 +52,15 @@ jobs:
           cp "target/${{ matrix.target }}/release/freeze-capsule" stage/
           cp LICENSE README.md stage/
           tar -C stage -czf "freeze-capsule-${{ matrix.asset }}.tar.gz" freeze-capsule LICENSE README.md
-      - name: Package macOS installer
+      # The factory has no signing certificates; both macOS and Windows outputs are deliberately unsigned.
+      - name: Package unsigned macOS installer
         if: runner.os == 'macOS'
         shell: bash
         run: |
           mkdir -p pkgroot/usr/local/bin
           cp "target/${{ matrix.target }}/release/freeze-capsule" pkgroot/usr/local/bin/
           pkgbuild --root pkgroot --identifier in.sociobot.freeze-capsule --version "${RELEASE_TAG#v}" "freeze-capsule-${{ matrix.asset }}.pkg"
-      - name: Package Windows archive
+      - name: Package unsigned Windows archive
         if: runner.os == 'Windows'
         shell: pwsh
         run: |

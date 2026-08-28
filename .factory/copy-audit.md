@@ -40,7 +40,9 @@ Count method: whitespace-separated words. Labels and code are included when they
 
 First-screen read-aloud: “Save freeze clues before you reboot. For desktop Linux users who need graphics, kernel, process, and session context after a freeze. Try it with sample data.”
 
-Catalog description: “Save Linux freeze clues before a reboot erases them.” (9 words, 53 characters)
+Round 2 checked the revised mobile report and plain-language labels. “Included command-line sample” replaces “CLI sample,” and “This browser report comes from the included command-line demo” replaces the internal fixture explanation. No landing sentence exceeds 22 words and no banned term appears.
+
+Catalog description: “Save Linux freeze clues before a reboot erases them.” (10 words, 55 characters)
 
 ## Terminology
 
