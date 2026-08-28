@@ -184,11 +184,11 @@ test('@claim:sample-fixture browser fixture is generated from the CLI demo repor
 test('known static routes and the real 404 configuration are explicit', () => {
   const config = JSON.parse(readFileSync('site/public/staticwebapp.config.json', 'utf8')) as { routes: { route: string; rewrite?: string; statusCode?: number }[]; responseOverrides: { '404': { rewrite: string } } };
   expect(config.routes.filter(route => ['/demo', '/privacy', '/terms'].includes(route.route)).every(route => route.rewrite === '/index.html')).toBe(true);
-  expect(config.routes.filter(route => ['/404.html', '/404.css', '/404.js', '/favicon.svg', '/apple-touch-icon.png', '/robots.txt', '/sitemap.xml', '/install.sh', '/install.ps1'].includes(route.route))).toHaveLength(9);
+  expect(config.routes.filter(route => ['/404.html', '/favicon.svg', '/apple-touch-icon.png', '/robots.txt', '/sitemap.xml', '/install.sh', '/install.ps1'].includes(route.route))).toHaveLength(7);
   expect(config.routes.find(route => route.route === '/*')).toMatchObject({ statusCode: 404 });
   expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
   const missing = readFileSync('site/public/404.html', 'utf8');
-  for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1', 'apple-touch-icon', 'og:image', 'twitter:image', '404.js']) expect(missing).toContain(text);
+  for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1', 'apple-touch-icon', 'og:image', 'twitter:image', 'sessionStorage', '<style>']) expect(missing).toContain(text);
 });
 
 test('demo banner controls meet the 44 pixel mobile touch-target baseline', async ({ page }) => {

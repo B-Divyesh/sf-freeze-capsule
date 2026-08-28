@@ -4,7 +4,7 @@
   },
   "globalHeaders": {
     "Cache-Control": "public, max-age=0, must-revalidate",
-    "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'sha256-GKofmQwid/pWodccqrhdgX+xo+aI/NfKpi0MbF/15R8='; style-src 'self' 'sha256-nhNxGCkdDe32yYJS5eVHZzfWklG3KT2cQ1ns9tOC5m0='; img-src 'self' data:; connect-src 'self' https://api.github.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
@@ -20,8 +20,6 @@
       }
     },
     { "route": "/404.html" },
-    { "route": "/404.css" },
-    { "route": "/404.js" },
     { "route": "/index.html" },
     { "route": "/favicon.svg" },
     { "route": "/apple-touch-icon.png" },
