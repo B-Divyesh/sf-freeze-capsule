@@ -1,4 +1,32 @@
-# Freeze Capsule — polish round 4 handoff
+# Freeze Capsule — review 5 handoff
+
+## Review 5 outcome
+
+Independent adversarial review 5 is **FAIL** with two documented findings in
+`.factory/review-5.md`. Product code was not modified. This review and its
+handoff are the only changes in the review commit.
+
+### Verification performed
+
+- Fresh live browser contexts at 390×844 and 1440×900.
+- One-click populated demo, Reset, demo exit, storage isolation, request log,
+  CLI temporary-directory demo, routes, metadata, focus restoration, headers,
+  404, and every landing/download link.
+- Live axe checks on Home, Demo, Privacy, Terms, and 404: zero violations.
+- Fresh clone `/tmp/freeze-capsule-review-5-NmDyPt/repo`: `npm ci`, all 26
+  exact claims commands individually, and `npm test` all passed.
+
+### Remaining work
+
+1. Add a separately declared and tested `linux-only-capture` claim for the
+   README statement that real system data is collected only on Linux, or remove
+   that statement.
+2. Define the background watcher on first use on the landing page.
+
+After those changes, rerun the clean-clone claim loop and the live 390 px
+first-read/demo check.
+
+## Archive: polish round 4 handoff
 
 ## Outcome
 
