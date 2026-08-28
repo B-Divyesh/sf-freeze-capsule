@@ -110,7 +110,7 @@ test('static asset headers are immutable while HTML revalidates', () => {
 });
 
 test('all public routes have one heading and no serious accessibility findings', async ({ page }) => {
-  for (const route of ['/', '/demo', '/privacy', '/terms', '/missing-sheet']) {
+  for (const route of ['/', '/demo', '/privacy', '/terms', '/missing-sheet', '/404.html']) {
     await page.goto(route);
     await expect(page.locator('main')).toBeVisible();
     await expect(page.locator('h1')).toHaveCount(1);
