@@ -1,67 +1,50 @@
-# Freeze Capsule — polish round 3 handoff
+# Freeze Capsule — review 4 handoff
 
 ## Outcome
 
-All cumulative review findings are repaired. The production code commit is
-`89416b221144702026916874ad4b2c4fa0b5e86c`; it is deployed to
-<https://freeze-capsule.sociobot.in> through the `sf-freeze-capsule` Azure
-Static Web App.
+Adversarial review 4 is complete at candidate
+`784aaa1512ead50241ae3f2d985aefa99bfead46`. The verdict is **FAIL** with 23
+findings in `.factory/review-4.md`: four blocking, two major, and seventeen
+minor copy/structure findings. Product code was not modified.
 
-The repair makes demo storage disposable on every exit, including browser
-history and the standalone HTTP 404 document. It also restores a real unknown
-route response instead of a soft 404, preserves the blueprint visual system,
-aligns README/copy-audit wording with the tested product, and records the full
-review mapping in `.factory/polish-3.md`.
+## Verification performed
 
-## Run and verify
+- Opened the live site cold at 390×844 and 1440×900.
+- Exercised the one-click demo, Reset, Install exit, ordinary navigation,
+  Back/Forward, unknown-route exit, storage isolation, and live request log.
+- Ran all 25 exact `.factory/claims.json` commands individually after `npm ci`
+  in clean clone `/tmp/freeze-review4-cdX0YK/clone`; all exited successfully.
+- Ran `npm test` in that clone: 10 Rust tests, watchdog integration, and 33
+  Playwright tests passed.
+- Confirmed the build emits `dist/site` and 5.21 kB gzip JavaScript.
+- Ran the live POSIX installer into a fresh temporary install directory and ran
+  the installed binary's demo.
+- Ran `/opt/fleet/lib/verify-url.sh` successfully and live Axe checks on Home,
+  Demo, Privacy, Terms, and the unknown-route 404 with zero violations.
+- Crawled all static links and all four resolved v0.1.1 download links; all
+  intended destinations returned 200.
+- Read and independently rechecked every finding from reviews 1–3 and every
+  polish/handoff record.
+
+## Remaining work
+
+The complete fixes are specified per finding in `.factory/review-4.md`. The
+blocking work is to show realistic report output in the first phone demo
+viewport, replace installer/release source-string claim tests with outcome
+tests, and remove or test the README build-output claim. Clipboard and package
+lookup errors need honest recovery states. The remaining copy should be
+rewritten to remove blueprint lore and define technical terms on first use.
+
+## Re-run
 
 ```sh
 npm ci
-npm test -- --workers=1
-cargo clippy --all-targets -- -D warnings
-cargo build --release
+npm test
 npm run build
 ```
 
-The static artifact is `dist/site`. Deploy it with the work-order static
-configuration: build with `npm ci && npm run build:site`, then deploy
-`dist/site` to the configured Static Web App.
-
-## Exact verification evidence
-
-- Final clean clone: `/tmp/freeze-capsule-polish-3-final-code.Ol3GaL` at
-  `89416b221144702026916874ad4b2c4fa0b5e86c`.
-- `npm ci` completed with 0 vulnerabilities.
-- All 25 exact commands from `.factory/claims.json` passed individually in
-  that clone.
-- `npm test -- --workers=1` passed: 10 Rust unit tests, watchdog integration,
-  and 33 Playwright tests.
-- `cargo clippy --all-targets -- -D warnings`, `cargo build --release`, and
-  `npm run build` passed. The final clone produced
-  `target/release/freeze-capsule` (2,422,280 bytes) and
-  `dist/site/index.html` (1,770 bytes).
-- Final bundle: JavaScript 13.94 kB (5.21 kB gzip); CSS 11.68 kB (3.38 kB
-  gzip); original hero WebP remains below 300 kB.
-- Production deployment completed with
-  `swa deploy ./dist/site --env production` using the configured app token.
-- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/` passed:
-  HTTP 200, 794 ms cold load, no console/page errors, `lang=en`, one
-  `h1`, one `main`, and no missing image alt text.
-- Live Axe checks passed with no serious or critical findings on `/`,
-  `/demo?demo=1`, `/privacy`, `/terms`, and `/missing-sheet`.
-- Live cold browser checks confirmed the 390×844 first screen, one-click
-  report, demo reset/exit isolation through Privacy, Home, Back, and the real
-  404, route headings, and route-specific titles. `/missing-sheet` returns
-  HTTP 404; the only browser console event there is Chromium’s expected failed
-  document event for that intentional 404, with no failed helper resource or
-  application error.
-- Mobile Lighthouse: Performance 100, Accessibility 100, LCP 1.1 s, CLS 0,
-  and TBT 60 ms.
-- Screens: `.factory/evidence/home-390-polish-3.png`,
-  `.factory/evidence/demo-390-polish-3.png`, and
-  `.factory/evidence/404-390-polish-3.png`.
-
-## Known gaps and next steps
-
-None. The release workflow remains ready to build publishable CLI assets when
-the factory creates the next version tag.
+Then run every command in `.factory/claims.json` individually from a clean
+clone and repeat the live 390 px demo, request-log, route, link, and
+accessibility checks. A later review should not inherit a PASS from the current
+green command exits; it must verify the outcome coverage called out in F-4-2
+and F-4-3.
