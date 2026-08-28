@@ -65,6 +65,9 @@
   the last completed rolling snapshot; it cannot guarantee a new final write.
 - Live evidence capture is Linux-specific. macOS and Windows provide the
   portable demo and report tools.
+- This static site has no service worker or update subsystem and makes no
+  offline-after-first-visit claim. The loaded demo itself needs no network
+  request; its no-request behavior is covered by the privacy regression.
 - macOS `.pkg` and Windows portable zip builds are unsigned. Publishing a
   signed replacement requires the owner’s Apple and Windows certificates.
 - `HOMEBREW_TAP_TOKEN` is needed only to push the generated formula to
