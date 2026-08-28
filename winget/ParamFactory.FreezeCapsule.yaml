@@ -1,0 +1,10 @@
+PackageIdentifier: ParamFactory.FreezeCapsule
+PackageVersion: 0.1.0
+PackageLocale: en-US
+Publisher: Param Factory
+PackageName: Freeze Capsule
+License: MIT
+ShortDescription: Preserve bounded Linux freeze evidence before reboot
+PackageUrl: https://freeze-capsule.sociobot.in
+ManifestType: defaultLocale
+ManifestVersion: 1.9.0
