@@ -14,7 +14,7 @@ freeze-capsule demo
 
 The command loads [the bundled sample](examples/sample-freeze.json). It writes an encrypted capsule and redacted Markdown report under a new temporary directory. It never reads or writes your normal capsule directory.
 
-The same isolated sample is available at <https://freeze-capsule.sociobot.in/demo?demo=1>. The browser report is generated from the same bundled CLI demo fixture.
+The same isolated sample is available at <https://freeze-capsule.sociobot.in/demo?demo=1>. This browser report comes from the included command-line demo.
 
 ## Install
 
@@ -30,7 +30,7 @@ Windows PowerShell:
 irm https://freeze-capsule.sociobot.in/install.ps1 | iex
 ```
 
-Both installers download the published archive and verify its SHA-256 checksum. Linux users can also choose the `.deb` or `.rpm` file on the release page.
+Both installers download the published archive and verify its SHA-256 checksum.
 
 Homebrew after the tap is published:
 
@@ -111,4 +111,4 @@ The GitHub Actions workflow builds archives, Linux packages, macOS packages, Win
 
 ## Privacy and license
 
-The bundled CLI demo makes no network connection and uses a temporary directory. See [privacy](https://freeze-capsule.sociobot.in/privacy) and [terms](https://freeze-capsule.sociobot.in/terms). Freeze Capsule is released under the [MIT License](LICENSE).
+The included command-line demo makes no network connection and uses a temporary directory. See [privacy](https://freeze-capsule.sociobot.in/privacy) and [terms](https://freeze-capsule.sociobot.in/terms). Freeze Capsule is released under the [MIT License](LICENSE).
