@@ -1,1 +1,1 @@
-Keep encrypted Linux freeze clues ready before a reboot erases them.
+Capture Linux freeze clues before a reboot erases them.

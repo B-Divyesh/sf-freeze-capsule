@@ -232,10 +232,36 @@ fn save_capsule(root: &Path, capsule: &Capsule, prebuffer: bool) -> Result<PathB
 }
 
 fn collect(reason: &str) -> Capsule {
-    let mut sections = Vec::new();
-    #[cfg(target_os = "linux")]
-    {
-        sections.push(command_section(
+    collect_for_platform(reason, env::consts::OS, linux_sections)
+}
+
+fn collect_for_platform<F>(reason: &str, platform: &str, linux_sections: F) -> Capsule
+where
+    F: FnOnce() -> Vec<Section>,
+{
+    let sections = if platform == "linux" {
+        linux_sections()
+    } else {
+        vec![Section {
+            name: "platform".into(),
+            source: platform.into(),
+            status: "unavailable".into(),
+            content: "The watcher collects real system data only on Linux. Use `freeze-capsule demo` here.".into(),
+        }]
+    };
+    Capsule {
+        schema: 1,
+        captured_at: Utc::now(),
+        reason: reason.chars().take(80).collect(),
+        window_seconds: SNAPSHOT_WINDOW_SECONDS,
+        sections,
+        notices: vec!["Commands respect the current user's log permissions.".into(), "A hard freeze can prevent any process from recording new data; the watcher keeps the last completed snapshot.".into()],
+    }
+}
+
+fn linux_sections() -> Vec<Section> {
+    vec![
+        command_section(
             "journal",
             "journalctl --since -10min",
             "journalctl",
@@ -248,15 +274,10 @@ fn collect(reason: &str) -> Capsule {
                 "-o",
                 "short-precise",
             ],
-        ));
-        sections.push(command_section(
-            "kernel",
-            "dmesg",
-            "dmesg",
-            &["--color=never", "--ctime"],
-        ));
-        sections.push(command_section("graphics", "lspci -k", "lspci", &["-k"]));
-        sections.push(command_section(
+        ),
+        command_section("kernel", "dmesg", "dmesg", &["--color=never", "--ctime"]),
+        command_section("graphics", "lspci -k", "lspci", &["-k"]),
+        command_section(
             "processes",
             "ps",
             "ps",
@@ -265,22 +286,10 @@ fn collect(reason: &str) -> Capsule {
                 "pid,ppid,stat,etimes,%cpu,%mem,comm,args",
                 "--sort=-%cpu",
             ],
-        ));
-        sections.push(file_section(
-            "gpu-drm",
-            "/sys/class/drm",
-            Path::new("/sys/class/drm"),
-        ));
-        sections.push(env_section());
-    }
-    #[cfg(not(target_os = "linux"))]
-    sections.push(Section {
-        name: "platform".into(),
-        source: env::consts::OS.into(),
-        status: "unavailable".into(),
-        content: "The watcher collects real system data only on Linux. Use `freeze-capsule demo` here.".into(),
-    });
-    Capsule { schema: 1, captured_at: Utc::now(), reason: reason.chars().take(80).collect(), window_seconds: SNAPSHOT_WINDOW_SECONDS, sections, notices: vec!["Commands respect the current user's log permissions.".into(), "A hard freeze can prevent any process from recording new data; the watcher keeps the last completed snapshot.".into()] }
+        ),
+        file_section("gpu-drm", "/sys/class/drm", Path::new("/sys/class/drm")),
+        env_section(),
+    ]
 }
 
 fn command_section(name: &str, source: &str, program: &str, args: &[&str]) -> Section {
@@ -762,6 +771,42 @@ mod tests {
                 .iter()
                 .all(|section| !section.status.is_empty())
         );
+    }
+
+    #[test]
+    fn non_linux_collection_returns_only_an_unavailable_platform_result() {
+        for platform in ["macos", "windows"] {
+            let capsule =
+                collect_for_platform("platform-boundary", platform, || -> Vec<Section> {
+                    panic!("a non-Linux capture must not request Linux sources")
+                });
+            assert_eq!(
+                capsule.sections.len(),
+                1,
+                "{platform} should have one result"
+            );
+            let section = &capsule.sections[0];
+            assert_eq!(section.name, "platform");
+            assert_eq!(section.source, platform);
+            assert_eq!(section.status, "unavailable");
+            assert!(section.content.contains("only on Linux"));
+            for source in [
+                "journal",
+                "kernel",
+                "graphics",
+                "gpu-drm",
+                "processes",
+                "display-session",
+            ] {
+                assert!(
+                    capsule
+                        .sections
+                        .iter()
+                        .all(|candidate| candidate.name != source),
+                    "{platform} must not request {source}"
+                );
+            }
+        }
     }
 
     #[test]

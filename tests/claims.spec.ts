@@ -249,6 +249,11 @@ test('@claim:linux-live-capture Linux collection requests every documented sourc
   expect(output).toContain('test result: ok');
 });
 
+test('@claim:linux-only-capture non-Linux capture returns only an unavailable platform result', () => {
+  const output = execFileSync('cargo', ['test', 'non_linux_collection_returns_only_an_unavailable_platform_result'], { encoding: 'utf8' });
+  expect(output).toContain('test result: ok');
+});
+
 test('@claim:hard-freeze-limit a stopped watcher preserves the last completed snapshot', () => {
   expect(execFileSync('sh', ['tests/watchdog.sh'], { encoding: 'utf8' })).toContain('watchdog gap promotion: ok');
 });

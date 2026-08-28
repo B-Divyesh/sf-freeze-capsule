@@ -26,7 +26,7 @@ marketing words.
 | Three steps | 2 | Process label |
 | How Freeze Capsule keeps pre-freeze evidence | 6 | Section heading |
 | Keep one snapshot current | 4 | Step heading |
-| The watcher records a ten-minute window every 30 seconds. | 9 | `rolling-snapshot` |
+| The background watcher records a ten-minute window every 30 seconds. | 10 | `rolling-snapshot`; defines watcher on first use |
 | Keep the snapshot when the watcher pauses | 7 | Step heading |
 | A 90-second pause keeps the last completed snapshot. | 9 | `watchdog-gap` |
 | Create a redacted report | 4 | Step heading |
