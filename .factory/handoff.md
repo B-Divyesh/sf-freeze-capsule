@@ -35,7 +35,7 @@ Verification completed on 28 August 2026:
 - GitHub Actions run `33185785710`: Linux, macOS arm64, macOS x64, Windows, and release jobs passed.
 - GitHub Release `v0.1.0` contains 13 assets. `latest.json` parsed and reported seven platform/package artifacts.
 - The published Linux archive matched `SHA256SUMS`. The one-line installer downloaded, verified, installed, and ran the released binary demo.
-- Production budget: 5.32 KB gzip JavaScript, 3.32 KB gzip CSS, 49 KB hero WebP.
+- Production budget: 5.44 KB gzip JavaScript, 3.33 KB gzip CSS, 49 KB hero WebP.
 - Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100. LCP 1.6 s, TBT 0 ms, CLS 0.
 
 Claim definitions and one-command checks are in `.factory/claims.json`. Demo isolation is documented in `.factory/demo.md`. Copy counts are in `.factory/copy-audit.md`.
