@@ -36,10 +36,41 @@
 
 ## Release and deployment evidence
 
-The repaired commit will be tagged `v0.1.1`, built by the GitHub Actions
-release matrix, and deployed as the existing static `dist/site` artifact. This
-section is updated with the immutable tag, action run, checksum, installer,
-and live-header evidence after publication.
+- Annotated tag `v0.1.1` dereferences to repair commit
+  `73390fd47f9881e38fafd7645f3b56b941c8536a`.
+- GitHub Actions run
+  [33192654373](https://github.com/B-Divyesh/sf-freeze-capsule/actions/runs/33192654373)
+  passed the Linux, macOS x64, macOS arm64, Windows, and release jobs.
+- GitHub Release `v0.1.1` contains 13 assets. Downloaded
+  `freeze-capsule-linux-x86_64.tar.gz` passes `sha256sum -c SHA256SUMS`; its
+  extracted binary runs `--json demo`. `latest.json` parses as version `0.1.1`
+  with seven checksummed platform/package artifacts.
+- The live `install.sh`, installed in a fresh temporary directory, downloaded,
+  verified, installed, and ran the `v0.1.1` demo.
+- Deployed `dist/site` using `/opt/fleet/lib/deploy-static.sh` (deployment ID
+  `92d73d3b-7ed7-4bfe-bfdd-56baca2e63f5`) to the existing Static Web App
+  `sf-freeze-capsule`; `https://freeze-capsule.sociobot.in` returned 200.
+- Live headers: HTML is `Cache-Control: public, max-age=0, must-revalidate`;
+  fingerprinted JS and CSS are `public, max-age=31536000, immutable`. Their
+  SHA-256 values exactly match `dist/site`.
+- Live Playwright checks passed across `/`, `/demo`, `/privacy`, `/terms`, and
+  a missing route: one main/heading, desktop and 390 px mobile layout, 44 px
+  demo actions, keyboard navigation, no console errors, and no axe serious or
+  critical findings. The demo made only same-origin requests and left
+  localStorage empty; the release lookup displayed `v0.1.1 packages are ready`.
+
+## Known limits and operator follow-up
+
+- A hard lock can stop all user processes and disk writes. The tool preserves
+  the last completed rolling snapshot; it cannot guarantee a new final write.
+- Live evidence capture is Linux-specific. macOS and Windows provide the
+  portable demo and report tools.
+- macOS `.pkg` and Windows portable zip builds are unsigned. Publishing a
+  signed replacement requires the owner’s Apple and Windows certificates.
+- `HOMEBREW_TAP_TOKEN` is needed only to push the generated formula to
+  `B-Divyesh/homebrew-freeze-capsule`; the matching formula, Scoop manifest,
+  and winget manifests are release assets. Submit the winget manifest to
+  `microsoft/winget-pkgs` after review.
 
 ---
 
