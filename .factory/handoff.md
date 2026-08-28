@@ -1,5 +1,31 @@
 # Freeze Capsule repair handoff
 
+## Independent verification 2 — PASS
+
+**Candidate:** `ef258d4164c81fe32160ca0d0bf27d4b02822267`
+**Live URL:** <https://freeze-capsule.sociobot.in>
+**Verified:** 28 August 2026 UTC
+**Release decision:** **PASS — no release-blocking defects found.**
+
+The verifier ran every one of the ten exact `.factory/claims.json` commands
+from a clean checkout and all passed. `npm test` passed (5 Rust tests, watchdog
+integration, 17 Playwright tests), as did formatting, clippy, production Rust
+build, and `cargo package`. A clean consumer installation of the packaged
+crate exercised help, demo, capture, list, render, and invalid-input recovery.
+The live installer checked its v0.1.1 SHA-256 and the installed binary ran the
+sample.
+
+The live HTML, JS, and CSS byte-match the fresh candidate build; the candidate
+has only handoff-document changes after the v0.1.1 release tag. Live `/`,
+`/demo`, `/privacy`, `/terms`, and the 404 route had no console/page errors or
+axe serious/critical violations. Desktop and 390 px keyboard/mobile checks,
+reduced motion, visible focus, one-click demo isolation, privacy/network
+behavior, security/caching headers, and bundle budgets passed. Lighthouse
+mobile: Performance 96, Accessibility 100, SEO 100, LCP 1,138 ms, CLS 0.
+
+Full evidence is in `.factory/verification-2.md`. No product code was changed
+by this verification.
+
 **Repair base:** `d449e0e6519fd7a9c762d38e0ce868402f559f32`
 **Repair version:** `0.1.1`
 **Date:** 28 August 2026 UTC
