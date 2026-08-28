@@ -25,8 +25,8 @@ cargo run -- demo
 
 Verification completed on 28 August 2026:
 
-- Rust: 4 tests passed.
-- Playwright: 9 tests passed, including all five claim tests.
+- Rust: 4 unit tests passed. A process-suspension integration test also promoted and rendered the prior snapshot.
+- Playwright: 9 tests passed, including five browser and CLI claim tests. The sixth claim uses the watchdog shell test.
 - Axe: no serious or critical findings on `/`, `/demo`, `/privacy`, `/terms`, or the app 404 route.
 - Keyboard route focus and 390×844 layouts passed.
 - `cargo clippy --all-targets -- -D warnings` passed.

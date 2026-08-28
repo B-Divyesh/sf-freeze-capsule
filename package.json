@@ -8,7 +8,7 @@
     "build:site": "tsc --noEmit && vite build",
     "build": "npm run build:site",
     "preview": "vite preview --host 127.0.0.1",
-    "test:rust": "cargo test",
+    "test:rust": "cargo test && sh tests/watchdog.sh",
     "test:site": "npm run build:site && playwright test",
     "test": "npm run test:rust && npm run test:site"
   },

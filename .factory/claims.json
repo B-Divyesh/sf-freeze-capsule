@@ -28,6 +28,13 @@
     "sandbox": "temporary capsule directory seeded with twelve encrypted sample capsules"
   },
   {
+    "id": "watchdog-gap",
+    "claim": "A scheduling gap promotes the last completed rolling snapshot.",
+    "where": "landing workflow, README",
+    "test": "sh tests/watchdog.sh",
+    "sandbox": "new temporary directory; suspend the real watcher process beyond its configured timeout"
+  },
+  {
     "id": "free-license",
     "claim": "Freeze Capsule is free and open source under the MIT License.",
     "where": "landing facts, README, terms",

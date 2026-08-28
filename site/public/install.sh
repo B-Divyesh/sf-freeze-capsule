@@ -15,6 +15,10 @@ case "$(uname -m)" in
   arm64|aarch64) arch="aarch64" ;;
   *) echo "Unsupported processor: $(uname -m)" >&2; exit 1 ;;
 esac
+if [ "$os" = "linux" ] && [ "$arch" = "aarch64" ]; then
+  echo "The current Linux release supports x86_64. Build from source on Linux ARM." >&2
+  exit 1
+fi
 
 if [ "$VERSION" = "latest" ]; then
   base="https://github.com/$REPO/releases/latest/download"
