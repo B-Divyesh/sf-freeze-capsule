@@ -52,7 +52,7 @@ test('@claim:demo-private demo makes no third-party request', async ({ page }) =
 
   await page.goto('/demo?demo=1');
   await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
-  await page.goto('/missing-sheet');
+  await page.goto('/404.html');
   await expect(page.getByRole('heading', { name: 'This sheet is missing' })).toBeVisible();
   expect(await demoKeys()).toEqual([]);
 });
@@ -186,7 +186,7 @@ test('known static routes and the real 404 configuration are explicit', () => {
   expect(config.routes.filter(route => ['/demo', '/privacy', '/terms'].includes(route.route)).every(route => route.rewrite === '/index.html')).toBe(true);
   expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
   const missing = readFileSync('site/public/404.html', 'utf8');
-  for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1', 'apple-touch-icon', 'og:image', 'twitter:image']) expect(missing).toContain(text);
+  for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1', 'apple-touch-icon', 'og:image', 'twitter:image', '404.js']) expect(missing).toContain(text);
 });
 
 test('demo banner controls meet the 44 pixel mobile touch-target baseline', async ({ page }) => {
