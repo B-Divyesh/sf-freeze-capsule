@@ -1,0 +1,430 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "title": "Freeze Capsule — save Linux freeze clues",
+    "description": "Keep Linux freeze clues ready before reboot, then create a redacted report.",
+    "canonical": "https://freeze-capsule.sociobot.in/",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "targets": [
+      {
+        "text": "Skip to main content",
+        "width": 199,
+        "height": 49
+      },
+      {
+        "text": "Freeze Capsule",
+        "width": 123,
+        "height": 44
+      },
+      {
+        "text": "Demo",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Install",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Try it with sample data",
+        "width": 232,
+        "height": 48
+      },
+      {
+        "text": "View the sample report",
+        "width": 211,
+        "height": 44
+      },
+      {
+        "text": "Copy command",
+        "width": 340,
+        "height": 48
+      },
+      {
+        "text": "Open Linux releases",
+        "width": 199,
+        "height": 48
+      },
+      {
+        "text": "Check published packages",
+        "width": 239,
+        "height": 44
+      },
+      {
+        "text": "Find Linux .deb on GitHub",
+        "width": 240,
+        "height": 44
+      },
+      {
+        "text": "Find Linux .rpm on GitHub",
+        "width": 240,
+        "height": 44
+      },
+      {
+        "text": "Find macOS Apple silicon .pkg on GitHub",
+        "width": 342,
+        "height": 50
+      },
+      {
+        "text": "Find macOS Intel .pkg on GitHub",
+        "width": 298,
+        "height": 44
+      },
+      {
+        "text": "Find Windows .zip on GitHub",
+        "width": 259,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Terms",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Built by Param Factory\n(external site)",
+        "width": 175,
+        "height": 44
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "serious": [],
+    "badTargets": []
+  },
+  {
+    "route": "/demo?demo=1",
+    "status": 200,
+    "title": "Demo — Freeze Capsule",
+    "description": "Inspect a bundled, redacted Linux freeze report without saving real data.",
+    "canonical": "https://freeze-capsule.sociobot.in/demo",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "targets": [
+      {
+        "text": "Skip to main content",
+        "width": 199,
+        "height": 49
+      },
+      {
+        "text": "Reset demo",
+        "width": 94,
+        "height": 44
+      },
+      {
+        "text": "Install Freeze Capsule",
+        "width": 147,
+        "height": 44
+      },
+      {
+        "text": "Freeze Capsule",
+        "width": 123,
+        "height": 44
+      },
+      {
+        "text": "Demo",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Install",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Read the full report",
+        "width": 330,
+        "height": 44
+      },
+      {
+        "text": "Replay sample capture",
+        "width": 215,
+        "height": 48
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Terms",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Built by Param Factory\n(external site)",
+        "width": 175,
+        "height": 44
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "serious": [],
+    "badTargets": []
+  },
+  {
+    "route": "/privacy",
+    "status": 200,
+    "title": "Privacy — Freeze Capsule",
+    "description": "Read how Freeze Capsule keeps browser demo data separate.",
+    "canonical": "https://freeze-capsule.sociobot.in/privacy",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "targets": [
+      {
+        "text": "Skip to main content",
+        "width": 199,
+        "height": 49
+      },
+      {
+        "text": "Freeze Capsule",
+        "width": 123,
+        "height": 44
+      },
+      {
+        "text": "Demo",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Install",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Terms",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Built by Param Factory\n(external site)",
+        "width": 175,
+        "height": 44
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "serious": [],
+    "badTargets": []
+  },
+  {
+    "route": "/terms",
+    "status": 200,
+    "title": "Terms — Freeze Capsule",
+    "description": "Read the MIT license terms and capture limits.",
+    "canonical": "https://freeze-capsule.sociobot.in/terms",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "targets": [
+      {
+        "text": "Skip to main content",
+        "width": 199,
+        "height": 49
+      },
+      {
+        "text": "Freeze Capsule",
+        "width": 123,
+        "height": 44
+      },
+      {
+        "text": "Demo",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Install",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 56,
+        "height": 44
+      },
+      {
+        "text": "Terms",
+        "width": 44,
+        "height": 44
+      },
+      {
+        "text": "Built by Param Factory\n(external site)",
+        "width": 175,
+        "height": 44
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "serious": [],
+    "badTargets": []
+  },
+  {
+    "route": "/missing-sheet",
+    "status": 404,
+    "title": "Page not found — Freeze Capsule",
+    "description": "The requested Freeze Capsule page was not found.",
+    "canonical": "https://freeze-capsule.sociobot.in/404.html",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "targets": [
+      {
+        "text": "Skip to main content",
+        "width": 209,
+        "height": 50
+      },
+      {
+        "text": "Freeze Capsule",
+        "width": 129,
+        "height": 44
+      },
+      {
+        "text": "Demo",
+        "width": 51,
+        "height": 44
+      },
+      {
+        "text": "Install",
+        "width": 51,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 62,
+        "height": 44
+      },
+      {
+        "text": "Return to the home page",
+        "width": 277,
+        "height": 48
+      },
+      {
+        "text": "Privacy",
+        "width": 62,
+        "height": 44
+      },
+      {
+        "text": "Terms",
+        "width": 50,
+        "height": 44
+      },
+      {
+        "text": "Built by Param Factory\n(external site)",
+        "width": 192,
+        "height": 44
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "serious": [],
+    "badTargets": []
+  },
+  {
+    "route": "/404.html",
+    "status": 200,
+    "title": "Page not found — Freeze Capsule",
+    "description": "The requested Freeze Capsule page was not found.",
+    "canonical": "https://freeze-capsule.sociobot.in/404.html",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "targets": [
+      {
+        "text": "Skip to main content",
+        "width": 209,
+        "height": 50
+      },
+      {
+        "text": "Freeze Capsule",
+        "width": 129,
+        "height": 44
+      },
+      {
+        "text": "Demo",
+        "width": 51,
+        "height": 44
+      },
+      {
+        "text": "Install",
+        "width": 51,
+        "height": 44
+      },
+      {
+        "text": "Privacy",
+        "width": 62,
+        "height": 44
+      },
+      {
+        "text": "Return to the home page",
+        "width": 277,
+        "height": 48
+      },
+      {
+        "text": "Privacy",
+        "width": 62,
+        "height": 44
+      },
+      {
+        "text": "Terms",
+        "width": 50,
+        "height": 44
+      },
+      {
+        "text": "Built by Param Factory\n(external site)",
+        "width": 192,
+        "height": 44
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "serious": [],
+    "badTargets": []
+  }
+]\n

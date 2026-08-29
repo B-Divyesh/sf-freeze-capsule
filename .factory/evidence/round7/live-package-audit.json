@@ -1,0 +1,74 @@
+[
+  {
+    "name": "android",
+    "status": "Choose a package on your desktop.",
+    "href": "https://github.com/B-Divyesh/sf-freeze-capsule/releases",
+    "secondary": [
+      "Download Linux .deb",
+      "Download Linux .rpm",
+      "Download macOS Apple silicon .pkg",
+      "Download macOS Intel .pkg",
+      "Download Windows .zip"
+    ]
+  },
+  {
+    "name": "iphone",
+    "status": "Choose a package on your desktop.",
+    "href": "https://github.com/B-Divyesh/sf-freeze-capsule/releases",
+    "secondary": [
+      "Download Linux .deb",
+      "Download Linux .rpm",
+      "Download macOS Apple silicon .pkg",
+      "Download macOS Intel .pkg",
+      "Download Windows .zip"
+    ]
+  },
+  {
+    "name": "linux",
+    "status": "v-live Linux .deb package is ready.",
+    "href": "https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb",
+    "secondary": [
+      "Download Linux .deb",
+      "Download Linux .rpm",
+      "Download macOS Apple silicon .pkg",
+      "Download macOS Intel .pkg",
+      "Download Windows .zip"
+    ]
+  },
+  {
+    "name": "windows",
+    "status": "v-live Windows .zip package is ready.",
+    "href": "https://downloads.example.test/freeze-capsule-windows-x86_64.zip",
+    "secondary": [
+      "Download Linux .deb",
+      "Download Linux .rpm",
+      "Download macOS Apple silicon .pkg",
+      "Download macOS Intel .pkg",
+      "Download Windows .zip"
+    ]
+  },
+  {
+    "name": "mac",
+    "status": "Choose the matching macOS package for your Mac.",
+    "href": "https://github.com/B-Divyesh/sf-freeze-capsule/releases",
+    "secondary": [
+      "Download Linux .deb",
+      "Download Linux .rpm",
+      "Download macOS Apple silicon .pkg",
+      "Download macOS Intel .pkg",
+      "Download Windows .zip"
+    ]
+  },
+  {
+    "name": "missing-linux",
+    "status": "v-live does not include a Linux .deb package. Open the GitHub release page to see current files.",
+    "href": "https://github.com/B-Divyesh/sf-freeze-capsule/releases",
+    "secondary": [
+      "Find Linux .deb on GitHub",
+      "Find Linux .rpm on GitHub",
+      "Find macOS Apple silicon .pkg on GitHub",
+      "Find macOS Intel .pkg on GitHub",
+      "Find Windows .zip on GitHub"
+    ]
+  }
+]\n

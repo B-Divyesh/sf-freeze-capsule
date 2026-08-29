@@ -2,60 +2,76 @@
 
 ## Outcome
 
-Review 7 is complete against commit
-`53c098114b86b489eedd4ddc44a2067dbe15b6f3` and the live site at
-<https://freeze-capsule.sociobot.in>. The verdict is **FAIL** with four findings.
-No product code was changed.
+Repair commit `de51e459e5e176a41f794f461028850564ee9192` is pushed to `main`
+and deployed to <https://freeze-capsule.sociobot.in>. It repairs all four
+review-7 findings and preserves the blueprint drafting-sheet visual system.
 
-The blocking defect is the phone download selector: Android is presented as
-desktop Linux and receives the x86_64 `.deb`; iPhone is presented as macOS and
-receives the x86_64 `.pkg`. The picker also says packages are ready without
-checking that a matching asset exists, and that behavior has no claims entry.
-Three minor plain-language findings cover the first-screen term “state
-directory” and two ambiguous README headings.
+The package picker now treats Android and iOS as mobile, does not guess a
+macOS architecture, and offers a direct desktop download only after the
+matching release asset resolves. The first-screen storage fact now uses plain
+language, and the two README headings name their work.
 
-Full evidence, copy counts, claim results, and the historical-finding ledger are
-in `.factory/review-7.md`.
+## Verification
 
-## How verification was run
+Clean-clone verification was run from
+`/tmp/freeze-capsule-round7-clean.uP7z4H/repo` after `npm ci`:
+
+- Every exact command declared in `.factory/claims.json` was run separately:
+  **28/28 passed**.
+- `npm test` passed: 11 Rust tests, watchdog integration, and 39 Playwright
+  tests.
+- `cargo clippy --locked --all-targets -- -D warnings` passed.
+- `cargo build --locked --release` passed.
+- `npm run build:site` produced `dist/site`; initial application JavaScript is
+  16.95 kB (6.14 kB gzip) and CSS is 12.14 kB (3.49 kB gzip).
+- `npm audit --audit-level=moderate` reported 0 vulnerabilities.
+
+The static deployment completed through the work-order deployment command.
+Cold live verification then passed:
+
+- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/ \
+  .factory/evidence/round7/live-verify` — title, language, one h1, main,
+  image alt text, and console check all pass.
+- `.factory/evidence/round7/live-route-audit.json` — Home, Demo, Privacy,
+  Terms, the real unknown-route 404, and `/404.html`: correct status,
+  metadata, one h1/main, no horizontal overflow at 390 px, no application
+  console errors, no Axe serious/critical issues, and no undersized targets.
+- `.factory/evidence/round7/live-demo-audit.json` — one-click demo has its
+  report above the 844 px fold; Reset reloads only `demo:` state; Install
+  clears `demo:` state while preserving non-demo state; no cross-origin
+  request occurs in the flow.
+- `.factory/evidence/round7/live-package-audit.json` — Android, iPhone,
+  Linux, Windows, ambiguous macOS, and missing-asset package branches pass
+  against the deployed bundle.
+- Mobile screenshots: `.factory/evidence/round7/live-home-390.png`,
+  `live-demo-390.png`, `live-404-390.png`, and `live-android-install-390.png`.
+
+## Run locally
 
 ```sh
-git clone --no-local /work/repo /tmp/freeze-review7.RrJvFI/repo
-cd /tmp/freeze-review7.RrJvFI/repo
 npm ci
-# Every exact .factory/claims.json test command was run separately.
 npm test
+npm run build:site
 ```
 
-Results:
+Open `dist/site` with a static server, or use `npm run dev:site` if available.
+The one-click browser sample is `/demo?demo=1`.
 
-- 27/27 declared claim commands passed.
-- `npm test` passed: 11 Rust tests, watchdog integration, and 38 Playwright
-  tests.
-- `npm run build` produced `dist/site`; application JavaScript is 15.25 kB
-  (5.73 kB gzip).
-- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/
-  /tmp/review7-verify` passed in 620 ms.
-- Live Axe checks found no serious or critical issue on Home, Demo, Privacy,
-  Terms, the unknown-route 404, or `/404.html`.
-- A live crawl returned 200 for every intended route, static file, external
-  link, and all 13 published v0.1.1 assets. The designed unknown route returned
-  404.
-- The live browser demo was checked in fresh storage at 390×844. Reset and exit
-  clear `demo:` keys, preserve seeded non-demo keys, and make only same-origin
-  requests.
-- The CLI demo ran from `/tmp/freeze-review7-cli.GHdy2S` with a separate state
-  directory. Its capsule, key, and report stayed inside the generated temporary
-  demo directory.
-- Pixel 7 and iPhone 13 user-agent runs reproduce the blocking package-picker
-  defect recorded as F-7-1.
+## Deployment
 
-## Remaining work
+The product remains a static landing/docs site plus the original Rust CLI and
+GitHub Actions release workflow. The static site is deployed from `dist/site`:
 
-1. Repair mobile platform/package selection and add the missing claim with
-   Android, iPhone, desktop, missing-asset, and architecture cases.
-2. Replace the first-screen storage jargon.
-3. Rename README headings **Use** and **What it records** as specified in the
-   review.
-4. Re-run every claim command, the full suite, the live phone flow, and the
-   complete earlier-finding ledger.
+```sh
+npm run build:site
+/opt/fleet/lib/deploy-static.sh freeze-capsule dist/site
+```
+
+No release tag or binary artifact changed in this repair; it changes the
+landing site's package-selection behavior and documentation only.
+
+## Known gaps
+
+None. The site deliberately does not claim offline-after-first-visit browser
+operation and does not install a service worker; its no-network claim is
+scoped to the bundled command-line demo and is covered by a claim test.

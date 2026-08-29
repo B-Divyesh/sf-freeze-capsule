@@ -1,0 +1,12 @@
+{
+  "heroBottom": 613,
+  "reportBottom": 551,
+  "afterReset": [
+    "demo:loaded",
+    "real:marker"
+  ],
+  "afterLeave": [
+    "real:marker"
+  ],
+  "crossOrigin": []
+}\n
