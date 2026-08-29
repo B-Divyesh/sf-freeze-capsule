@@ -440,6 +440,20 @@ test('@claim:normal-state-directory normal capture keeps one key and capsules be
   } finally { rmSync(state, { recursive: true, force: true }); }
 });
 
+test('@claim:local-evidence-removal removing the documented normal-state folder removes the local key and saved capsules', () => {
+  const state = join(tmpdir(), `freeze-capsule-removal-${process.pid}-${Date.now()}`);
+  const root = join(state, 'freeze-capsule');
+  try {
+    execFileSync('cargo', ['build', '--quiet']);
+    execFileSync('target/debug/freeze-capsule', ['capture'], { env: { ...process.env, XDG_STATE_HOME: state } });
+    expect(existsSync(join(root, 'capsule.key'))).toBe(true);
+    expect(readdirSync(root).some(name => /^capsule-.*\.fcap$/.test(name))).toBe(true);
+    rmSync(root, { recursive: true, force: true });
+    expect(existsSync(root)).toBe(false);
+    expect(existsSync(join(root, 'capsule.key'))).toBe(false);
+  } finally { rmSync(state, { recursive: true, force: true }); }
+});
+
 test('@claim:site-no-tracking static routes use no cookies, analytics, advertising, or third-party requests', async ({ page }) => {
   const foreign: string[] = [];
   page.on('request', request => { if (new URL(request.url()).origin !== 'http://127.0.0.1:4173') foreign.push(request.url()); });

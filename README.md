@@ -111,4 +111,4 @@ The checked release workflow declares Linux, macOS, and Windows packaging jobs. 
 
 ## Privacy and license
 
-The included command-line demo makes no network connection and uses a temporary directory. See [privacy](https://freeze-capsule.sociobot.in/privacy) and [terms](https://freeze-capsule.sociobot.in/terms). Freeze Capsule is released under the [MIT License](LICENSE).
+The included command-line demo makes no network connection and uses a temporary directory. For normal Linux storage, remove `~/.local/state/freeze-capsule` to remove the local key and saved capsules. If you set `XDG_STATE_HOME`, remove its `freeze-capsule` folder instead. See [privacy](https://freeze-capsule.sociobot.in/privacy) and [terms](https://freeze-capsule.sociobot.in/terms). Freeze Capsule is released under the [MIT License](LICENSE).
