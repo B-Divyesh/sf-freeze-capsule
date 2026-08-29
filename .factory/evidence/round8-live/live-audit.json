@@ -1,0 +1,168 @@
+{
+  "origin": "https://freeze-capsule.sociobot.in",
+  "routes": [
+    {
+      "path": "/",
+      "status": 200,
+      "expected": 200,
+      "title": "Freeze Capsule — save Linux freeze clues",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "canonical": "https://freeze-capsule.sociobot.in/",
+      "ogUrl": "https://freeze-capsule.sociobot.in/",
+      "overflow": 390,
+      "errors": [],
+      "expected404NetworkMessage": [],
+      "seriousOrCritical": [],
+      "undersized": []
+    },
+    {
+      "path": "/demo?demo=1",
+      "status": 200,
+      "expected": 200,
+      "title": "Demo — Freeze Capsule",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "canonical": "https://freeze-capsule.sociobot.in/demo",
+      "ogUrl": "https://freeze-capsule.sociobot.in/demo",
+      "overflow": 390,
+      "errors": [],
+      "expected404NetworkMessage": [],
+      "seriousOrCritical": [],
+      "undersized": []
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "expected": 200,
+      "title": "Privacy — Freeze Capsule",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "canonical": "https://freeze-capsule.sociobot.in/privacy",
+      "ogUrl": "https://freeze-capsule.sociobot.in/privacy",
+      "overflow": 390,
+      "errors": [],
+      "expected404NetworkMessage": [],
+      "seriousOrCritical": [],
+      "undersized": []
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "expected": 200,
+      "title": "Terms — Freeze Capsule",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "canonical": "https://freeze-capsule.sociobot.in/terms",
+      "ogUrl": "https://freeze-capsule.sociobot.in/terms",
+      "overflow": 390,
+      "errors": [],
+      "expected404NetworkMessage": [],
+      "seriousOrCritical": [],
+      "undersized": []
+    },
+    {
+      "path": "/missing-sheet",
+      "status": 404,
+      "expected": 404,
+      "title": "Page not found — Freeze Capsule",
+      "lang": "en",
+      "h1": 1,
+      "main": 1,
+      "canonical": "https://freeze-capsule.sociobot.in/404.html",
+      "ogUrl": "https://freeze-capsule.sociobot.in/404.html",
+      "overflow": 390,
+      "errors": [],
+      "expected404NetworkMessage": [
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "seriousOrCritical": [],
+      "undersized": []
+    }
+  ],
+  "flow": {
+    "oneClickUrl": "https://freeze-capsule.sociobot.in/demo?demo=1",
+    "reportEvidenceRows": 4,
+    "resetKeys": [
+      "demo:loaded"
+    ],
+    "exitKeys": [],
+    "realKeys": {
+      "local": "keep",
+      "session": "keep"
+    },
+    "installBox": {
+      "x": 24,
+      "y": 735.578125,
+      "width": 342,
+      "height": 60.46875
+    },
+    "installInViewport": true,
+    "privacyHasPath": true,
+    "hashBox": {
+      "x": 24,
+      "y": 158.578125,
+      "width": 342,
+      "height": 60.46875
+    },
+    "hashInViewport": true,
+    "hashFocused": "Install the Linux watcher",
+    "demoFocus": "H1 Inspect a sample freeze report",
+    "backFocus": "H1 Save freeze clues before you reboot",
+    "forwardFocus": "H1 Inspect a sample freeze report",
+    "foreignRequests": [],
+    "flowErrors": [],
+    "installExit": {
+      "url": "https://freeze-capsule.sociobot.in/#install",
+      "scrollY": 1964,
+      "box": {
+        "x": 24,
+        "y": 735.578125,
+        "width": 342,
+        "height": 60.46875
+      },
+      "active": "Install the Linux watcher",
+      "demoKeys": [],
+      "installInViewport": true
+    },
+    "demoExitNavigation": true
+  },
+  "links": [
+    {
+      "href": "https://freeze-capsule.sociobot.in/#main",
+      "status": 200
+    },
+    {
+      "href": "https://freeze-capsule.sociobot.in/",
+      "status": 200
+    },
+    {
+      "href": "https://freeze-capsule.sociobot.in/demo?demo=1",
+      "status": 200
+    },
+    {
+      "href": "https://freeze-capsule.sociobot.in/#install",
+      "status": 200
+    },
+    {
+      "href": "https://freeze-capsule.sociobot.in/privacy",
+      "status": 200
+    },
+    {
+      "href": "https://github.com/B-Divyesh/sf-freeze-capsule/releases",
+      "status": 200
+    },
+    {
+      "href": "https://freeze-capsule.sociobot.in/terms",
+      "status": 200
+    },
+    {
+      "href": "https://sociobot.in/",
+      "status": 200
+    }
+  ]
+}

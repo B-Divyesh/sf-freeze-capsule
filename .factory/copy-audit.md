@@ -88,3 +88,11 @@ command-line demo makes no network connection.”
 | --- | --- |
 | Capture and export freeze reports | Names the capture, list, and export procedures in the section. |
 | What Freeze Capsule records | Names the product and the information described below it. |
+
+## README privacy copy
+
+| Copy | Words | Claim |
+| --- | ---: | --- |
+| The included command-line demo makes no network connection and uses a temporary directory. | 13 | `cli-local-only` |
+| For normal Linux storage, remove `~/.local/state/freeze-capsule` to remove the local key and saved capsules. | 14 | `local-evidence-removal` |
+| If you set `XDG_STATE_HOME`, remove its `freeze-capsule` folder instead. | 9 | `local-evidence-removal` |
