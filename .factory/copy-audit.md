@@ -16,7 +16,7 @@ marketing words.
 | Try it with sample data | 5 | `sample-report` action |
 | See a redacted report in one click. | 7 | `sample-report` |
 | Free under the MIT License | 5 | `free-license` |
-| Capsules and key stay in your state directory | 8 | `normal-state-directory` |
+| Freeze Capsule stores capsules and the key in a folder on your computer. | 13 | `normal-state-directory`; names the local location in plain words |
 | The command-line demo makes no network connection | 7 | `cli-local-only` |
 | Evidence sources: journal, graphics, processes, and display session. | 8 | Art caption |
 | Included command-line sample | 3 | Sample label |
@@ -38,14 +38,18 @@ marketing words.
 | Could not copy. | 3 | Clipboard error |
 | Select the command and copy it manually. | 8 | Clipboard recovery step |
 | Find a package on GitHub, or check the published release. | 10 | Download instruction |
-| Open Linux releases / Check published packages | 3 / 3 | Download actions |
+| Open Linux releases / Check published packages | 3 / 3 | Desktop Linux action and explicit lookup action |
 | Checking the GitHub release… | 4 | Loading state |
-| Packages are ready. | 3 | Successful lookup state; version is prepended |
-| Linux was detected. | 3 | Detected-platform state |
+| v0.1.1 Linux `.deb` package is ready. | 6 | `platform-package-selection`; shown only when the matching asset exists |
+| v0.1.1 does not include a Linux `.deb` package. Open the GitHub release page to see current files. | 17 | `platform-package-selection`; missing-asset recovery |
+| Choose a package on your desktop. | 6 | `platform-package-selection`; Android and iOS state |
+| Choose the matching macOS package for your Mac. | 9 | `platform-package-selection`; architecture is not guessed |
 | Package check failed. | 3 | Lookup error |
 | Open the GitHub release page to see current files. | 10 | Lookup recovery step |
-| Find Linux .deb on GitHub / Find Linux .rpm on GitHub | 5 / 5 | Honest external links |
-| Find macOS .pkg on GitHub / Find Windows .zip on GitHub | 5 / 5 | Honest external links |
+| Find Linux `.deb` on GitHub / Find Linux `.rpm` on GitHub | 5 / 5 | Honest external links before lookup |
+| Find macOS Apple silicon `.pkg` on GitHub / Find macOS Intel `.pkg` on GitHub | 7 / 7 | Honest external links before lookup |
+| Find Windows `.zip` on GitHub | 5 | Honest external link before lookup |
+| Download Linux `.deb` / Download Linux `.rpm` / Download macOS Apple silicon `.pkg` / Download macOS Intel `.pkg` / Download Windows `.zip` | 3 / 3 / 5 / 5 / 3 | `platform-package-selection`; direct labels only after their files resolve |
 | If macOS shows an unidentified-developer warning, right-click the package and choose Open. | 12 | Conditional install recovery |
 | Review any Windows security warning before running the file. | 9 | Conditional install safety step |
 | Start and check the watcher | 5 | Section heading |
@@ -62,7 +66,9 @@ marketing words.
 
 First-screen read-aloud: “Save freeze clues before you reboot. For desktop
 Linux users who need graphics, kernel, process, and session context after a
-freeze. Try it with sample data. See a redacted report in one click.”
+freeze. Try it with sample data. See a redacted report in one click. Freeze
+Capsule stores capsules and the key in a folder on your computer. The
+command-line demo makes no network connection.”
 
 ## Terminology
 
@@ -75,3 +81,10 @@ freeze. Try it with sample data. See a redacted report in one click.”
 | Kept evidence after a trigger | saved capsule |
 | Shipped test scenario | sample |
 | Browser test state | demo |
+
+## README heading audit
+
+| Heading | Why it works alone |
+| --- | --- |
+| Capture and export freeze reports | Names the capture, list, and export procedures in the section. |
+| What Freeze Capsule records | Names the product and the information described below it. |

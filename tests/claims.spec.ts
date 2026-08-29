@@ -220,7 +220,7 @@ test('mobile first screen shows the tested price, local-storage, and no-network 
     page.getByRole('link', { name: 'Try it with sample data' }),
     page.getByText('See a redacted report in one click.', { exact: true }),
     page.locator('.facts li').filter({ hasText: 'Free under the MIT License' }),
-    page.locator('.facts li').filter({ hasText: 'Capsules and key stay in your state directory' }),
+    page.locator('.facts li').filter({ hasText: 'Freeze Capsule stores capsules and the key in a folder on your computer' }),
     page.locator('.facts li').filter({ hasText: 'The command-line demo makes no network connection' }),
   ]) await expect(element).toBeInViewport();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
@@ -452,12 +452,69 @@ test('@claim:site-no-tracking static routes use no cookies, analytics, advertisi
 test('@claim:release-lookup-request GitHub release details are requested only after the explicit check action', async ({ page }) => {
   const githubRequests: string[] = [];
   page.on('request', request => { if (request.url().startsWith('https://api.github.com/')) githubRequests.push(request.url()); });
-  await page.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ tag_name: 'v-test', assets: [] }) }));
+  await page.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ tag_name: 'v-test', assets: [{ name: 'freeze-capsule_0.1.1_amd64.deb', browser_download_url: 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb' }] }) }));
   await page.goto('/');
   expect(githubRequests).toEqual([]);
   await page.getByRole('button', { name: 'Check published packages' }).click();
-  await expect(page.getByText('v-test packages are ready. Linux was detected.')).toBeVisible();
+  await expect(page.getByText('v-test Linux .deb package is ready.')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Download for Linux' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb');
   expect(githubRequests).toHaveLength(1);
+});
+
+test('@claim:platform-package-selection package checks select only compatible desktop assets', async ({ browser }) => {
+  const releasePage = 'https://github.com/B-Divyesh/sf-freeze-capsule/releases';
+  const assets = [
+    'freeze-capsule_0.1.1_amd64.deb',
+    'freeze-capsule-0.1.1-1.x86_64.rpm',
+    'freeze-capsule-macos-aarch64.pkg',
+    'freeze-capsule-macos-x86_64.pkg',
+    'freeze-capsule-windows-x86_64.zip',
+  ].map(name => ({ name, browser_download_url: `https://downloads.example.test/${name}` }));
+
+  async function checkedPage(userAgent: string, releaseAssets = assets) {
+    const context = await browser.newContext({ userAgent, viewport: { width: 390, height: 844 } });
+    const page = await context.newPage();
+    await page.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ tag_name: 'v-test', assets: releaseAssets }) }));
+    await page.goto('/#install');
+    await page.getByRole('button', { name: 'Check published packages' }).click();
+    return { context, page };
+  }
+
+  const android = await checkedPage('Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 Chrome/120.0 Mobile Safari/537.36');
+  await expect(android.page.getByText('Choose a package on your desktop.')).toBeVisible();
+  await expect(android.page.getByRole('link', { name: 'Choose a package on your desktop' })).toHaveAttribute('href', releasePage);
+  await expect(android.page.locator('[data-primary-download]')).not.toHaveText(/Download for/);
+  await android.context.close();
+
+  const iphone = await checkedPage('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1');
+  await expect(iphone.page.getByText('Choose a package on your desktop.')).toBeVisible();
+  await expect(iphone.page.getByRole('link', { name: 'Choose a package on your desktop' })).toHaveAttribute('href', releasePage);
+  await expect(iphone.page.locator('[data-primary-download]')).not.toHaveText(/Download for/);
+  await iphone.context.close();
+
+  const linux = await checkedPage('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36');
+  await expect(linux.page.getByText('v-test Linux .deb package is ready.')).toBeVisible();
+  await expect(linux.page.getByRole('link', { name: 'Download for Linux' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb');
+  await expect(linux.page.getByRole('link', { name: 'Download Linux .deb' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb');
+  await expect(linux.page.getByRole('link', { name: 'Download macOS Apple silicon .pkg' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule-macos-aarch64.pkg');
+  await linux.context.close();
+
+  const windows = await checkedPage('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36');
+  await expect(windows.page.getByText('v-test Windows .zip package is ready.')).toBeVisible();
+  await expect(windows.page.getByRole('link', { name: 'Download for Windows' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule-windows-x86_64.zip');
+  await windows.context.close();
+
+  const mac = await checkedPage('Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15');
+  await expect(mac.page.getByText('Choose the matching macOS package for your Mac.')).toBeVisible();
+  await expect(mac.page.getByRole('link', { name: 'Choose the matching macOS package' })).toHaveAttribute('href', releasePage);
+  await expect(mac.page.locator('[data-primary-download]')).not.toHaveText(/Download for/);
+  await mac.context.close();
+
+  const missing = await checkedPage('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36', []);
+  await expect(missing.page.getByText('v-test does not include a Linux .deb package. Open the GitHub release page to see current files.')).toBeVisible();
+  await expect(missing.page.getByRole('link', { name: 'Open Linux releases' })).toHaveAttribute('href', releasePage);
+  await expect(missing.page.getByRole('link', { name: 'Find Linux .deb on GitHub' })).toHaveAttribute('href', releasePage);
+  await missing.context.close();
 });
 
 test('@claim:redaction-limits reports redact selected private patterns while retaining hardware detail for review', () => {

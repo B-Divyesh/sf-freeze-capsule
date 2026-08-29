@@ -47,7 +47,7 @@ scoop install freeze-capsule
 
 The watcher collects real system data only on Linux. Use the included sample to inspect a report before installing.
 
-## Use
+## Capture and export freeze reports
 
 Start the watcher as your Linux user:
 
@@ -77,7 +77,7 @@ freeze-capsule --json list
 freeze-capsule render latest --format json
 ```
 
-## What it records
+## What Freeze Capsule records
 
 Each Linux snapshot requests journal, kernel, graphics, connector, and process details. It also records selected display-session variables. A report marks unavailable sources instead of abandoning capture.
 

@@ -1,1 +1,1 @@
-Capture Linux freeze evidence before rebooting.
+Capture Linux freeze evidence before a reboot erases it.

@@ -2,6 +2,13 @@ import './style.css';
 
 type Route = '/' | '/demo' | '/privacy' | '/terms' | '/404';
 type Release = { tag_name: string; assets: { name: string; browser_download_url: string }[] };
+type DownloadKind = 'deb' | 'rpm' | 'mac-arm' | 'mac-x86' | 'win';
+type PlatformSelection = {
+  mode: 'desktop' | 'mobile' | 'mac-ambiguous' | 'unknown';
+  label: string;
+  packageName?: string;
+  selectedKind?: DownloadKind;
+};
 const app = document.querySelector<HTMLDivElement>('#app')!;
 const ORIGIN = 'https://freeze-capsule.sociobot.in';
 const RELEASES = 'https://github.com/B-Divyesh/sf-freeze-capsule/releases';
@@ -27,12 +34,12 @@ const terminal = (interactive = false) => `
 
 const home = () => shell(`
   <section class="hero blueprint-section">
-    <div class="hero-copy"><p class="eyebrow">LINUX FREEZE EVIDENCE TOOL</p><h1>Save freeze clues before you reboot</h1><p class="lede">For desktop Linux users who need graphics, kernel, process, and session context after a freeze.</p><div class="hero-actions"><a class="primary" href="/demo?demo=1" data-link>Try it with sample data</a><span>See a redacted report in one click.</span></div><ul class="facts"><li><span aria-hidden="true">01</span> Free under the MIT License</li><li><span aria-hidden="true">02</span> Capsules and key stay in your state directory</li><li><span aria-hidden="true">03</span> The command-line demo makes no network connection</li></ul></div>
+    <div class="hero-copy"><p class="eyebrow">LINUX FREEZE EVIDENCE TOOL</p><h1>Save freeze clues before you reboot</h1><p class="lede">For desktop Linux users who need graphics, kernel, process, and session context after a freeze.</p><div class="hero-actions"><a class="primary" href="/demo?demo=1" data-link>Try it with sample data</a><span>See a redacted report in one click.</span></div><ul class="facts"><li><span aria-hidden="true">01</span> Free under the MIT License</li><li><span aria-hidden="true">02</span> Freeze Capsule stores capsules and the key in a folder on your computer</li><li><span aria-hidden="true">03</span> The command-line demo makes no network connection</li></ul></div>
     <figure class="hero-art"><div class="scan" aria-hidden="true"></div><img src="/assets/freeze-capsule-hero.webp" width="768" height="512" alt="Cutaway drawing of a capsule holding four layers of Linux system evidence." fetchpriority="high" /><figcaption>Evidence sources: journal, graphics, processes, and display session.</figcaption></figure>
   </section>
   ${terminal(false)}
   <section class="steps blueprint-section" aria-labelledby="how-title"><div class="section-mark">THREE STEPS</div><h2 id="how-title">How Freeze Capsule keeps pre-freeze evidence</h2><ol><li><span>01</span><div><h3>Keep one snapshot current</h3><p>The background watcher records a ten-minute window every 30 seconds.</p></div></li><li><span>02</span><div><h3>Keep the snapshot when the watcher pauses</h3><p>A 90-second pause keeps the last completed snapshot.</p></div></li><li><span>03</span><div><h3>Create a redacted report</h3><p>The report removes home paths, email addresses, IP addresses, and common secrets.</p></div></li></ol></section>
-  <section id="install" class="install blueprint-section" aria-labelledby="install-title"><div><h2 id="install-title">Install the Linux watcher</h2><p>Install Freeze Capsule, then choose when to start the watcher.</p><div class="command"><code id="install-command" tabindex="0">curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh</code><button type="button" data-copy="curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh">Copy command</button></div><p class="copy-status" data-copy-status role="status" aria-live="polite"></p><p class="platform-note" data-download-state aria-live="polite">Find a package on GitHub, or check the published release.</p><div class="release-actions"><a class="primary" data-primary-download href="${RELEASES}">Find Linux packages on GitHub</a><button class="check-release" type="button" data-check-release>Check published packages</button></div><div class="downloads"><a data-download="deb" href="${RELEASES}">Find Linux .deb on GitHub</a><a data-download="rpm" href="${RELEASES}">Find Linux .rpm on GitHub</a><a data-download="mac" href="${RELEASES}">Find macOS .pkg on GitHub</a><a data-download="win" href="${RELEASES}">Find Windows .zip on GitHub</a></div><p>If macOS shows an unidentified-developer warning, right-click the package and choose Open. Review any Windows security warning before running the file.</p></div><aside><h3>Start and check the watcher</h3><pre><code>freeze-capsule install-service\nfreeze-capsule doctor\nfreeze-capsule hotkey-command</code></pre><p>On Linux, use these commands to set up, check, or trigger the watcher.</p></aside></section>
+  <section id="install" class="install blueprint-section" aria-labelledby="install-title"><div><h2 id="install-title">Install the Linux watcher</h2><p>Install Freeze Capsule, then choose when to start the watcher.</p><div class="command"><code id="install-command" tabindex="0">curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh</code><button type="button" data-copy="curl -fsSL https://freeze-capsule.sociobot.in/install.sh | sh">Copy command</button></div><p class="copy-status" data-copy-status role="status" aria-live="polite"></p><p class="platform-note" data-download-state aria-live="polite">Find a package on GitHub, or check the published release.</p><div class="release-actions"><a class="primary" data-primary-download href="${RELEASES}">Open Linux releases</a><button class="check-release" type="button" data-check-release>Check published packages</button></div><div class="downloads"><a data-download="deb" href="${RELEASES}">Find Linux .deb on GitHub</a><a data-download="rpm" href="${RELEASES}">Find Linux .rpm on GitHub</a><a data-download="mac-arm" href="${RELEASES}">Find macOS Apple silicon .pkg on GitHub</a><a data-download="mac-x86" href="${RELEASES}">Find macOS Intel .pkg on GitHub</a><a data-download="win" href="${RELEASES}">Find Windows .zip on GitHub</a></div><p>If macOS shows an unidentified-developer warning, right-click the package and choose Open. Review any Windows security warning before running the file.</p></div><aside><h3>Start and check the watcher</h3><pre><code>freeze-capsule install-service\nfreeze-capsule doctor\nfreeze-capsule hotkey-command</code></pre><p>On Linux, use these commands to set up, check, or trigger the watcher.</p></aside></section>
   <section class="limits blueprint-section" aria-labelledby="limits-title"><h2 id="limits-title">Know the capture limits</h2><div class="limit-grid"><p><strong>A hard freeze can stop capture.</strong><br />The last completed snapshot remains available.</p><p><strong>Log access follows your account.</strong><br />Unavailable sources appear in the report.</p><p><strong>Review before sharing.</strong><br />Redaction does not remove every machine detail.</p></div></section>`);
 
 const demo = () => shell(`
@@ -40,7 +47,7 @@ const demo = () => shell(`
   <section class="report-sheet" aria-labelledby="report-title" data-report><div class="report-meta"><span>REDACTED OUTPUT</span><span>2026-07-23 14:32 UTC</span></div><article data-report-content aria-live="polite"><h2 id="report-title">Loading the sample report</h2><p>Reading the included command-line sample…</p></article></section>
   ${terminal(true)}`, true);
 
-const privacy = () => shell(`<article class="prose"><p class="eyebrow">PRIVACY POLICY</p><h1>Privacy stays local</h1><p><time datetime="2026-08-28">Effective 28 August 2026</time></p><h2>The command-line tool</h2><p>Capsules and one local key are stored in your state directory. The included demo uses a temporary directory.</p><h2>The website</h2><p>The site does not use accounts, analytics, advertising, or cookies. Checking published packages requests public release details from GitHub.</p><h2>Reports</h2><p>Open each report before sharing it. Redaction covers common private patterns, not every machine detail.</p><h2>Remove local evidence</h2><p>Remove your Freeze Capsule state directory when you want to remove local capsules and the key.</p></article>`);
+const privacy = () => shell(`<article class="prose"><p class="eyebrow">PRIVACY POLICY</p><h1>Privacy stays local</h1><p><time datetime="2026-08-28">Effective 28 August 2026</time></p><h2>The command-line tool</h2><p>Capsules and one local key are stored in a folder on your computer. The included demo uses a temporary folder.</p><h2>The website</h2><p>The site does not use accounts, analytics, advertising, or cookies. Checking published packages requests public release details from GitHub.</p><h2>Reports</h2><p>Open each report before sharing it. Redaction covers common private patterns, not every machine detail.</p><h2>Remove local evidence</h2><p>Remove the Freeze Capsule folder when you want to remove local capsules and the key.</p></article>`);
 const terms = () => shell(`<article class="prose"><p class="eyebrow">TERMS</p><h1>Terms for using Freeze Capsule</h1><p><time datetime="2026-08-28">Effective 28 August 2026</time></p><h2>License</h2><p>Freeze Capsule is free software under the MIT License.</p><h2>No guarantee of capture</h2><p>A hard freeze can prevent a final write. Available logs depend on your Linux distribution and account permissions.</p><h2>Your responsibility</h2><p>Read the redacted report before sharing it.</p><h2>Warranty</h2><p>The software is provided “as is,” without warranty, as described in the MIT License.</p></article>`);
 const notFound = () => shell(`<section class="not-found"><div class="broken-capsule" aria-hidden="true"><i></i><i></i></div><p class="eyebrow">PAGE NOT FOUND / 404</p><h1>Page not found</h1><p>The address does not match a Freeze Capsule page.</p><a class="primary" href="/" data-link>Return to the home page</a></section>`);
 
@@ -120,8 +127,7 @@ function bind() {
       if (status) status.textContent = 'Could not copy. Select the command and copy it manually.';
     }
   }));
-  const primaryDownload = document.querySelector<HTMLAnchorElement>('[data-primary-download]');
-  if (primaryDownload) primaryDownload.textContent = `Open ${detectedPlatform()} releases`;
+  resetPackageLinks();
 }
 
 function clearDemo() { Object.keys(sessionStorage).filter(key => key.startsWith('demo:')).forEach(key => sessionStorage.removeItem(key)); }
@@ -167,19 +173,76 @@ async function loadRelease() {
   }
 }
 
-function applyRelease(release: Release, state: HTMLElement) {
-  const isArm = /arm|aarch64/i.test(navigator.userAgent);
-  const pairs: [string, RegExp][] = [['deb', /amd64\.deb$/], ['rpm', /x86_64\.rpm$/], ['mac', isArm ? /macos-aarch64\.pkg$/ : /macos-x86_64\.pkg$/], ['win', /windows-x86_64\.zip$/]];
-  pairs.forEach(([kind, pattern]) => { const asset = release.assets.find(item => pattern.test(item.name)); const link = document.querySelector<HTMLAnchorElement>(`[data-download="${kind}"]`); if (asset && link) link.href = asset.browser_download_url; });
-  const platform = detectedPlatform();
-  const kind = platform === 'Windows' ? 'win' : platform === 'macOS' ? 'mac' : 'deb';
-  const selected = document.querySelector<HTMLAnchorElement>(`[data-download="${kind}"]`);
-  const primary = document.querySelector<HTMLAnchorElement>('[data-primary-download]');
-  if (selected && primary) { primary.href = selected.href; primary.textContent = `Download for ${platform}`; }
-  state.textContent = `${release.tag_name} packages are ready. ${platform} was detected.`;
+const packageLinks: Record<DownloadKind, { pattern: RegExp; fallback: string; download: string }> = {
+  deb: { pattern: /amd64\.deb$/i, fallback: 'Find Linux .deb on GitHub', download: 'Download Linux .deb' },
+  rpm: { pattern: /x86_64\.rpm$/i, fallback: 'Find Linux .rpm on GitHub', download: 'Download Linux .rpm' },
+  'mac-arm': { pattern: /macos-aarch64\.pkg$/i, fallback: 'Find macOS Apple silicon .pkg on GitHub', download: 'Download macOS Apple silicon .pkg' },
+  'mac-x86': { pattern: /macos-x86_64\.pkg$/i, fallback: 'Find macOS Intel .pkg on GitHub', download: 'Download macOS Intel .pkg' },
+  win: { pattern: /windows-x86_64\.zip$/i, fallback: 'Find Windows .zip on GitHub', download: 'Download Windows .zip' },
+};
+
+function platformSelection(): PlatformSelection {
+  const agent = navigator.userAgent;
+  if (/Android/i.test(agent)) return { mode: 'mobile', label: 'Android' };
+  if (/iPhone|iPad|iPod/i.test(agent) || (/Macintosh/i.test(agent) && navigator.maxTouchPoints > 1)) return { mode: 'mobile', label: 'iOS' };
+  if (/Windows/i.test(agent)) return { mode: 'desktop', label: 'Windows', packageName: 'Windows .zip', selectedKind: 'win' };
+  if (/Linux/i.test(agent)) return { mode: 'desktop', label: 'Linux', packageName: 'Linux .deb', selectedKind: 'deb' };
+  if (/Macintosh|Mac OS X/i.test(agent)) return { mode: 'mac-ambiguous', label: 'macOS' };
+  return { mode: 'unknown', label: 'your platform' };
 }
 
-function detectedPlatform() { return /Windows/i.test(navigator.userAgent) ? 'Windows' : /Mac/i.test(navigator.userAgent) ? 'macOS' : 'Linux'; }
+function defaultPrimary(selection = platformSelection()) {
+  if (selection.mode === 'mobile') return 'Choose a package on your desktop';
+  if (selection.mode === 'mac-ambiguous') return 'Choose the matching macOS package';
+  if (selection.mode === 'desktop') return `Open ${selection.label} releases`;
+  return 'Open package choices';
+}
+
+function resetPackageLinks() {
+  const selection = platformSelection();
+  const primary = document.querySelector<HTMLAnchorElement>('[data-primary-download]');
+  if (primary) { primary.href = RELEASES; primary.textContent = defaultPrimary(selection); }
+  (Object.keys(packageLinks) as DownloadKind[]).forEach(kind => {
+    const link = document.querySelector<HTMLAnchorElement>(`[data-download="${kind}"]`);
+    if (link) { link.href = RELEASES; link.textContent = packageLinks[kind].fallback; }
+  });
+}
+
+function applyRelease(release: Release, state: HTMLElement) {
+  resetPackageLinks();
+  const assets = new Map<DownloadKind, { name: string; browser_download_url: string }>();
+  (Object.keys(packageLinks) as DownloadKind[]).forEach(kind => {
+    const asset = release.assets.find(item => packageLinks[kind].pattern.test(item.name));
+    const link = document.querySelector<HTMLAnchorElement>(`[data-download="${kind}"]`);
+    if (asset && link) {
+      assets.set(kind, asset);
+      link.href = asset.browser_download_url;
+      link.textContent = packageLinks[kind].download;
+    }
+  });
+  const selection = platformSelection();
+  const primary = document.querySelector<HTMLAnchorElement>('[data-primary-download]');
+  if (selection.mode === 'mobile') {
+    state.textContent = 'Choose a package on your desktop.';
+    return;
+  }
+  if (selection.mode === 'mac-ambiguous') {
+    state.textContent = 'Choose the matching macOS package for your Mac.';
+    return;
+  }
+  if (selection.mode === 'desktop' && selection.selectedKind && selection.packageName) {
+    const asset = assets.get(selection.selectedKind);
+    if (asset && primary) {
+      primary.href = asset.browser_download_url;
+      primary.textContent = `Download for ${selection.label}`;
+      state.textContent = `${release.tag_name} ${selection.packageName} package is ready.`;
+      return;
+    }
+    state.textContent = `${release.tag_name} does not include a ${selection.packageName} package. Open the GitHub release page to see current files.`;
+    return;
+  }
+  state.textContent = 'Choose a package from the GitHub release page.';
+}
 
 window.addEventListener('popstate', () => render(location.pathname, false, true));
 render();
