@@ -1,77 +1,60 @@
-# Freeze Capsule — polish round 8 handoff
+# Freeze Capsule — adversarial review 9 handoff
 
 ## Outcome
 
-Repaired the only open adversarial-review finding, `F-8-1`, from candidate
-`d4db6701961f3936f312ddbad841d80d6bfa9591`. Repair commit
-`05c6e7b99a75f024dd76c148bb568005a05d8a4c` is pushed to `main` and is deployed
-to <https://freeze-capsule.sociobot.in>.
+Completed adversarial first-read review 9 against candidate
+`8a3e95b4ab74fe04f7bfc64cda351d2bca6b3737` and the deployed site at
+<https://freeze-capsule.sociobot.in>. The verdict is **PASS** with zero
+blocking, major, or minor findings.
 
-The privacy policy and README now say exactly where normal Linux evidence is
-stored: `~/.local/state/freeze-capsule`. They explain the `XDG_STATE_HOME`
-alternative and make the removal promise only for that documented storage.
-`local-evidence-removal` creates a normal capture in a temporary XDG state
-directory, removes that `freeze-capsule` folder, and proves the local key and
-saved capsule are gone.
+No product code was changed. The complete review, copy inventories, claim
+results, and one-row-per-finding history reconciliation are in
+`.factory/review-9.md`.
 
-## Run and verify
+## Verification
+
+- Opened the live site cold at 390×844 and 1440×900. The job, audience, primary
+  action, action result, and all three facts were visible before scrolling.
+- Entered the live sample in one click. Four realistic report evidence rows
+  appeared in the first phone viewport.
+- Verified live demo reset and exit behavior with seeded `demo:` and `real:`
+  storage keys. Demo keys were discarded; real markers were untouched.
+- Recorded live requests across the demo flow. They were same-origin only.
+- Ran the CLI demo from isolated working, temporary, and XDG state directories.
+  It wrote one encrypted capsule, one 32-byte key, and one Markdown report only
+  below its temporary demo directory; normal state remained empty.
+- Created a no-local clean clone at `/tmp/freeze-review9-clean.Tk246r/repo`, ran
+  `npm ci`, then ran every exact command from all 29 entries in
+  `.factory/claims.json` separately. All passed.
+- Ran `npm test -- --workers=1` in the clean clone. It passed 11 Rust tests, the
+  watchdog integration, and 40 Playwright tests. The build produced
+  `dist/site`; application JavaScript is 17.08 kB raw and 6.21 kB gzip.
+- Ran `/opt/fleet/lib/verify-url.sh` against the live home page. It passed with
+  no console errors, one h1/main, `lang=en`, and complete image/button labels.
+- Ran live Axe checks on Home, Demo, Privacy, Terms, the deployed 404, and
+  `/404.html`; no serious or critical violation was found. Every visible mobile
+  link, button, and summary met the 44×44 px target.
+- Confirmed route-specific titles, descriptions, canonicals, social metadata,
+  deep links, Back/Forward focus, reduced motion, HTTP 404 behavior, and zero
+  horizontal overflow at 390 px.
+- Crawled rendered destinations and checked all 13 current v0.1.1 release asset
+  URLs; all returned 200 after redirects.
+- Re-read every prior review, polish note, and handoff. All 105 earlier finding
+  IDs were individually reconciled in review 9 and remain fixed.
+
+## Re-run
 
 ```sh
 npm ci
-npm test
-cargo clippy --locked --all-targets -- -D warnings
-cargo build --locked --release
-npm audit --audit-level=moderate
-./target/debug/freeze-capsule demo
+npm test -- --workers=1
+npm run build
 ```
 
-The site build is `npm run build:site` into `dist/site`. Run the landing page
-locally with `npm run dev`, or inspect the isolated browser sample at
-`/demo?demo=1`. The CLI sample writes to a temporary directory and makes no
-network connection.
-
-## Exact verification evidence
-
-- Fresh clone: `/tmp/freeze-capsule-round8-clean.08ROXt/repo` from a no-local
-  clone of this repository, followed by `npm ci`.
-- Every one of the 29 exact `.factory/claims.json` commands passed separately,
-  including `@claim:local-evidence-removal`.
-- The same clean clone passed `npm test`: 11 Rust tests, watchdog integration,
-  and 40 Playwright tests; `cargo clippy --locked --all-targets -- -D warnings`;
-  `cargo build --locked --release`; and `npm audit --audit-level=moderate`
-  (0 vulnerabilities).
-- `npm run build:site` produced `dist/site`; its entry JavaScript is 17.08 kB
-  (6.21 kB gzip), within the static first-load budget.
-- Local cold check: `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173/
-  .factory/evidence/round8-local` passed with no console errors, one `h1`, one
-  `main`, `lang=en`, and no missing image alt. See
-  `.factory/evidence/round8-local/verify.json` and its desktop/mobile screens.
-- Live cold check after deployment: `/opt/fleet/lib/verify-url.sh
-  https://freeze-capsule.sociobot.in/ .factory/evidence/round8-live/verify`
-  passed in 817 ms with the same structural, alt, and console results.
-- `.factory/evidence/round8-live/live-audit.json` records live cold-browser
-  checks for `/`, `/demo?demo=1`, `/privacy`, `/terms`, and `/missing-sheet`:
-  correct expected statuses (including real 404), route titles/metadata,
-  390 px overflow, 44 px controls, zero serious/critical Axe results, link
-  crawl, isolated demo reset/exit, focus/history, and same-origin demo traffic.
-  `live-install-exit-390.png` shows the checked demo exit focused at Install.
-- Deployment used the configured static-workload target `sf-freeze-capsule`
-  and completed successfully; the live origin serves the repaired bundle.
-
-## Documentation and product boundaries
-
-- `.factory/polish-8.md` maps every finding from reviews 1–8 to its repair and
-  evidence.
-- `.factory/catalog-description.txt` now says: “Capture Linux freeze clues
-  before a reboot erases them.” It is verb-first and 55 characters.
-- No analytics, cookies, accounts, or runtime AI were added. The site remains a
-  static landing/docs surface for the Rust CLI installer and retains the
-  blueprint drafting-sheet visual system.
-- The CLI only captures on Linux. macOS and Windows packages remain unsigned as
-  documented; this is an explicit platform limitation, not a claim of support
-  beyond the shipped package artifacts.
+The browser demo is `/demo?demo=1`. The command-line sandbox is
+`freeze-capsule --json demo` and should be run from a temporary directory with
+an isolated `XDG_STATE_HOME` when independently verifying storage behavior.
 
 ## Known gaps / next steps
 
-None for this work order. Release publication and package signing remain the
-normal factory release process, not a runtime dependency of the repaired site.
+None for this review. Preserve the current claim inventory, demo namespace,
+package-selection matrix, and route/accessibility regressions in future work.
