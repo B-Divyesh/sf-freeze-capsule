@@ -1,0 +1,121 @@
+{
+  "origin": "https://freeze-capsule.sociobot.in",
+  "routes": {
+    "/": {
+      "status": 200,
+      "metadata": {
+        "title": "Freeze Capsule — save Linux freeze clues",
+        "lang": "en",
+        "canonical": "https://freeze-capsule.sociobot.in/",
+        "robots": "index,follow",
+        "h1": 1,
+        "main": true,
+        "overflow": 390
+      },
+      "axeSeriousCritical": 0,
+      "errors": [],
+      "expectedNavigation404": []
+    },
+    "/demo?demo=1": {
+      "status": 200,
+      "metadata": {
+        "title": "Demo — Freeze Capsule",
+        "lang": "en",
+        "canonical": "https://freeze-capsule.sociobot.in/demo",
+        "robots": "index,follow",
+        "h1": 1,
+        "main": true,
+        "overflow": 390
+      },
+      "axeSeriousCritical": 0,
+      "errors": [],
+      "expectedNavigation404": []
+    },
+    "/privacy": {
+      "status": 200,
+      "metadata": {
+        "title": "Privacy — Freeze Capsule",
+        "lang": "en",
+        "canonical": "https://freeze-capsule.sociobot.in/privacy",
+        "robots": "index,follow",
+        "h1": 1,
+        "main": true,
+        "overflow": 390
+      },
+      "axeSeriousCritical": 0,
+      "errors": [],
+      "expectedNavigation404": []
+    },
+    "/terms": {
+      "status": 200,
+      "metadata": {
+        "title": "Terms — Freeze Capsule",
+        "lang": "en",
+        "canonical": "https://freeze-capsule.sociobot.in/terms",
+        "robots": "index,follow",
+        "h1": 1,
+        "main": true,
+        "overflow": 390
+      },
+      "axeSeriousCritical": 0,
+      "errors": [],
+      "expectedNavigation404": []
+    },
+    "/missing-sheet": {
+      "status": 404,
+      "metadata": {
+        "title": "Page not found — Freeze Capsule",
+        "lang": "en",
+        "canonical": "https://freeze-capsule.sociobot.in/404.html",
+        "robots": "noindex,follow",
+        "h1": 1,
+        "main": true,
+        "overflow": 390
+      },
+      "axeSeriousCritical": 0,
+      "errors": [],
+      "expectedNavigation404": [
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ]
+    },
+    "/404.html": {
+      "status": 200,
+      "metadata": {
+        "title": "Page not found — Freeze Capsule",
+        "lang": "en",
+        "canonical": "https://freeze-capsule.sociobot.in/404.html",
+        "robots": "noindex,follow",
+        "h1": 1,
+        "main": true,
+        "overflow": 390
+      },
+      "axeSeriousCritical": 0,
+      "errors": [],
+      "expectedNavigation404": []
+    }
+  },
+  "mobileControls": {
+    "/": {
+      "undersized": []
+    },
+    "/demo?demo=1": {
+      "undersized": []
+    },
+    "/privacy": {
+      "undersized": []
+    },
+    "/terms": {
+      "undersized": []
+    },
+    "/missing-sheet": {
+      "undersized": []
+    },
+    "/404.html": {
+      "undersized": []
+    }
+  },
+  "screenshots": [
+    ".factory/evidence/live-polish-6/live-home-390-polish-6.png",
+    ".factory/evidence/live-polish-6/live-404-390-polish-6.png"
+  ]
+}

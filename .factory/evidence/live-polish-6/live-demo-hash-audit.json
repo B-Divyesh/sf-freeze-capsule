@@ -1,0 +1,55 @@
+{
+  "origin": "https://freeze-capsule.sociobot.in",
+  "demo": {
+    "firstScreen": [
+      {
+        "text": "Save freeze clues before you reboot",
+        "top": 151.140625,
+        "bottom": 285.859375,
+        "visible": true
+      },
+      {
+        "text": "Try it with sample data",
+        "top": 423.65625,
+        "bottom": 471.65625,
+        "visible": true
+      },
+      {
+        "text": "See a redacted report in one click.",
+        "top": 491.65625,
+        "bottom": 513.984375,
+        "visible": true
+      },
+      {
+        "text": "01 Free under the MIT License",
+        "top": 531.984375,
+        "bottom": 546.984375,
+        "visible": true
+      },
+      {
+        "text": "02 Capsules and key stay in your state directory",
+        "top": 549.984375,
+        "bottom": 579.984375,
+        "visible": true
+      },
+      {
+        "text": "03 The command-line demo makes no network connection",
+        "top": 582.984375,
+        "bottom": 612.984375,
+        "visible": true
+      }
+    ],
+    "foreignRequests": [],
+    "evidence": "journal, graphics, processes, display-session",
+    "reset": "passed",
+    "exit": "passed"
+  },
+  "hash": {
+    "directLoad": "passed",
+    "headerActivation": "passed",
+    "backForward": "passed"
+  },
+  "screenshots": [
+    ".factory/evidence/live-polish-6/live-demo-390-polish-6.png"
+  ]
+}

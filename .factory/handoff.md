@@ -1,57 +1,74 @@
-# Freeze Capsule — adversarial review 6 handoff
+# Freeze Capsule — polish round 6 handoff
 
 ## Outcome
 
-Review 6 is complete and the verdict is **FAIL**. No product code was changed.
-The full report is `.factory/review-6.md`.
+Round 6 is complete. Repair commit `9734754` (`fix: complete round six site
+polish`) is pushed to `origin/main` and deployed to
+<https://freeze-capsule.sociobot.in>. Azure Static Web Apps deployment:
+`4f77aab3-f25b-4239-8bd9-f8f9f7cd0e0c`.
 
-Three findings remain:
+The repair fixes the broken `/#install` route, makes every visible app and
+standalone-404 target at least 44×44 px, and restores the required price,
+local-storage, and no-network facts to the 390 px first screen. It preserves
+the original blueprint drafting-sheet visual system.
 
-- **F-6-1 (blocking):** the header **Install** link and direct `/#install`
-  deep link retain the hash but leave the install section outside the viewport.
-- **F-6-2 (major):** several mobile header, footer, report-summary, and static
-  404 controls are smaller than the required 44×44 px.
-- **F-6-3 (minor):** the first-screen facts omit the required offline fact.
+## How to run and verify
 
-The cold landing message, one-click populated demo, sandbox cleanup, route
-metadata, designed 404, claim inventory, external links, visual identity, and
-current automated suite otherwise passed.
+```sh
+npm ci
+npm test
+cargo clippy --locked -- -D warnings
+cargo build --locked --release
+npm run build:site
+```
 
-## Verification performed
+The static site is `dist/site`. Deploy it with:
 
-- Fresh live Chromium contexts at 390×844 and 1440×900.
-- One-click demo, sample evidence viewport position, banner, reset, demo-state
-  isolation, real-marker preservation, and request logging.
-- Live route metadata, Back/Forward heading focus, unknown-route HTTP status,
-  hash deep link behavior, and every discovered link.
-- Live Axe on Home, Demo, Privacy, Terms, the unknown-route 404, and
-  `/404.html`: zero reported violations. A separate bounding-box audit found
-  F-6-2 because Axe does not enforce the 44×44 px factory baseline.
-- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/`: pass in
-  766 ms with no page or console errors.
-- No-local clean clone at `/tmp/freeze-review6.hMKU7B/repo`: `npm ci`, every
-  exact command in `.factory/claims.json` (27/27), and
-  `npm test -- --workers=1` all passed. The full suite ran 11 Rust tests, the
-  watchdog integration, and 36 Playwright tests.
-- `npm run build` ran through the suite and produced `dist/site`; JavaScript is
-  14.83 kB (5.55 kB gzip).
-- Direct `freeze-capsule demo` equivalent from fresh temporary working/state
-  directories wrote only one encrypted capsule, one key, and one Markdown
-  report beneath its temporary demo directory. Normal state remained empty.
+```sh
+/opt/fleet/lib/deploy-static.sh freeze-capsule dist/site
+```
 
-## Reproduce the open findings
+## Exact evidence
 
-1. At desktop width, open the live home page and activate header **Install**.
-   The URL becomes `/#install`, but `scrollY` remains 0 and the install section
-   remains below the viewport. A direct load of `/#install` behaves the same.
-2. At 390 px, measure every visible `a`, `button`, and `summary`. Examples:
-   header Demo is 31.8×44 px, app footer Terms is 39.8×15 px, demo report
-   summary is 330×36 px, and standalone 404 links are 25.5 px high.
-3. Read the three hero facts. They cover price, demo isolation, and retention,
-   but not offline/no-network behavior.
+- Clean clone: `/tmp/freeze-capsule-round6-clean-kPHsEj/repo`, created with
+  `git clone --no-local` at `9734754`.
+- `npm ci` passed. Every exact test command in `.factory/claims.json` ran
+  independently and passed: 27/27. Ledger:
+  `/tmp/freeze-capsule-round6-claims.log`.
+- Full clean-clone suite passed: 11 Rust unit tests, watchdog integration, and
+  38 Playwright tests. `cargo clippy --locked -- -D warnings`, locked release
+  build, and `npm audit --audit-level=moderate` also passed.
+- Production output: JavaScript 15.25 kB (5.73 kB gzip), CSS 12.14 kB
+  (3.49 kB gzip); deployed static artifacts total 160,671 bytes.
+- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/
+  .factory/evidence/live-polish-6` passed cold in 759 ms: no console errors,
+  `lang=en`, title, one `h1`, one `main`, and no missing image alt text.
+- Cold live route audit:
+  `.factory/evidence/live-polish-6/live-route-audit.json` records all six
+  routes, real 404 status, metadata, zero serious/critical Axe findings, no
+  application console errors, no overflow, and no undersized controls.
+- Cold demo/hash audit:
+  `.factory/evidence/live-polish-6/live-demo-hash-audit.json` records
+  populated one-click demo evidence, same-origin requests, reset/exit storage
+  isolation, direct/header hash behavior, and Back/Forward focus.
+- Mobile evidence: `live-home-390-polish-6.png`,
+  `live-demo-390-polish-6.png`, and `live-404-390-polish-6.png` in
+  `.factory/evidence/live-polish-6/`.
 
-## Next steps
+An unknown URL intentionally emits the browser’s normal network diagnostic for
+its document-level HTTP 404; the audit records it separately. There are no
+application console errors, and the designed 404 is `noindex,follow`.
 
-Repair all three findings, add hash-route and all-control-size regressions, and
-rerun review 6 from a fresh live context and clean clone. The review standard
-requires zero remaining findings before PASS.
+## Product and privacy notes
+
+- Demo URL: <https://freeze-capsule.sociobot.in/demo?demo=1>. It uses only
+  `sessionStorage` keys prefixed `demo:`; Reset or every exit discards them.
+- The CLI demo runs in a temporary directory. Normal evidence storage and the
+  browser demo remain separate.
+- No tracking, cookies, accounts, analytics, or third-party scripts are used.
+
+## Known gaps and next steps
+
+No acceptance gaps remain. This repair does not change the CLI release binary,
+so it does not create a new release tag; the existing workflow remains ready
+for the next versioned CLI release.
