@@ -158,6 +158,17 @@ test('static asset headers are immutable while HTML revalidates', () => {
   expect(assets?.headers?.['Cache-Control']).toBe('public, max-age=31536000, immutable');
 });
 
+test('standalone 404 inline assets match the deployed content-security policy', () => {
+  const config = JSON.parse(readFileSync('site/public/staticwebapp.config.json', 'utf8')) as { globalHeaders: Record<string, string> };
+  const missing = readFileSync('site/public/404.html', 'utf8');
+  for (const tag of ['style', 'script']) {
+    const contents = missing.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`))?.[1];
+    expect(contents, `${tag} contents`).toBeTruthy();
+    const hash = createHash('sha256').update(contents!).digest('base64');
+    expect(config.globalHeaders['Content-Security-Policy']).toContain(`'sha256-${hash}'`);
+  }
+});
+
 test('all public routes have one heading and no serious accessibility findings', async ({ page }) => {
   for (const route of ['/', '/demo', '/privacy', '/terms', '/missing-sheet', '/404.html']) {
     await page.goto(route);
@@ -181,15 +192,37 @@ test('keyboard route changes focus the page heading', async ({ page }) => {
   await expect(page.locator('h1')).toBeFocused();
 });
 
-test('mobile first screen and demo stay within 390 pixels', async ({ page }) => {
+test('install hash links scroll, focus, and restore on browser history', async ({ page }) => {
+  await page.goto('/#install');
+  const installHeading = page.getByRole('heading', { name: 'Install the Linux watcher' });
+  await expect(installHeading).toBeInViewport();
+  await expect(installHeading).toBeFocused();
+
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Install', exact: true }).click();
+  await expect(page).toHaveURL('/#install');
+  await expect(installHeading).toBeInViewport();
+  await expect(installHeading).toBeFocused();
+  await page.goBack();
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('h1')).toBeFocused();
+  await page.goForward();
+  await expect(page).toHaveURL('/#install');
+  await expect(installHeading).toBeInViewport();
+  await expect(installHeading).toBeFocused();
+});
+
+test('mobile first screen shows the tested price, local-storage, and no-network facts', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Try it with sample data' })).toBeVisible();
-  await expect(page.getByText('See a redacted report in one click.', { exact: true })).toBeVisible();
-  await expect(page.locator('.facts li').nth(0)).toContainText('Free and open source');
-  await expect(page.locator('.facts li').nth(1)).toContainText('Demo data stays separate');
-  await expect(page.locator('.facts li').nth(2)).toContainText('Keeps at most eight capsules');
+  for (const element of [
+    page.getByRole('heading', { level: 1 }),
+    page.getByRole('link', { name: 'Try it with sample data' }),
+    page.getByText('See a redacted report in one click.', { exact: true }),
+    page.locator('.facts li').filter({ hasText: 'Free under the MIT License' }),
+    page.locator('.facts li').filter({ hasText: 'Capsules and key stay in your state directory' }),
+    page.locator('.facts li').filter({ hasText: 'The command-line demo makes no network connection' }),
+  ]) await expect(element).toBeInViewport();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page.goto('/demo');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
@@ -212,13 +245,22 @@ test('known static routes and the real 404 configuration are explicit', () => {
   for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1', 'apple-touch-icon', 'og:image', 'twitter:image', 'sessionStorage', '<style>']) expect(missing).toContain(text);
 });
 
-test('demo banner controls meet the 44 pixel mobile touch-target baseline', async ({ page }) => {
+test('every visible app and static-404 control meets the 44 pixel mobile touch-target baseline', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/demo');
-  for (const name of ['Reset demo', 'Install Freeze Capsule']) {
-    const box = await page.getByRole(name === 'Reset demo' ? 'button' : 'link', { name }).boundingBox();
-    expect(box?.height, name + ' height').toBeGreaterThanOrEqual(44);
-    expect(box?.width, name + ' width').toBeGreaterThanOrEqual(44);
+  for (const route of ['/', '/demo?demo=1', '/privacy', '/terms', '/missing-sheet', '/404.html']) {
+    await page.goto(route);
+    if (route.startsWith('/demo')) await expect(page.getByRole('heading', { name: 'Freeze Capsule report' })).toBeVisible();
+    const undersized = await page.locator('a, button, summary').evaluateAll(elements => elements
+      .filter(element => {
+        const style = getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0;
+      })
+      .map(element => {
+        const box = element.getBoundingClientRect();
+        return { name: element.textContent?.trim() || element.getAttribute('aria-label') || element.tagName, width: box.width, height: box.height };
+      })
+      .filter(control => control.width < 44 || control.height < 44));
+    expect(undersized, route).toEqual([]);
   }
 });
 

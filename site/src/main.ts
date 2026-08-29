@@ -27,7 +27,7 @@ const terminal = (interactive = false) => `
 
 const home = () => shell(`
   <section class="hero blueprint-section">
-    <div class="hero-copy"><p class="eyebrow">LINUX FREEZE EVIDENCE TOOL</p><h1>Save freeze clues before you reboot</h1><p class="lede">For desktop Linux users who need graphics, kernel, process, and session context after a freeze.</p><div class="hero-actions"><a class="primary" href="/demo?demo=1" data-link>Try it with sample data</a><span>See a redacted report in one click.</span></div><ul class="facts"><li><span aria-hidden="true">01</span> Free and open source</li><li><span aria-hidden="true">02</span> Demo data stays separate</li><li><span aria-hidden="true">03</span> Keeps at most eight capsules</li></ul></div>
+    <div class="hero-copy"><p class="eyebrow">LINUX FREEZE EVIDENCE TOOL</p><h1>Save freeze clues before you reboot</h1><p class="lede">For desktop Linux users who need graphics, kernel, process, and session context after a freeze.</p><div class="hero-actions"><a class="primary" href="/demo?demo=1" data-link>Try it with sample data</a><span>See a redacted report in one click.</span></div><ul class="facts"><li><span aria-hidden="true">01</span> Free under the MIT License</li><li><span aria-hidden="true">02</span> Capsules and key stay in your state directory</li><li><span aria-hidden="true">03</span> The command-line demo makes no network connection</li></ul></div>
     <figure class="hero-art"><div class="scan" aria-hidden="true"></div><img src="/assets/freeze-capsule-hero.webp" width="768" height="512" alt="Cutaway drawing of a capsule holding four layers of Linux system evidence." fetchpriority="high" /><figcaption>Evidence sources: journal, graphics, processes, and display session.</figcaption></figure>
   </section>
   ${terminal(false)}
@@ -45,6 +45,36 @@ const terms = () => shell(`<article class="prose"><p class="eyebrow">TERMS</p><h
 const notFound = () => shell(`<section class="not-found"><div class="broken-capsule" aria-hidden="true"><i></i><i></i></div><p class="eyebrow">PAGE NOT FOUND / 404</p><h1>Page not found</h1><p>The address does not match a Freeze Capsule page.</p><a class="primary" href="/" data-link>Return to the home page</a></section>`);
 
 function routeFor(pathname: string): Route { return ['/', '/demo', '/privacy', '/terms'].includes(pathname) ? pathname as Route : '/404'; }
+
+function hashTarget() {
+  if (!location.hash || location.hash === '#') return null;
+  try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); }
+  catch { return null; }
+}
+
+function placeRouteFocus(focusRoute: boolean) {
+  const target = hashTarget();
+  if (target) {
+    target.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'auto' });
+    const heading = target.matches('h1, h2, h3') ? target as HTMLElement : target.querySelector<HTMLElement>('h1, h2, h3');
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      heading.focus({ preventScroll: true });
+      // Browsers finish native fragment restoration after the module has run on
+      // a cold deep link. Reapply focus in the next frame so that restoration
+      // cannot leave a keyboard user at the document body.
+      window.requestAnimationFrame(() => heading.focus({ preventScroll: true }));
+      return heading.textContent?.trim();
+    }
+  }
+  if (focusRoute) {
+    window.scrollTo(0, 0);
+    const heading = document.querySelector<HTMLElement>('h1');
+    heading?.focus({ preventScroll: true });
+    return heading?.textContent?.trim();
+  }
+  return undefined;
+}
 
 function render(pathname = location.pathname, push = false, focus = false) {
   const route = routeFor(pathname);
@@ -68,8 +98,8 @@ function render(pathname = location.pathname, push = false, focus = false) {
   document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')!.content = description[route];
   document.querySelector<HTMLMetaElement>('meta[name="robots"]')!.content = route === '/404' ? 'noindex,follow' : 'index,follow';
   bind();
-  if (push || focus) { window.scrollTo(0, 0); document.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true }); }
-  document.querySelector<HTMLElement>('.route-announcer')!.textContent = titles[route];
+  const destination = placeRouteFocus(push || focus || Boolean(location.hash));
+  document.querySelector<HTMLElement>('.route-announcer')!.textContent = destination ? `${titles[route]}. ${destination}` : titles[route];
   if (route === '/demo') void loadDemoFixture();
   if (route === '/') void loadTerminalFixture();
 }
@@ -79,7 +109,6 @@ function bind() {
   document.querySelector<HTMLButtonElement>('[data-run]')?.addEventListener('click', () => void replayDemo());
   document.querySelector<HTMLButtonElement>('[data-check-release]')?.addEventListener('click', () => void loadRelease());
   document.querySelector<HTMLButtonElement>('[data-reset]')?.addEventListener('click', () => { clearDemo(); void loadDemoFixture(); });
-  document.querySelector<HTMLAnchorElement>('[data-leave-demo]')?.addEventListener('click', event => { event.preventDefault(); clearDemo(); render('/', true, true); window.setTimeout(() => document.querySelector('#install')?.scrollIntoView(), 0); });
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach(button => button.addEventListener('click', async () => {
     const status = document.querySelector<HTMLElement>('[data-copy-status]');
     try {

@@ -15,9 +15,9 @@ marketing words.
 | For desktop Linux users who need graphics, kernel, process, and session context after a freeze. | 15 | First-screen audience |
 | Try it with sample data | 5 | `sample-report` action |
 | See a redacted report in one click. | 7 | `sample-report` |
-| Free and open source | 4 | `free-license` |
-| Demo data stays separate | 4 | `demo-private` |
-| Keeps at most eight capsules | 5 | `bounded-retention` |
+| Free under the MIT License | 5 | `free-license` |
+| Capsules and key stay in your state directory | 8 | `normal-state-directory` |
+| The command-line demo makes no network connection | 7 | `cli-local-only` |
 | Evidence sources: journal, graphics, processes, and display session. | 8 | Art caption |
 | Included command-line sample | 3 | Sample label |
 | See the sample report before installing | 6 | Section heading |
