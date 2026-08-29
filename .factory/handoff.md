@@ -1,124 +1,57 @@
-# Freeze Capsule — polish round 5 handoff
+# Freeze Capsule — adversarial review 6 handoff
 
 ## Outcome
 
-All findings in `.factory/review-1.md` through `.factory/review-5.md` and
-`.factory/polish-1.md` through `.factory/polish-4.md` are closed. The repair
-is implementation commit `9d99a359f0103163f682a840500bda681246da68`
-(`fix: prove Linux-only capture boundary`), pushed to `main` and deployed as
-the static site at <https://freeze-capsule.sociobot.in>.
+Review 6 is complete and the verdict is **FAIL**. No product code was changed.
+The full report is `.factory/review-6.md`.
 
-The final two fixes are substantive:
+Three findings remain:
 
-- `linux-only-capture` is an exact public claim with its own tagged test. The
-  collector now selects its platform branch through an injected Linux-source
-  closure. The test exercises macOS and Windows branches, asserts one
-  unavailable platform result, asserts no Linux source sections, and would
-  panic if Linux collection were requested.
-- The landing page now defines the background process on first use:
-  “The background watcher records a ten-minute window every 30 seconds.”
+- **F-6-1 (blocking):** the header **Install** link and direct `/#install`
+  deep link retain the hash but leave the install section outside the viewport.
+- **F-6-2 (major):** several mobile header, footer, report-summary, and static
+  404 controls are smaller than the required 44×44 px.
+- **F-6-3 (minor):** the first-screen facts omit the required offline fact.
 
-The product remains a Rust CLI with installer artifacts and its original
-blueprint drafting-sheet identity. The catalog sentence is now verb-first and
-55 characters: “Capture Linux freeze clues before a reboot erases them.”
+The cold landing message, one-click populated demo, sandbox cleanup, route
+metadata, designed 404, claim inventory, external links, visual identity, and
+current automated suite otherwise passed.
 
-## Exact verification evidence
+## Verification performed
 
-### Clean clone
+- Fresh live Chromium contexts at 390×844 and 1440×900.
+- One-click demo, sample evidence viewport position, banner, reset, demo-state
+  isolation, real-marker preservation, and request logging.
+- Live route metadata, Back/Forward heading focus, unknown-route HTTP status,
+  hash deep link behavior, and every discovered link.
+- Live Axe on Home, Demo, Privacy, Terms, the unknown-route 404, and
+  `/404.html`: zero reported violations. A separate bounding-box audit found
+  F-6-2 because Axe does not enforce the 44×44 px factory baseline.
+- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/`: pass in
+  766 ms with no page or console errors.
+- No-local clean clone at `/tmp/freeze-review6.hMKU7B/repo`: `npm ci`, every
+  exact command in `.factory/claims.json` (27/27), and
+  `npm test -- --workers=1` all passed. The full suite ran 11 Rust tests, the
+  watchdog integration, and 36 Playwright tests.
+- `npm run build` ran through the suite and produced `dist/site`; JavaScript is
+  14.83 kB (5.55 kB gzip).
+- Direct `freeze-capsule demo` equivalent from fresh temporary working/state
+  directories wrote only one encrypted capsule, one key, and one Markdown
+  report beneath its temporary demo directory. Normal state remained empty.
 
-Fresh clone: `/tmp/freeze-capsule-round5-clean-tkeufz/repo`, created with
-`git clone --no-local --branch main /work/repo` at the implementation commit.
-Full log: `/tmp/freeze-capsule-round5-clean-2.log`.
+## Reproduce the open findings
 
-- `npm ci`: pass; zero moderate-or-higher audit vulnerabilities.
-- All **27** exact commands in `.factory/claims.json`: pass individually.
-  This includes the new `npm run test:site -- --grep @claim:linux-only-capture`.
-- `npm test -- --workers=1`: pass — 11 Rust unit tests, the real suspended
-  watcher integration, and 36 Playwright/browser tests.
-- `cargo clippy --all-targets -- -D warnings`: pass.
-- `cargo build --locked --release`: pass.
-- `npm run build`: pass; output is `dist/site`.
-- Production bundle: JavaScript 14.83 kB (5.55 kB gzip); CSS 12.17 kB
-  (3.50 kB gzip).
+1. At desktop width, open the live home page and activate header **Install**.
+   The URL becomes `/#install`, but `scrollY` remains 0 and the install section
+   remains below the viewport. A direct load of `/#install` behaves the same.
+2. At 390 px, measure every visible `a`, `button`, and `summary`. Examples:
+   header Demo is 31.8×44 px, app footer Terms is 39.8×15 px, demo report
+   summary is 330×36 px, and standalone 404 links are 25.5 px high.
+3. Read the three hero facts. They cover price, demo isolation, and retention,
+   but not offline/no-network behavior.
 
-The claim tests cover generated CLI/browser fixture parity, one-click report
-visibility, demo isolation, encrypted/redacted output, retention, watchdog
-promotion, actual POSIX and PowerShell checksum acceptance/rejection, JSON,
-encryption/key modes, normal local state, no tracking, explicit release lookup,
-redaction limits, build output, workflow declaration, live Linux sources, and
-the non-Linux collection boundary. The complete per-finding map is
-`.factory/polish-5.md`.
+## Next steps
 
-### Local mobile checks
-
-Fresh 390×844 screenshots were visually inspected:
-
-- `.factory/evidence/home-390-polish-5.png`
-- `.factory/evidence/demo-390-polish-5.png`
-- `.factory/evidence/404-390-polish-5.png`
-
-The Home screen shows its headline, audience, primary action, one-click result,
-and all three facts before the fold. The demo’s populated evidence excerpt is
-visible before replay controls. The 404 uses the complete navigation/footer
-shell and a plain route-specific heading.
-
-### Deployment and cold production recheck
-
-Deployment used `/opt/fleet/lib/deploy-static.sh freeze-capsule dist/site`.
-Azure Static Web Apps upload deployment ID:
-`9b08cc50-9df5-4be7-bc4f-48453618b08a`. The existing custom domain reached
-HTTPS 200 after the upload.
-
-- `/opt/fleet/lib/verify-url.sh https://freeze-capsule.sociobot.in/ .factory/evidence/live-polish-5`:
-  pass — HTTP 200, 920 ms cold load, no page or console errors, one title,
-  `lang=en`, one `h1`, one `main`, no missing image alt text, and no unnamed
-  buttons. Evidence: `.factory/evidence/live-polish-5/verify.json`.
-- Fresh live Playwright + Axe audit: Home, Demo, Privacy, Terms, the real 404,
-  and standalone `/404.html` each have one `h1`, one `main`, route-specific
-  title/description/canonical/OG URL, skip link, legal footer, and zero
-  serious/critical axe violations. The expected browser failed-resource message
-  for the deliberately HTTP-404 document was excluded only for that document;
-  no application console error occurred.
-- `/missing-sheet`: HTTP 404. `/404.html`: HTTP 200 as the designed standalone
-  error document. Security response headers include CSP with response-header
-  `frame-ancestors`, `X-Content-Type-Options`, `Referrer-Policy`, and
-  `Permissions-Policy`. Hashed assets are one-year immutable.
-- Cold demo flow: one Home click opens `/demo?demo=1` with AMD/Cinnamon/Chrome
-  evidence. Its Journal and Graphics rows span y=469–507; Processes and Display
-  session span y=513–551, entirely inside a 390×844 viewport. Reset leaves only
-  `demo:loaded`; Install exit clears every `demo:` key while preserving seeded
-  real markers. Demo requests are same-origin only.
-- Browser Back and Forward restore heading focus. The explicit package-check
-  action produces exactly one request to `api.github.com`; none occurs before
-  activation. The live response was “v0.1.1 packages are ready. Linux was
-  detected.”
-- All static, legal, installer, release-page, and resolved `.deb`, `.rpm`,
-  macOS `.pkg`, and Windows `.zip` links returned HTTP 200 after redirects.
-
-Live mobile screenshots were visually inspected:
-
-- `.factory/evidence/live-home-390-polish-5.png`
-- `.factory/evidence/live-demo-390-polish-5.png`
-- `.factory/evidence/live-404-390-polish-5.png`
-
-## Run and verify
-
-```sh
-npm ci
-npm test -- --workers=1
-cargo clippy --all-targets -- -D warnings
-cargo build --locked --release
-npm run build
-```
-
-Run any single public claim with the exact `test` command in
-`.factory/claims.json`. The isolated browser entry point is
-`/demo?demo=1`; the isolated command-line entry point is
-`freeze-capsule demo`.
-
-## Known gaps and next steps
-
-No acceptance finding or known product defect remains. macOS and Windows
-release artifacts remain intentionally unsigned, as disclosed; adding signing
-in the future requires owner-held certificates and is not part of this work
-order.
+Repair all three findings, add hash-route and all-control-size regressions, and
+rerun review 6 from a fresh live context and clean clone. The review standard
+requires zero remaining findings before PASS.
