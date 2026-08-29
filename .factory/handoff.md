@@ -51,6 +51,9 @@ The static site is `dist/site`. Deploy it with:
   `.factory/evidence/live-polish-6/live-demo-hash-audit.json` records
   populated one-click demo evidence, same-origin requests, reset/exit storage
   isolation, direct/header hash behavior, and Back/Forward focus.
+- Mobile Lighthouse against the deployed cold URL: **100 performance** and
+  **100 accessibility**; FCP 0.8 s, LCP 1.1 s, CLS 0, and TBT 60 ms. Raw
+  result: `.factory/evidence/live-polish-6/lighthouse-mobile.json`.
 - Mobile evidence: `live-home-390-polish-6.png`,
   `live-demo-390-polish-6.png`, and `live-404-390-polish-6.png` in
   `.factory/evidence/live-polish-6/`.

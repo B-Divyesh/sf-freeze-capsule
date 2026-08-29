@@ -19,6 +19,8 @@ The implementation repair is `9734754`.
   Screens are `live-home-390-polish-6.png`, `live-demo-390-polish-6.png`, and
   `live-404-390-polish-6.png` in that directory. Live URL:
   <https://freeze-capsule.sociobot.in>.
+- **Mobile Lighthouse** is `.factory/evidence/live-polish-6/lighthouse-mobile.json`:
+  100 performance, 100 accessibility, FCP 0.8 s, LCP 1.1 s, CLS 0, TBT 60 ms.
 
 ## Review 1 ledger
 
