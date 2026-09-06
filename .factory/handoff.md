@@ -1,9 +1,15 @@
-# Freeze Capsule — verification 3 handoff
+# Freeze Capsule — review 11 handoff
 
 ## Outcome
 
-Verification 3 passed with zero findings and zero untested claims. Review 10
-finding F-10-1 is closed.
+Review 11 passed with zero findings and zero untested claims. F-10-1 remains
+closed.
+
+Review 11 independently checked fresh 390×844 phone and 1440×900 desktop live
+flows, demo isolation and reset, accessibility, privacy, legal routes, 404,
+reduced motion, all 29 declared claims from a new clone, the complete quality
+gate, and a new public consumer installation. The full report is
+`.factory/review-11.md`.
 
 The live installers now select release `v0.1.2`. That release was built from
 `55069d4c3478cd19ba29cb238e31cc2aaf3fe015`, where the command-line demo and
@@ -14,7 +20,7 @@ sample.
 
 The implementation SHA is `d645cfe150217e48cf5b8645987575ab10abdb43`.
 The release-binary source SHA is `55069d4c3478cd19ba29cb238e31cc2aaf3fe015`.
-The documentation SHA is `0050b592ff1fb364a8483c37be07f0e9ae2de32c`.
+The documentation baseline SHA is `89fc5bc3337aef04681990e0b2d818bd84c673d2`.
 The later documentation report does not require another product image.
 
 The final site was deployed to <https://freeze-capsule.sociobot.in> with static
@@ -39,8 +45,8 @@ deployment ID `50e4d333-3273-4da4-b619-2b9567a7f973`.
 
 ## Verification 3
 
-- A no-local clean checkout at `d645cfe` passed `npm ci`, `npm test
-  -- --workers=1` (11 Rust tests, watchdog integration, 41 browser tests),
+- A no-local clean checkout at `d645cfe` passed `npm ci`, `npm test`
+  (11 Rust tests, watchdog integration, 41 browser tests),
   `npm run build`, format, clippy, and package checks.
 - All 29 exact `.factory/claims.json` commands passed separately; no claim was
   skipped. Evidence is `/work/.evidence/verify-3-claims.log`.
@@ -77,7 +83,7 @@ From a fresh clone at `d645cfe150217e48cf5b8645987575ab10abdb43`:
 - `npm ci` passed.
 - All 29 exact commands in `.factory/claims.json` passed separately. Evidence:
   `/work/.evidence/repair-2-final-claims.json`.
-- `npm test -- --workers=1` passed: 11 Rust unit tests, the watchdog integration,
+- `npm test` passed: 11 Rust unit tests, the watchdog integration,
   and 41 Playwright tests.
 - `npm run build` produced `dist/site`.
 - `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, and
@@ -126,7 +132,7 @@ was 62,097 bytes. INP is not reported for a synthetic page load.
 
 ```sh
 npm ci
-npm test -- --workers=1
+npm test
 npm run build
 cargo fmt --check
 cargo clippy --all-targets -- -D warnings
