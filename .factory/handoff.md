@@ -1,8 +1,9 @@
-# Freeze Capsule — repair 2 handoff
+# Freeze Capsule — verification 3 handoff
 
 ## Outcome
 
-Repair 2 is complete. Review 10 finding F-10-1 is closed.
+Verification 3 passed with zero findings and zero untested claims. Review 10
+finding F-10-1 is closed.
 
 The live installers now select release `v0.1.2`. That release was built from
 `55069d4c3478cd19ba29cb238e31cc2aaf3fe015`, where the command-line demo and
@@ -11,11 +12,10 @@ install of the public Linux archive produced `freeze-capsule 0.1.2`, passed its
 published checksum, and produced a report byte-for-byte equal to the browser
 sample.
 
-The final implementation and public-documentation SHA is
-`d645cfe150217e48cf5b8645987575ab10abdb43`. The release-binary source SHA is
-`55069d4c3478cd19ba29cb238e31cc2aaf3fe015`; the later implementation commit
-only updates site reflow, release manifests, and documentation. The final
-handoff commit is report-only and does not require another site image.
+The implementation SHA is `d645cfe150217e48cf5b8645987575ab10abdb43`.
+The release-binary source SHA is `55069d4c3478cd19ba29cb238e31cc2aaf3fe015`.
+The documentation SHA is `0050b592ff1fb364a8483c37be07f0e9ae2de32c`.
+The later documentation report does not require another product image.
 
 The final site was deployed to <https://freeze-capsule.sociobot.in> with static
 deployment ID `50e4d333-3273-4da4-b619-2b9567a7f973`.
@@ -36,6 +36,28 @@ deployment ID `50e4d333-3273-4da4-b619-2b9567a7f973`.
   regression across the home, demo, privacy, terms, and 404 routes.
 - Kept the catalog description verb-first and under 120 characters, then
   copied it to `/work/.evidence/catalog-description.txt`.
+
+## Verification 3
+
+- A no-local clean checkout at `d645cfe` passed `npm ci`, `npm test
+  -- --workers=1` (11 Rust tests, watchdog integration, 41 browser tests),
+  `npm run build`, format, clippy, and package checks.
+- All 29 exact `.factory/claims.json` commands passed separately; no claim was
+  skipped. Evidence is `/work/.evidence/verify-3-claims.log`.
+- Fresh phone and desktop live contexts showed the job, Linux audience, sample
+  action, result, and three facts before scrolling. The one-click sample was
+  populated, labelled persistently, reset correctly, and did not alter real
+  browser state.
+- The public POSIX installer installed `freeze-capsule 0.1.2` in a new
+  consumer directory, verified its checksum, and produced a byte-for-byte
+  browser-sample report. Empty, normal, watch-once, corrupt-input, JSON, and
+  key-permission paths behaved as expected.
+- All 13 public release assets returned HTTP 200; all seven checksum-listed
+  packages matched; `latest.json` names 0.1.2 with seven platform entries.
+- The live runtime asset hashes match the `d645cfe` clean build. Axe found no
+  violations on Home, Demo, Privacy, Terms, the deployed 404, or `/404.html`.
+  The deliberate HTTP 404 is expected and has a working designed page.
+- `.factory/verification-3.md` is the full independent report.
 
 ## Finding disposition
 
