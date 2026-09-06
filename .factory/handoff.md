@@ -1,70 +1,138 @@
-# Freeze Capsule — review 10 handoff
+# Freeze Capsule — repair 2 handoff
 
 ## Outcome
 
-The seven-day independent review is complete against implementation candidate
-`05c6e7b99a75f024dd76c148bb568005a05d8a4c`, documentation SHA
-`c8a13d84a5996addc86d1a83290fa9f257fcb16a`, and the live site at
-<https://freeze-capsule.sociobot.in>.
+Repair 2 is complete. Review 10 finding F-10-1 is closed.
 
-**Verdict: FAIL.** One major finding remains and no claim was left untested.
+The live installers now select release `v0.1.2`. That release was built from
+`55069d4c3478cd19ba29cb238e31cc2aaf3fe015`, where the command-line demo and
+browser fixture both use the current “hard freeze” sample. A clean consumer
+install of the public Linux archive produced `freeze-capsule 0.1.2`, passed its
+published checksum, and produced a report byte-for-byte equal to the browser
+sample.
 
-F-10-1: the documented installer downloads `v0.1.1`, built from older commit
-`73390fd47f9881e38fafd7645f3b56b941c8536a`. Its command-line demo says “hard
-lock,” while the current source and live browser sample say “hard freeze.” The
-public claim that both reports match is therefore false for a clean consumer
-installation. The source-level claim test passes because it does not exercise
-the published artifact.
+The final implementation and public-documentation SHA is
+`d645cfe150217e48cf5b8645987575ab10abdb43`. The release-binary source SHA is
+`55069d4c3478cd19ba29cb238e31cc2aaf3fe015`; the later implementation commit
+only updates site reflow, release manifests, and documentation. The final
+handoff commit is report-only and does not require another site image.
 
-No product code was changed. The full finding, claim table, browser evidence,
-installed-artifact results, and one-row-per-finding history audit are in
-`.factory/review-10.md`.
+The final site was deployed to <https://freeze-capsule.sociobot.in> with static
+deployment ID `50e4d333-3273-4da4-b619-2b9567a7f973`.
 
-## Verification completed
+## What changed
 
-- Opened the live site in fresh 390×844 phone and 1440×900 desktop contexts.
-  The job, audience, sample action, action result, and three facts were visible
-  before scrolling.
-- Entered the realistic sample in one click. Its persistent label, Reset, exit,
-  isolated `demo:` storage, real-marker preservation, and same-origin request
-  boundary passed.
-- Ran every exact command from all 29 `.factory/claims.json` entries separately
-  after `npm ci` in a no-local clean clone. Every command passed.
-- Ran `npm test`: 11 Rust tests, the watchdog integration, and 40 Playwright
-  tests passed.
-- Ran `npm run build`; `dist/site` was produced. Live HTML, JavaScript, CSS, and
-  demo-fixture hashes matched the clean build.
-- Ran the factory live URL verifier, full Axe checks on six documents, mobile
-  touch-target checks, keyboard/focus/history checks, reduced motion, 200% text,
-  failure recovery, links, metadata, privacy requests, legal pages, and the
-  designed HTTP 404.
-- Lighthouse mobile scored 100 for Performance, Accessibility, Best Practices,
-  and SEO. LCP was 1.1 s, TBT 50 ms, and CLS 0.
-- Ran the documented POSIX installer in an isolated consumer directory. The
-  archive checksum passed, normal and invalid CLI paths worked, all seven
-  checksummed release files verified, and all 13 release-page assets returned
-  200.
-- Compared the installed demo report with the source-built candidate and live
-  browser fixture. The direct one-line mismatch proves F-10-1.
-- Re-read and reconciled all 105 earlier review findings, the four original
-  verification findings, both verification reports, and all polish ledgers.
+- Released `v0.1.2` for Linux, macOS Intel, macOS Apple silicon, and Windows.
+- Pinned both public one-line installers to `v0.1.2` while preserving their
+  documented version overrides.
+- Changed the sample-parity claim test to package the release binary, install
+  it through `install.sh`, check its version, run its demo, and compare the
+  complete rendered report with the browser fixture.
+- Added the same packaged-binary parity gate to the Linux release job before
+  release assets are assembled.
+- Updated `Cargo.toml`, npm metadata, the site build label, changelog, README,
+  Homebrew formula, Scoop manifest, and winget manifests to `0.1.2`.
+- Fixed horizontal page overflow at 200% text size and added an outcome-based
+  regression across the home, demo, privacy, terms, and 404 routes.
+- Kept the catalog description verb-first and under 120 characters, then
+  copied it to `/work/.evidence/catalog-description.txt`.
 
-## Re-run
+## Finding disposition
+
+- F-10-1: closed. The live POSIX installer downloaded `v0.1.2`; the installed
+  binary's full demo report matched `site/public/assets/demo-report.json`.
+- Reviews 1–9 and both earlier verification reports: all 105 findings listed
+  as closed in review 10 remain closed. Their affected paths were covered by
+  the 29 clean-checkout claim commands and the final unit, integration,
+  browser, package, and live checks.
+- Repair audit: a 200% text-size overflow was found on the install and terms
+  sections, fixed, regression-tested, deployed, and verified at 390 px.
+
+## Verification
+
+From a fresh clone at `d645cfe150217e48cf5b8645987575ab10abdb43`:
+
+- `npm ci` passed.
+- All 29 exact commands in `.factory/claims.json` passed separately. Evidence:
+  `/work/.evidence/repair-2-final-claims.json`.
+- `npm test -- --workers=1` passed: 11 Rust unit tests, the watchdog integration,
+  and 41 Playwright tests.
+- `npm run build` produced `dist/site`.
+- `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, and
+  `cargo package --allow-dirty` passed. The crate package is version `0.1.2`.
+- Initial JavaScript is 17,082 bytes raw and 6.21 kB gzip. CSS is 12,250 bytes
+  raw and 3.52 kB gzip. The hero image is 49,308 bytes.
+
+Release workflow run `34009735634` passed every Linux, macOS, Windows, release,
+checksum, and packaged-demo-parity job. The public release has 13 assets. Every
+asset returned HTTP 200, all seven distributable packages matched
+`SHA256SUMS`, and `latest.json` named version `0.1.2` with seven platform
+entries. The released Homebrew, Scoop, and winget metadata matches this repo.
+Release metadata is in `/work/.evidence/release-v0.1.2.json`.
+
+The public POSIX installer was run in a new directory. It installed version
+`0.1.2`, verified SHA-256, and passed the full demo-parity comparison. The same
+installed binary also passed empty-state recovery, invalid-format exit code 2,
+normal capture and render, persistence across processes, eight-capsule
+retention, a rolling snapshot, 0600 key permissions, a 32-byte key, and the
+`FCAP1` encrypted-file header. Installer evidence is in
+`/work/.evidence/repair-2-live-install.txt` and
+`/work/.evidence/repair-2-installed-artifact.json`.
+
+The live custom domain passed the factory URL check in 885 ms with no home-page
+console errors. Fresh 390×844 phone and 1440×900 desktop contexts showed the
+job, Linux audience, sample action, action result, and three facts before any
+scroll. The one-click demo showed all four evidence groups in the first screen,
+kept its sample label, reset to the same report, discarded only `demo:` state,
+preserved real-data markers, and made only same-origin requests.
+
+The final live route audit covered home, demo, privacy, terms, a deliberate
+HTTP 404, and the standalone 404 page. Every route had its own title, one h1,
+one main landmark, no Axe violations, no undersized visible controls, correct
+keyboard focus, reduced-motion behavior, and no horizontal page scroll at 200%
+text size. Privacy checks found no cookies or third-party requests. Evidence,
+screenshots, and browser output are under
+`/work/.evidence/repair-2-live-d645cfe/`. The deliberate missing-route request
+produces the expected browser 404 resource message; its designed document,
+navigation, and accessibility checks pass.
+
+Final mobile Lighthouse scores were 100 Performance, 100 Accessibility, 100
+Best Practices, and 100 SEO. LCP was 1.1 seconds, CLS was 0, and total transfer
+was 62,097 bytes. INP is not reported for a synthetic page load.
+
+## Run and verify
 
 ```sh
 npm ci
-npm test
+npm test -- --workers=1
 npm run build
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+cargo package --allow-dirty
 ```
 
-The browser demo is `/demo?demo=1`. The CLI sandbox command is
-`freeze-capsule --json demo`; run it with isolated `TMPDIR` and
-`XDG_STATE_HOME` values when checking storage behavior.
+Browser demo: <https://freeze-capsule.sociobot.in/demo?demo=1>
 
-## Required next step
+CLI demo:
 
-Publish all platform packages, `SHA256SUMS`, and `latest.json` from the current
-implementation candidate or a later repair commit. Then install through the
-documented one-line installer and compare the complete installed demo report
-with the live browser fixture. Review 10 cannot become PASS until F-10-1 is
-closed and a fresh review finds no other issue.
+```sh
+freeze-capsule --json demo
+```
+
+## Known limits and operator actions
+
+- A hard machine lock can stop every user process. Freeze Capsule preserves the
+  last completed rolling snapshot but cannot guarantee a final write.
+- Real freeze-recovery success on physical graphics hardware was not induced in
+  this container. Collection failure and watchdog-gap paths are covered by
+  deterministic tests.
+- The separate Homebrew tap still serves its earlier formula. Work-order scope
+  did not permit modifying another repository. Publish the released `v0.1.2`
+  `freeze-capsule.rb` asset to that tap before advertising the Homebrew command
+  as current. The README states this condition.
+- The winget manifests are ready in `winget/`; the owner must submit them to
+  `microsoft/winget-pkgs`.
+- macOS and Windows packages are unsigned, as disclosed. Signing requires the
+  owner's platform certificates.
+- This is a free MIT-licensed product. No billing offer or billing metadata is
+  required.
