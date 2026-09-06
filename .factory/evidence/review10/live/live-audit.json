@@ -1,0 +1,362 @@
+{
+  "checkedAt": "2026-09-06T02:15:43.341Z",
+  "desktop": {
+    "viewport": [
+      1440,
+      900
+    ],
+    "scrollY": 0,
+    "headline": "Save freeze clues before you reboot",
+    "audience": "For desktop Linux users who need graphics, kernel, process, and session context after a freeze.",
+    "action": "Try it with sample data",
+    "result": "See a redacted report in one click.",
+    "facts": [
+      "01 Free under the MIT License",
+      "02 Freeze Capsule stores capsules and the key in a folder on your computer",
+      "03 The command-line demo makes no network connection"
+    ],
+    "beforeFold": {
+      "h1": true,
+      "audience": true,
+      "action": true,
+      "result": true,
+      "facts": true
+    },
+    "reducedScan": "none",
+    "js": [
+      "https://freeze-capsule.sociobot.in/assets/index-C_CwWMcl.js"
+    ],
+    "css": [
+      "https://freeze-capsule.sociobot.in/assets/index-DjANjR31.css"
+    ]
+  },
+  "phone": {
+    "viewport": [
+      390,
+      844
+    ],
+    "scrollY": 0,
+    "headline": "Save freeze clues before you reboot",
+    "audience": "For desktop Linux users who need graphics, kernel, process, and session context after a freeze.",
+    "action": "Try it with sample data",
+    "result": "See a redacted report in one click.",
+    "facts": [
+      "01 Free under the MIT License",
+      "02 Freeze Capsule stores capsules and the key in a folder on your computer",
+      "03 The command-line demo makes no network connection"
+    ],
+    "beforeFold": {
+      "h1": true,
+      "audience": true,
+      "action": true,
+      "result": true,
+      "facts": true
+    },
+    "overflow": 0,
+    "reducedScan": "none"
+  },
+  "routes": {
+    "home-desktop": {
+      "status": 200,
+      "title": "Freeze Capsule — save Linux freeze clues",
+      "lang": "en",
+      "h1": [
+        "Save freeze clues before you reboot"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "Keep Linux freeze clues ready before reboot, then create a redacted report.",
+      "canonical": "https://freeze-capsule.sociobot.in/",
+      "robots": "index,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n  Freeze Capsule — save Linux freeze clues\n  \n  \n    Freeze Capsule\n    DemoInstallPrivacy\n  \n  \n  \n    LINUX FREEZE EVIDENCE TOOLSave freeze clues before you rebootFor desktop Linux users who need graphics, kernel, process, and session context after a freeze.Try it with sample dataSee a redacted report in one click.01 Free under the MIT License02 Freeze Capsule stores capsules and the key in a folder on your computer03 The command-line demo makes no network connection\n    Evidence sources: journal, graphics, processes, and display session.\n  \n  \n  \n    INCLUDED COMMAND-LINE SAMPLE\n    See the sample report before installingView the sample report\n    Demo — bundled sample data, nothing is saved to your capsule directory.\nEncrypted sample: temporary .fcap\nRedacted report: temporary freeze-report.md\n\n✓ journal  ✓ graphics  ✓ processes  ✓ display-session\n    This browser report comes from the included command-line demo. freeze-capsule --json demo\n  \n  THREE STEPSHow Freeze Capsule keeps pre-freeze evidence01Keep one snapshot currentThe background watcher records a ten-minute window every 30 seconds.02Keep the snapshot when the watcher pausesA 90-second pause keeps the last completed snapshot.03Create a redacted reportThe report removes home paths, email addresses, IP addresses, and common secrets.\n  Install the Linux watcherInstall Freeze Capsule, then choose when to start the watcher.curl -fsSL https://freeze-capsule.sociobot.in/install.sh | shCopy commandFind a package on GitHub, or check the published release.Open Linux releasesCheck published packagesFind Linux .deb on GitHubFind Linux .rpm on GitHubFind macOS Apple silicon .pkg on GitHubFind macOS Intel .pkg on GitHubFind Windows .zip on GitHubIf macOS shows an unidentified-developer warning, right-click the package and choose Open. Review any Windows security warning before running the file.Start and check the watcherfreeze-capsule install-service\nfreeze-capsule doctor\nfreeze-capsule hotkey-commandOn Linux, use these commands to set up, check, or trigger the watcher.\n  Know the capture limitsA hard freeze can stop capture.The last completed snapshot remains available.Log access follows your account.Unavailable sources appear in the report.Review before sharing.Redaction does not remove every machine detail.\n  Freeze Capsule · Save Linux freeze clues before reboot.PrivacyTermsBuilt by Param Factory (external site)v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "privacy-desktop": {
+      "status": 200,
+      "title": "Privacy — Freeze Capsule",
+      "lang": "en",
+      "h1": [
+        "Privacy stays local"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "Read how Freeze Capsule keeps browser demo data separate.",
+      "canonical": "https://freeze-capsule.sociobot.in/privacy",
+      "robots": "index,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n  Privacy — Freeze Capsule\n  \n  \n    Freeze Capsule\n    DemoInstallPrivacy\n  \n  PRIVACY POLICYPrivacy stays localEffective 28 August 2026The command-line toolCapsules and one local key are stored in a folder on your computer. The included demo uses a temporary folder.The websiteThe site does not use accounts, analytics, advertising, or cookies. Checking published packages requests public release details from GitHub.ReportsOpen each report before sharing it. Redaction covers common private patterns, not every machine detail.Remove local evidenceFor normal Linux storage, remove ~/.local/state/freeze-capsule to remove the local key and saved capsules. If you set XDG_STATE_HOME, remove its freeze-capsule folder instead.\n  Freeze Capsule · Save Linux freeze clues before reboot.PrivacyTermsBuilt by Param Factory (external site)v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "terms-desktop": {
+      "status": 200,
+      "title": "Terms — Freeze Capsule",
+      "lang": "en",
+      "h1": [
+        "Terms for using Freeze Capsule"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "Read the MIT license terms and capture limits.",
+      "canonical": "https://freeze-capsule.sociobot.in/terms",
+      "robots": "index,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n  Terms — Freeze Capsule\n  \n  \n    Freeze Capsule\n    DemoInstallPrivacy\n  \n  TERMSTerms for using Freeze CapsuleEffective 28 August 2026LicenseFreeze Capsule is free software under the MIT License.No guarantee of captureA hard freeze can prevent a final write. Available logs depend on your Linux distribution and account permissions.Your responsibilityRead the redacted report before sharing it.WarrantyThe software is provided “as is,” without warranty, as described in the MIT License.\n  Freeze Capsule · Save Linux freeze clues before reboot.PrivacyTermsBuilt by Param Factory (external site)v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "404-desktop": {
+      "status": 404,
+      "title": "Page not found — Freeze Capsule",
+      "lang": "en",
+      "h1": [
+        "Page not found"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "The requested Freeze Capsule page was not found.",
+      "canonical": "https://freeze-capsule.sociobot.in/404.html",
+      "robots": "noindex,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n      Freeze Capsule\n      \n        DemoInstallPrivacy\n      \n    \n    \n      PAGE NOT FOUND / 404\n      Page not found\n      The address does not match a Freeze Capsule page.\n      Return to the home page\n    \n    \n      Freeze Capsule · Save Linux freeze clues before reboot.\n      \n        PrivacyTerms\n        Built by Param Factory (external site)\n      \n      v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "pageErrors": []
+    },
+    "demo-phone": {
+      "status": 200,
+      "title": "Demo — Freeze Capsule",
+      "lang": "en",
+      "h1": [
+        "Inspect a sample freeze report"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "Inspect a bundled, redacted Linux freeze report without saving real data.",
+      "canonical": "https://freeze-capsule.sociobot.in/demo",
+      "robots": "index,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n  Demo — Freeze Capsule\n  Demo — sample data, nothing is savedReset demoInstall Freeze Capsule\n  \n    Freeze Capsule\n    DemoInstallPrivacy\n  \n  \n  ISOLATED SAMPLEInspect a sample freeze reportThe sample shows an AMD graphics timeout during a Cinnamon and Chrome freeze.\n  REDACTED OUTPUT2026-07-23 14:32 UTCFreeze Capsule reportJournalJul 23 14:31:44 workstation kernel: amdgpu 0000:0b:00.0: ring gfx timeoutGraphicsKernel driver in use: amdgpuProcesses4871 2142 Sl 240 45.1 8.3 chrome --token=[REDACTED] [EMAIL] [IP] /home/[USER]/freezeDisplay sessionXDG_CURRENT_DESKTOP=X-CinnamonRead the full report# Freeze Capsule report\n\n- Captured: 2026-07-23 14:32:08 UTC\n- Reason: watchdog-gap-94s\n- Evidence window: 600 seconds\n\n> Commands respect the current user's log permissions.\n\n> A hard freeze can prevent any process from recording new data; the watcher keeps the last completed snapshot.\n\n## journal\n\nSource: `journalctl --since -10min` · Status: **captured**\n\n```text\nJul 23 14:31:41 workstation cinnamon[2142]: Window 0x4e00007 stopped responding\nJul 23 14:31:44 workstation kernel: amdgpu 0000:0b:00.0: ring gfx timeout\nJul 23 14:31:46 workstation kernel: [drm:amdgpu_job_timedout] GPU reset begin!\nJul 23 14:31:53 workstation kernel: amdgpu: GPU reset succeeded\n```\n\n## kernel\n\nSource: `dmesg` · Status: **limited**\n\n```text\ndmesg: read kernel buffer failed: Operation not permitted\n```\n\n## graphics\n\nSource: `lspci -k` · Status: **captured**\n\n```text\n0b:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Navi 23\nKernel driver in use: amdgpu\n```\n\n## processes\n\nSource: `ps` · Status: **captured**\n\n```text\nPID PPID STAT ELAPSED %CPU %MEM COMMAND\n2142 1964 Rl 6621 88.4 3.8 cinnamon\n4871 2142 Sl 240 45.1 8.3 chrome --token=[REDACTED] [EMAIL] [IP] /home/[USER]/freeze\n1964 1 Ssl 6700 2.1 1.4 Xorg\n```\n\n## gpu-drm\n\nSource: `/sys/class/drm` · Status: **captured**\n\n```text\ncard0 connected\ncard0-DP-1 disconnected\ncard0-HDMI-A-1 connected\n```\n\n## display-session\n\nSource: `selected environment` · Status: **captured**\n\n```text\nXDG_SESSION_TYPE=x11\nXDG_CURRENT_DESKTOP=X-Cinnamon\nDESKTOP_SESSION=cinnamon\nDISPLAY=:0\n```\n\n\n  \n  \n    INCLUDED COMMAND-LINE SAMPLE\n    See the sample report before installingReplay sample capture\n    Demo — bundled sample data, nothing is saved to your capsule directory.\nEncrypted sample: temporary .fcap\nRedacted report: temporary freeze-report.md\n\n✓ journal  ✓ graphics  ✓ processes  ✓ display-session\n    This browser report comes from the included command-line demo. freeze-capsule --json demo\n  \n  Freeze Capsule · Save Linux freeze clues before reboot.PrivacyTermsBuilt by Param Factory (external site)v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "privacy-phone": {
+      "status": 200,
+      "title": "Privacy — Freeze Capsule",
+      "lang": "en",
+      "h1": [
+        "Privacy stays local"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "Read how Freeze Capsule keeps browser demo data separate.",
+      "canonical": "https://freeze-capsule.sociobot.in/privacy",
+      "robots": "index,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n  Privacy — Freeze Capsule\n  \n  \n    Freeze Capsule\n    DemoInstallPrivacy\n  \n  PRIVACY POLICYPrivacy stays localEffective 28 August 2026The command-line toolCapsules and one local key are stored in a folder on your computer. The included demo uses a temporary folder.The websiteThe site does not use accounts, analytics, advertising, or cookies. Checking published packages requests public release details from GitHub.ReportsOpen each report before sharing it. Redaction covers common private patterns, not every machine detail.Remove local evidenceFor normal Linux storage, remove ~/.local/state/freeze-capsule to remove the local key and saved capsules. If you set XDG_STATE_HOME, remove its freeze-capsule folder instead.\n  Freeze Capsule · Save Linux freeze clues before reboot.PrivacyTermsBuilt by Param Factory (external site)v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "terms-phone": {
+      "status": 200,
+      "title": "Terms — Freeze Capsule",
+      "lang": "en",
+      "h1": [
+        "Terms for using Freeze Capsule"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "Read the MIT license terms and capture limits.",
+      "canonical": "https://freeze-capsule.sociobot.in/terms",
+      "robots": "index,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n  Terms — Freeze Capsule\n  \n  \n    Freeze Capsule\n    DemoInstallPrivacy\n  \n  TERMSTerms for using Freeze CapsuleEffective 28 August 2026LicenseFreeze Capsule is free software under the MIT License.No guarantee of captureA hard freeze can prevent a final write. Available logs depend on your Linux distribution and account permissions.Your responsibilityRead the redacted report before sharing it.WarrantyThe software is provided “as is,” without warranty, as described in the MIT License.\n  Freeze Capsule · Save Linux freeze clues before reboot.PrivacyTermsBuilt by Param Factory (external site)v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [],
+      "pageErrors": []
+    },
+    "404-phone": {
+      "status": 404,
+      "title": "Page not found — Freeze Capsule",
+      "lang": "en",
+      "h1": [
+        "Page not found"
+      ],
+      "main": 1,
+      "header": 1,
+      "nav": 2,
+      "footer": 1,
+      "description": "The requested Freeze Capsule page was not found.",
+      "canonical": "https://freeze-capsule.sociobot.in/404.html",
+      "robots": "noindex,follow",
+      "overflow": 0,
+      "active": "Skip to main content\n    \n      Freeze Capsule\n      \n        DemoInstallPrivacy\n      \n    \n    \n      PAGE NOT FOUND / 404\n      Page not found\n      The address does not match a Freeze Capsule page.\n      Return to the home page\n    \n    \n      Freeze Capsule · Save Linux freeze clues before reboot.\n      \n        PrivacyTerms\n        Built by Param Factory (external site)\n      \n      v0.1.1 · build 2026.08",
+      "imgsMissingAlt": 0,
+      "axeSeriousCritical": [],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "pageErrors": []
+    }
+  },
+  "interaction": {
+    "demo": {
+      "url": "https://freeze-capsule.sociobot.in/demo?demo=1",
+      "banner": "Demo — sample data, nothing is savedReset demoInstall Freeze Capsule",
+      "rows": [
+        "JournalJul 23 14:31:44 workstation kernel: amdgpu 0000:0b:00.0: ring gfx timeout",
+        "GraphicsKernel driver in use: amdgpu",
+        "Processes4871 2142 Sl 240 45.1 8.3 chrome --token=[REDACTED] [EMAIL] [IP] /home/[USER]/freeze",
+        "Display sessionXDG_CURRENT_DESKTOP=X-Cinnamon"
+      ],
+      "storage": {
+        "demo:loaded": "1"
+      },
+      "realLocal": null
+    },
+    "reset": {
+      "demoMutated": null,
+      "demoLoaded": "1",
+      "realMarker": "keep",
+      "sameOutput": true
+    },
+    "exit": {
+      "url": "https://freeze-capsule.sociobot.in/#install",
+      "demoKeys": [],
+      "realMarker": "keep",
+      "active": "Install the Linux watcher",
+      "installVisible": -0.421875
+    },
+    "hashDirect": {
+      "active": "Install the Linux watcher",
+      "top": -0.421875
+    },
+    "backFocus": "Save freeze clues before you reboot",
+    "forwardFocus": "Privacy stays local",
+    "clipboardDenied": "Could not copy. Select the command and copy it manually.",
+    "releaseFailure": {
+      "apiBefore": 0,
+      "apiAfter": 1,
+      "message": "Package check failed. Open the GitHub release page to see current files."
+    },
+    "releaseMobile": {
+      "message": "Choose a package on your desktop.",
+      "primary": "Choose a package on your desktop"
+    },
+    "firstTab": "Skip to main content",
+    "skipResult": {
+      "active": "",
+      "main": "H1"
+    },
+    "zoom200": {
+      "overflow": 133,
+      "h1Visible": true,
+      "ctaVisible": true
+    }
+  },
+  "requests": {
+    "demoForeign": [],
+    "demoAll": [
+      "https://freeze-capsule.sociobot.in/",
+      "https://freeze-capsule.sociobot.in/assets/index-C_CwWMcl.js",
+      "https://freeze-capsule.sociobot.in/assets/index-DjANjR31.css",
+      "https://freeze-capsule.sociobot.in/assets/demo-report.json",
+      "https://freeze-capsule.sociobot.in/assets/freeze-capsule-hero.webp"
+    ]
+  },
+  "links": {
+    "rendered": [
+      {
+        "href": "https://freeze-capsule.sociobot.in/#main",
+        "status": 200
+      },
+      {
+        "href": "https://freeze-capsule.sociobot.in/",
+        "status": 200
+      },
+      {
+        "href": "https://freeze-capsule.sociobot.in/demo?demo=1",
+        "status": 200
+      },
+      {
+        "href": "https://freeze-capsule.sociobot.in/#install",
+        "status": 200
+      },
+      {
+        "href": "https://freeze-capsule.sociobot.in/privacy",
+        "status": 200
+      },
+      {
+        "href": "https://github.com/B-Divyesh/sf-freeze-capsule/releases",
+        "status": "external"
+      },
+      {
+        "href": "https://freeze-capsule.sociobot.in/terms",
+        "status": 200
+      },
+      {
+        "href": "https://sociobot.in/",
+        "status": "external"
+      }
+    ],
+    "/robots.txt": {
+      "status": 200,
+      "contentType": "text/plain"
+    },
+    "/sitemap.xml": {
+      "status": 200,
+      "contentType": "text/xml"
+    },
+    "/favicon.svg": {
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    "/apple-touch-icon.png": {
+      "status": 200,
+      "contentType": "image/png"
+    },
+    "/install.sh": {
+      "status": 200,
+      "contentType": "text/plain"
+    },
+    "/install.ps1": {
+      "status": 200,
+      "contentType": "text/plain"
+    },
+    "/assets/social-card.webp": {
+      "status": 200,
+      "contentType": "image/webp"
+    }
+  },
+  "errors": []
+}

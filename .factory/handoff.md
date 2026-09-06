@@ -1,60 +1,70 @@
-# Freeze Capsule — adversarial review 9 handoff
+# Freeze Capsule — review 10 handoff
 
 ## Outcome
 
-Completed adversarial first-read review 9 against candidate
-`8a3e95b4ab74fe04f7bfc64cda351d2bca6b3737` and the deployed site at
-<https://freeze-capsule.sociobot.in>. The verdict is **PASS** with zero
-blocking, major, or minor findings.
+The seven-day independent review is complete against implementation candidate
+`05c6e7b99a75f024dd76c148bb568005a05d8a4c`, documentation SHA
+`c8a13d84a5996addc86d1a83290fa9f257fcb16a`, and the live site at
+<https://freeze-capsule.sociobot.in>.
 
-No product code was changed. The complete review, copy inventories, claim
-results, and one-row-per-finding history reconciliation are in
-`.factory/review-9.md`.
+**Verdict: FAIL.** One major finding remains and no claim was left untested.
 
-## Verification
+F-10-1: the documented installer downloads `v0.1.1`, built from older commit
+`73390fd47f9881e38fafd7645f3b56b941c8536a`. Its command-line demo says “hard
+lock,” while the current source and live browser sample say “hard freeze.” The
+public claim that both reports match is therefore false for a clean consumer
+installation. The source-level claim test passes because it does not exercise
+the published artifact.
 
-- Opened the live site cold at 390×844 and 1440×900. The job, audience, primary
-  action, action result, and all three facts were visible before scrolling.
-- Entered the live sample in one click. Four realistic report evidence rows
-  appeared in the first phone viewport.
-- Verified live demo reset and exit behavior with seeded `demo:` and `real:`
-  storage keys. Demo keys were discarded; real markers were untouched.
-- Recorded live requests across the demo flow. They were same-origin only.
-- Ran the CLI demo from isolated working, temporary, and XDG state directories.
-  It wrote one encrypted capsule, one 32-byte key, and one Markdown report only
-  below its temporary demo directory; normal state remained empty.
-- Created a no-local clean clone at `/tmp/freeze-review9-clean.Tk246r/repo`, ran
-  `npm ci`, then ran every exact command from all 29 entries in
-  `.factory/claims.json` separately. All passed.
-- Ran `npm test -- --workers=1` in the clean clone. It passed 11 Rust tests, the
-  watchdog integration, and 40 Playwright tests. The build produced
-  `dist/site`; application JavaScript is 17.08 kB raw and 6.21 kB gzip.
-- Ran `/opt/fleet/lib/verify-url.sh` against the live home page. It passed with
-  no console errors, one h1/main, `lang=en`, and complete image/button labels.
-- Ran live Axe checks on Home, Demo, Privacy, Terms, the deployed 404, and
-  `/404.html`; no serious or critical violation was found. Every visible mobile
-  link, button, and summary met the 44×44 px target.
-- Confirmed route-specific titles, descriptions, canonicals, social metadata,
-  deep links, Back/Forward focus, reduced motion, HTTP 404 behavior, and zero
-  horizontal overflow at 390 px.
-- Crawled rendered destinations and checked all 13 current v0.1.1 release asset
-  URLs; all returned 200 after redirects.
-- Re-read every prior review, polish note, and handoff. All 105 earlier finding
-  IDs were individually reconciled in review 9 and remain fixed.
+No product code was changed. The full finding, claim table, browser evidence,
+installed-artifact results, and one-row-per-finding history audit are in
+`.factory/review-10.md`.
+
+## Verification completed
+
+- Opened the live site in fresh 390×844 phone and 1440×900 desktop contexts.
+  The job, audience, sample action, action result, and three facts were visible
+  before scrolling.
+- Entered the realistic sample in one click. Its persistent label, Reset, exit,
+  isolated `demo:` storage, real-marker preservation, and same-origin request
+  boundary passed.
+- Ran every exact command from all 29 `.factory/claims.json` entries separately
+  after `npm ci` in a no-local clean clone. Every command passed.
+- Ran `npm test`: 11 Rust tests, the watchdog integration, and 40 Playwright
+  tests passed.
+- Ran `npm run build`; `dist/site` was produced. Live HTML, JavaScript, CSS, and
+  demo-fixture hashes matched the clean build.
+- Ran the factory live URL verifier, full Axe checks on six documents, mobile
+  touch-target checks, keyboard/focus/history checks, reduced motion, 200% text,
+  failure recovery, links, metadata, privacy requests, legal pages, and the
+  designed HTTP 404.
+- Lighthouse mobile scored 100 for Performance, Accessibility, Best Practices,
+  and SEO. LCP was 1.1 s, TBT 50 ms, and CLS 0.
+- Ran the documented POSIX installer in an isolated consumer directory. The
+  archive checksum passed, normal and invalid CLI paths worked, all seven
+  checksummed release files verified, and all 13 release-page assets returned
+  200.
+- Compared the installed demo report with the source-built candidate and live
+  browser fixture. The direct one-line mismatch proves F-10-1.
+- Re-read and reconciled all 105 earlier review findings, the four original
+  verification findings, both verification reports, and all polish ledgers.
 
 ## Re-run
 
 ```sh
 npm ci
-npm test -- --workers=1
+npm test
 npm run build
 ```
 
-The browser demo is `/demo?demo=1`. The command-line sandbox is
-`freeze-capsule --json demo` and should be run from a temporary directory with
-an isolated `XDG_STATE_HOME` when independently verifying storage behavior.
+The browser demo is `/demo?demo=1`. The CLI sandbox command is
+`freeze-capsule --json demo`; run it with isolated `TMPDIR` and
+`XDG_STATE_HOME` values when checking storage behavior.
 
-## Known gaps / next steps
+## Required next step
 
-None for this review. Preserve the current claim inventory, demo namespace,
-package-selection matrix, and route/accessibility regressions in future work.
+Publish all platform packages, `SHA256SUMS`, and `latest.json` from the current
+implementation candidate or a later repair commit. Then install through the
+documented one-line installer and compare the complete installed demo report
+with the live browser fixture. Review 10 cannot become PASS until F-10-1 is
+closed and a fresh review finds no other issue.
