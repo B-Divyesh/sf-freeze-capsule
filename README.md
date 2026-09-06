@@ -32,7 +32,7 @@ irm https://freeze-capsule.sociobot.in/install.ps1 | iex
 
 Both installers download the published archive and verify its SHA-256 checksum.
 
-Install with Homebrew after the formula is published:
+Install with Homebrew after the v0.1.2 formula is published to the tap:
 
 ```sh
 brew install B-Divyesh/freeze-capsule/freeze-capsule

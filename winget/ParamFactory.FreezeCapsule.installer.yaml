@@ -1,5 +1,5 @@
 PackageIdentifier: ParamFactory.FreezeCapsule
-PackageVersion: 0.1.0
+PackageVersion: 0.1.2
 InstallerType: zip
 NestedInstallerType: portable
 NestedInstallerFiles:
@@ -7,7 +7,7 @@ NestedInstallerFiles:
     PortableCommandAlias: freeze-capsule
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v0.1.0/freeze-capsule-windows-x86_64.zip
-    InstallerSha256: ab31ceb920d6cc453dd54f3fb4c50f78ef228671b1b9f1b3cab99a85d1ff10a6
+    InstallerUrl: https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v0.1.2/freeze-capsule-windows-x86_64.zip
+    InstallerSha256: 9907d22d4d78cdd66b3eb5073128c696a0cdb7070ae3ac8afc27766e009a0eb1
 ManifestType: installer
 ManifestVersion: 1.9.0

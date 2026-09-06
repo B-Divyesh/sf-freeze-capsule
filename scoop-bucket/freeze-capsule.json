@@ -1,10 +1,10 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Preserve bounded Linux freeze evidence before reboot",
   "homepage": "https://freeze-capsule.sociobot.in",
   "license": "MIT",
-  "url": "https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v0.1.0/freeze-capsule-windows-x86_64.zip",
-  "hash": "ab31ceb920d6cc453dd54f3fb4c50f78ef228671b1b9f1b3cab99a85d1ff10a6",
+  "url": "https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v0.1.2/freeze-capsule-windows-x86_64.zip",
+  "hash": "9907d22d4d78cdd66b3eb5073128c696a0cdb7070ae3ac8afc27766e009a0eb1",
   "bin": "freeze-capsule.exe",
   "checkver": { "github": "https://github.com/B-Divyesh/sf-freeze-capsule" },
   "autoupdate": { "url": "https://github.com/B-Divyesh/sf-freeze-capsule/releases/download/v$version/freeze-capsule-windows-x86_64.zip" }

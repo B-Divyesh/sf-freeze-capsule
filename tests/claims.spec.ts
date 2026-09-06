@@ -228,6 +228,19 @@ test('mobile first screen shows the tested price, local-storage, and no-network 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
+test('site content reflows at 200 percent text size without horizontal page scrolling', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const route of ['/', '/demo?demo=1', '/privacy', '/terms', '/missing-sheet']) {
+    await page.goto(route);
+    await page.evaluate(() => { document.documentElement.style.fontSize = '32px'; });
+    await expect.poll(() => page.evaluate(() => ({
+      client: document.documentElement.clientWidth,
+      scroll: document.documentElement.scrollWidth,
+    }))).toEqual({ client: 390, scroll: 390 });
+    await expect(page.locator('h1')).toBeVisible();
+  }
+});
+
 test('@claim:sample-fixture installed release demo matches the browser report', async () => {
   test.setTimeout(180_000);
   const root = mkdtempSync(join(tmpdir(), 'freeze-capsule-parity-'));
