@@ -228,11 +228,51 @@ test('mobile first screen shows the tested price, local-storage, and no-network 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
-test('@claim:sample-fixture browser fixture is generated from the CLI demo report', () => {
-  const expected = JSON.parse(execFileSync('cargo', ['run', '--quiet', '--', '--json', 'demo'], { encoding: 'utf8' })) as { capsule: string; report: string };
-  const fixture = JSON.parse(readFileSync('site/public/assets/demo-report.json', 'utf8')) as { report: string };
-  expect(fixture.report).toBe(readFileSync(expected.report, 'utf8'));
-  rmSync(expected.capsule.replace(/\/capsule-[^/]+$/, ''), { recursive: true, force: true });
+test('@claim:sample-fixture installed release demo matches the browser report', async () => {
+  test.setTimeout(180_000);
+  const root = mkdtempSync(join(tmpdir(), 'freeze-capsule-parity-'));
+  const stage = join(root, 'stage');
+  const install = join(root, 'install');
+  const asset = 'freeze-capsule-linux-x86_64.tar.gz';
+  mkdirSync(stage);
+  execFileSync('cargo', ['build', '--quiet', '--locked', '--release']);
+  execFileSync('cp', ['target/release/freeze-capsule', join(stage, 'freeze-capsule')]);
+  execFileSync('tar', ['-C', stage, '-czf', join(root, asset), 'freeze-capsule']);
+  const digest = createHash('sha256').update(readFileSync(join(root, asset))).digest('hex');
+  const server = createServer((request, response) => {
+    const name = (request.url ?? '').split('/').at(-1);
+    if (name === asset) response.end(readFileSync(join(root, asset)));
+    else if (name === 'SHA256SUMS') response.end(`${digest}  ${asset}\n`);
+    else response.writeHead(404).end();
+  });
+  await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('fixture server did not bind');
+  const installed = join(install, 'freeze-capsule');
+  try {
+    const result = await new Promise<{ code: number; output: string }>((resolve, reject) => {
+      const child = spawn('sh', ['site/public/install.sh'], {
+        env: {
+          ...process.env,
+          FREEZE_CAPSULE_RELEASE_BASE: `http://127.0.0.1:${address.port}`,
+          FREEZE_CAPSULE_INSTALL_DIR: install,
+        },
+      });
+      let output = '';
+      child.stdout.on('data', value => { output += value; });
+      child.stderr.on('data', value => { output += value; });
+      child.on('error', reject);
+      child.on('close', code => resolve({ code: code ?? -1, output }));
+    });
+    expect(result.code, result.output).toBe(0);
+    const packageVersion = (JSON.parse(readFileSync('package.json', 'utf8')) as { version: string }).version;
+    expect(execFileSync(installed, ['--version'], { encoding: 'utf8' }).trim()).toBe(`freeze-capsule ${packageVersion}`);
+    expect(execFileSync('node', ['tools/verify-demo-parity.mjs', installed], { encoding: 'utf8' }))
+      .toContain('packaged demo report matches the browser sample');
+  } finally {
+    await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('known static routes and the real 404 configuration are explicit', () => {
@@ -242,7 +282,7 @@ test('known static routes and the real 404 configuration are explicit', () => {
   expect(config.routes.find(route => route.route === '/*')).toMatchObject({ statusCode: 404 });
   expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
   const missing = readFileSync('site/public/404.html', 'utf8');
-  for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.1', 'apple-touch-icon', 'og:image', 'twitter:image', 'sessionStorage', '<style>']) expect(missing).toContain(text);
+  for (const text of ['noindex,follow', 'Skip to main content', 'Install', 'Privacy', 'Terms', 'Built by Param Factory', 'v0.1.2', 'apple-touch-icon', 'og:image', 'twitter:image', 'sessionStorage', '<style>']) expect(missing).toContain(text);
 });
 
 test('every visible app and static-404 control meets the 44 pixel mobile touch-target baseline', async ({ page }) => {
@@ -426,6 +466,7 @@ test('@claim:release-workflow-declaration release workflow declares three operat
   ]));
   expect(workflow.jobs.release.needs).toBe('build');
   const executableSteps = Object.values(workflow.jobs).flatMap(job => job.steps ?? []).map(step => `${step.uses ?? ''}\n${step.run ?? ''}`).join('\n');
+  expect(executableSteps).toContain('tools/verify-demo-parity.mjs');
   expect(executableSteps).not.toMatch(/\bcodesign\b|\bsigntool\b|\bnotarytool\b|osslsigncode/i);
 });
 
@@ -466,20 +507,20 @@ test('@claim:site-no-tracking static routes use no cookies, analytics, advertisi
 test('@claim:release-lookup-request GitHub release details are requested only after the explicit check action', async ({ page }) => {
   const githubRequests: string[] = [];
   page.on('request', request => { if (request.url().startsWith('https://api.github.com/')) githubRequests.push(request.url()); });
-  await page.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ tag_name: 'v-test', assets: [{ name: 'freeze-capsule_0.1.1_amd64.deb', browser_download_url: 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb' }] }) }));
+  await page.route('https://api.github.com/**', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ tag_name: 'v-test', assets: [{ name: 'freeze-capsule_0.1.2_amd64.deb', browser_download_url: 'https://downloads.example.test/freeze-capsule_0.1.2_amd64.deb' }] }) }));
   await page.goto('/');
   expect(githubRequests).toEqual([]);
   await page.getByRole('button', { name: 'Check published packages' }).click();
   await expect(page.getByText('v-test Linux .deb package is ready.')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Download for Linux' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb');
+  await expect(page.getByRole('link', { name: 'Download for Linux' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.2_amd64.deb');
   expect(githubRequests).toHaveLength(1);
 });
 
 test('@claim:platform-package-selection package checks select only compatible desktop assets', async ({ browser }) => {
   const releasePage = 'https://github.com/B-Divyesh/sf-freeze-capsule/releases';
   const assets = [
-    'freeze-capsule_0.1.1_amd64.deb',
-    'freeze-capsule-0.1.1-1.x86_64.rpm',
+    'freeze-capsule_0.1.2_amd64.deb',
+    'freeze-capsule-0.1.2-1.x86_64.rpm',
     'freeze-capsule-macos-aarch64.pkg',
     'freeze-capsule-macos-x86_64.pkg',
     'freeze-capsule-windows-x86_64.zip',
@@ -508,8 +549,8 @@ test('@claim:platform-package-selection package checks select only compatible de
 
   const linux = await checkedPage('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36');
   await expect(linux.page.getByText('v-test Linux .deb package is ready.')).toBeVisible();
-  await expect(linux.page.getByRole('link', { name: 'Download for Linux' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb');
-  await expect(linux.page.getByRole('link', { name: 'Download Linux .deb' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.1_amd64.deb');
+  await expect(linux.page.getByRole('link', { name: 'Download for Linux' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.2_amd64.deb');
+  await expect(linux.page.getByRole('link', { name: 'Download Linux .deb' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule_0.1.2_amd64.deb');
   await expect(linux.page.getByRole('link', { name: 'Download macOS Apple silicon .pkg' })).toHaveAttribute('href', 'https://downloads.example.test/freeze-capsule-macos-aarch64.pkg');
   await linux.context.close();
 

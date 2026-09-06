@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 $repo = "B-Divyesh/sf-freeze-capsule"
-$version = if ($env:FREEZE_CAPSULE_VERSION) { $env:FREEZE_CAPSULE_VERSION } else { "latest" }
+$version = if ($env:FREEZE_CAPSULE_VERSION) { $env:FREEZE_CAPSULE_VERSION } else { "v0.1.2" }
 $installDir = if ($env:FREEZE_CAPSULE_INSTALL_DIR) { $env:FREEZE_CAPSULE_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA "FreezeCapsule\bin" }
 $base = if ($env:FREEZE_CAPSULE_RELEASE_BASE) { $env:FREEZE_CAPSULE_RELEASE_BASE } elseif ($version -eq "latest") { "https://github.com/$repo/releases/latest/download" } else { "https://github.com/$repo/releases/download/$version" }
 $asset = "freeze-capsule-windows-x86_64.zip"

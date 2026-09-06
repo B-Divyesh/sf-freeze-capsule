@@ -40,8 +40,8 @@ marketing words.
 | Find a package on GitHub, or check the published release. | 10 | Download instruction |
 | Open Linux releases / Check published packages | 3 / 3 | Desktop Linux action and explicit lookup action |
 | Checking the GitHub release… | 4 | Loading state |
-| v0.1.1 Linux `.deb` package is ready. | 6 | `platform-package-selection`; shown only when the matching asset exists |
-| v0.1.1 does not include a Linux `.deb` package. Open the GitHub release page to see current files. | 17 | `platform-package-selection`; missing-asset recovery |
+| v0.1.2 Linux `.deb` package is ready. | 6 | `platform-package-selection`; shown only when the matching asset exists |
+| v0.1.2 does not include a Linux `.deb` package. Open the GitHub release page to see current files. | 17 | `platform-package-selection`; missing-asset recovery |
 | Choose a package on your desktop. | 6 | `platform-package-selection`; Android and iOS state |
 | Choose the matching macOS package for your Mac. | 9 | `platform-package-selection`; architecture is not guessed |
 | Package check failed. | 3 | Lookup error |
@@ -62,7 +62,7 @@ marketing words.
 | Review before sharing. | 3 | Direct instruction |
 | Redaction does not remove every machine detail. | 7 | `redaction-limits` |
 | Freeze Capsule · Save Linux freeze clues before reboot. | 8 | Footer |
-| Terms / Built by Param Factory / v0.1.1 · build 2026.08 | 1 / 4 / 3 | Footer navigation and build id |
+| Terms / Built by Param Factory / v0.1.2 · build 2026.09 | 1 / 4 / 3 | Footer navigation and build id |
 
 First-screen read-aloud: “Save freeze clues before you reboot. For desktop
 Linux users who need graphics, kernel, process, and session context after a

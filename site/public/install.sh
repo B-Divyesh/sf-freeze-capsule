@@ -2,7 +2,7 @@
 set -eu
 
 REPO="B-Divyesh/sf-freeze-capsule"
-VERSION="${FREEZE_CAPSULE_VERSION:-latest}"
+VERSION="${FREEZE_CAPSULE_VERSION:-v0.1.2}"
 INSTALL_DIR="${FREEZE_CAPSULE_INSTALL_DIR:-$HOME/.local/bin}"
 
 case "$(uname -s)" in

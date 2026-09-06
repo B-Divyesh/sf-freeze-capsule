@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v0.1.1' }}
+  RELEASE_TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v0.1.2' }}
 
 jobs:
   build:
@@ -44,6 +44,10 @@ jobs:
         run: |
           cargo test --locked
           cargo build --locked --release --target "${{ matrix.target }}"
+      - name: Verify packaged demo matches the browser sample
+        if: runner.os == 'Linux'
+        shell: bash
+        run: node tools/verify-demo-parity.mjs "target/${{ matrix.target }}/release/freeze-capsule"
       - name: Package Unix archive
         if: runner.os != 'Windows'
         shell: bash

@@ -103,8 +103,8 @@ The site is in `dist/site`. The release binary is in `target/release/freeze-caps
 Tag a tested commit:
 
 ```sh
-git tag v0.1.1
-git push origin main v0.1.1
+git tag v0.1.2
+git push origin main v0.1.2
 ```
 
 The checked release workflow declares Linux, macOS, and Windows packaging jobs. It does not configure package signing.

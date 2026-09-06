@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 — 2026-09-06
+
+- Publish the current command-line implementation for every supported package.
+- Pin site installers to the reviewed release instead of an older latest release.
+- Verify the packaged and installed command-line demo against the browser sample.
+
 ## 0.1.1 — 2026-08-28
 
 - Repair demo controls to meet the 44 px touch-target baseline.

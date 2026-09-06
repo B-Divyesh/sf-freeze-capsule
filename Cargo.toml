@@ -1,6 +1,6 @@
 [package]
 name = "freeze-capsule"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "Preserve bounded Linux freeze evidence before reboot"
 license = "MIT"
